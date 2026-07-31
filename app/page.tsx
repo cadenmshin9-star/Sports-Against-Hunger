@@ -144,23 +144,21 @@ function Arrow() {
 
 function WallSticker({
   kind,
-  text,
-  note,
+  label,
 }: {
   kind: string;
-  text: string;
-  note: string;
+  label: string;
 }) {
   return (
     <span
-      aria-label={`${text}. ${note}`}
+      aria-label={label}
       className={`wall-sticker wall-sticker--${kind}`}
-      data-note={note}
       role="img"
       tabIndex={0}
     >
-      <strong>{text}</strong>
       <i aria-hidden="true" />
+      <b aria-hidden="true" />
+      <em aria-hidden="true" />
     </span>
   );
 }
@@ -1546,9 +1544,7 @@ export default function Home() {
               <span className="status-dot" />
               Student-led / school-powered / community-backed
             </div>
-            <span className="hero-tech__kicker">
-              SANTA CLARITA, CA / LOCAL IMPACT NETWORK
-            </span>
+            <span className="hero-tech__kicker">LOCAL IMPACT NETWORK / 001</span>
             <h1 id="hero-title">
               <span>Every</span>
               <span>play can</span>
@@ -1559,6 +1555,7 @@ export default function Home() {
               High school athletics, local businesses, and food partners—moving
               together to turn verified achievements into dependable support.
             </p>
+            <p className="hero__location">Based in Santa Clarita, California.</p>
             <div className="hero__actions">
               <a className="hero-sponsor" href="#contact">
                 Sponsor a play <Arrow />
@@ -1590,8 +1587,7 @@ export default function Home() {
           <i aria-hidden="true" /><i aria-hidden="true" /><i aria-hidden="true" />
           <WallSticker
             kind="feed"
-            note="Game-day energy becomes neighborhood support."
-            text="PLAY / FEED / REPEAT"
+            label="Plate, fork, and spoon sticker"
           />
         </div>
 
@@ -1610,8 +1606,7 @@ export default function Home() {
           <div className="section-index">01 / About</div>
           <WallSticker
             kind="valley"
-            note="Home court: Santa Clarita, California."
-            text="SCV / 661"
+            label="Santa Clarita mountains and sun sticker"
           />
           <div className="mission__statement" data-reveal="swoosh-left">
             <p>Our north star</p>
@@ -1672,8 +1667,7 @@ export default function Home() {
         <section className="impact" id="impact" aria-labelledby="impact-title">
           <WallSticker
             kind="score"
-            note="Every verified achievement can help a neighbor."
-            text="SCORE → SHARE"
+            label="Basketball sticker"
           />
           <div className="impact__top section-shell" data-reveal>
             <div className="section-index section-index--light">02 / Live impact</div>
@@ -1718,8 +1712,7 @@ export default function Home() {
         <section className="playbook section-shell" id="playbook">
           <WallSticker
             kind="pantry"
-            note="The only acceptable final score."
-            text="NO EMPTY PLATES"
+            label="Grocery bag and produce sticker"
           />
           <div className="section-index">03 / The playbook</div>
           <div className="playbook__heading" data-reveal="swoosh-left">
@@ -1760,8 +1753,7 @@ export default function Home() {
         <section className="dashboard section-shell" id="dashboard">
           <WallSticker
             kind="bolt"
-            note="Turn the scoreboard into real community support."
-            text="POINTS → PLATES"
+            label="Running shoe sticker"
           />
           <div className="section-index">04 / Games & achievements</div>
           <div className="placeholder" data-reveal>
@@ -1781,8 +1773,7 @@ export default function Home() {
         <section className="partners" id="partners">
           <WallSticker
             kind="heart"
-            note="Love your team. Feed your block."
-            text="LOVE YOUR BLOCK"
+            label="Heart sticker"
           />
           <div className="partners__inner section-shell">
             <div className="section-index section-index--light">05 / Founding partners</div>
@@ -1813,8 +1804,7 @@ export default function Home() {
         <section className="faq section-shell" id="faq">
           <WallSticker
             kind="hands"
-            note="Trust is the strongest assist."
-            text="TEAMWORK FEEDS"
+            label="Wheat and hands sticker"
           />
           <div className="section-index">06 / Preemptive Q&amp;A</div>
           <div className="faq__heading" data-reveal>
@@ -1892,8 +1882,7 @@ export default function Home() {
         <section className="final-cta contact" id="contact" aria-labelledby="contact-title">
           <WallSticker
             kind="sunset"
-            note="A small local promise can travel far."
-            text="PLAY FOR LA"
+            label="Soccer ball at sunset sticker"
           />
           <div className="final-cta__orb" aria-hidden="true">
             <span>SAH</span>
