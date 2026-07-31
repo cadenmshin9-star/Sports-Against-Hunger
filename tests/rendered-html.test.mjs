@@ -36,6 +36,10 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /href="tel:\+16615938857"/i);
   assert.match(html, /href="mailto:cadenmshin9@gmail\.com/i);
   assert.match(html, /Valencia High School/);
+  assert.match(html, /Hunger is local\./);
+  assert.match(html, /So is the/);
+  assert.match(html, /Sports Against Hunger is a student-led network designed to make/);
+  assert.match(html, /Schools bring the energy\. Businesses make capped commitments\./);
   assert.match(html, /Three pillars\./);
   assert.match(html, />Compete</);
   assert.match(html, />Unite</);
@@ -43,6 +47,10 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /Preemptive Q&amp;A/);
   assert.match(html, /Does Sports Against Hunger handle money\?/);
   assert.match(html, /How are meals calculated\?/);
+  assert.match(html, /Dignity first/);
+  assert.match(html, /Pantry-led impact/);
+  assert.match(html, /aria-label="Back to top"/);
+  assert.doesNotMatch(html, /id="ethics"/);
   assert.doesNotMatch(html, /Why would businesses be interested\?/);
   assert.doesNotMatch(html, /How does money get divided/i);
   assert.doesNotMatch(html, /Valencia, California/);
@@ -63,12 +71,18 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /Illustrative only\./);
   assert.match(page, /Sports<\/strong>\s*<strong>Against<\/strong>\s*<strong>Hunger/);
   assert.match(page, /className="hero-visual__canvas"/);
+  assert.match(page, /className="loader__tiles"/);
+  assert.match(page, /setLoaderProgress/);
+  assert.match(page, /className="ethics-answer__grid"/);
   assert.match(page, /Dignity first/);
   assert.match(page, /Pantry-led impact/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /\[data-reveal\]\.is-visible/);
   assert.match(css, /\.valencia-crest/);
   assert.match(css, /\.hero-visual__canvas/);
+  assert.match(css, /\.loader__tiles/);
+  assert.match(css, /\.back-to-top/);
+  assert.match(css, /--paper:\s*#e4e9e0/);
   assert.match(layout, /images: \[\{ url: socialImage, width: 1200, height: 630 \}\]/);
 
   await access(new URL("../public/og.png", import.meta.url));

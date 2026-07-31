@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 const navItems = [
   ["About", "#about"],
@@ -100,21 +100,26 @@ const ethics = [
 
 const questions = [
   {
+    kind: "text",
     question: "Does Sports Against Hunger handle money?",
     answer:
       "No. The program is designed as a closed financial flow: sponsor support moves directly to the approved food partner. Students coordinate the campaign and its reporting, not the funds.",
   },
   {
+    kind: "ethics",
     question: "What are Sports Against Hunger’s ethics?",
     answer:
-      "Dignity, pantry leadership, fair participation, student safety, responsible sponsors, and honest reporting. Families are never used as promotional props, and unverified impact is never published.",
+      "The standard is simple: protect people, follow the food partner’s lead, and publish only what can be proved.",
   },
   {
+    kind: "text",
     question: "How are meals calculated?",
     answer:
       "The approved food partner sets the official dollar-to-meal calculation. Sports Against Hunger publishes that method with the verified results once the pilot is active.",
   },
 ];
+
+const loaderTiles = Array.from({ length: 96 });
 
 function Arrow() {
   return <span aria-hidden="true">↗</span>;
@@ -302,14 +307,31 @@ function HeroFieldCanvas() {
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
+  const [loaderProgress, setLoaderProgress] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setLoading(false), 1850);
+    let loaderFrame = 0;
+    const loaderStart = performance.now();
+    const loaderDuration = 1700;
+    const animateLoader = (time: number) => {
+      const nextProgress = Math.min(
+        100,
+        Math.round(((time - loaderStart) / loaderDuration) * 100),
+      );
+      setLoaderProgress(nextProgress);
+      if (nextProgress < 100) {
+        loaderFrame = window.requestAnimationFrame(animateLoader);
+      }
+    };
+    loaderFrame = window.requestAnimationFrame(animateLoader);
+    const timer = window.setTimeout(() => setLoading(false), 1825);
     const updateProgress = () => {
       const scrollable =
         document.documentElement.scrollHeight - window.innerHeight;
       setProgress(scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0);
+      setShowBackToTop(window.scrollY > window.innerHeight * 0.85);
     };
     const revealObserver = new IntersectionObserver(
       (entries) => {
@@ -330,6 +352,7 @@ export default function Home() {
 
     return () => {
       window.clearTimeout(timer);
+      window.cancelAnimationFrame(loaderFrame);
       revealObserver.disconnect();
       window.removeEventListener("scroll", updateProgress);
     };
@@ -341,32 +364,54 @@ export default function Home() {
         className={`loader ${loading ? "" : "loader--hidden"}`}
         aria-hidden={!loading}
       >
-        <div className="loader__score">
-          <span>PRE-GAME</span>
-          <strong>00:01</strong>
+        <div className="loader__tiles" aria-hidden="true">
+          {loaderTiles.map((_, index) => (
+            <i
+              key={index}
+              style={
+                {
+                  "--tile-delay": `${(index % 12) * 18 + Math.floor(index / 12) * 24}ms`,
+                } as CSSProperties
+              }
+            />
+          ))}
+        </div>
+        <div className="loader__hud">
+          <span>COMMUNITY IMPACT SYSTEM</span>
+          <strong>PRE-SEASON / 001</strong>
           <span>PLAY WITH PURPOSE</span>
         </div>
-        <div className="loader__field">
-          <i className="loader__yard loader__yard--one" />
-          <i className="loader__yard loader__yard--two" />
-          <i className="loader__yard loader__yard--three" />
-          <span className="loader__ball" />
+        <div className="loader__stage">
+          <span className="loader__orbit loader__orbit--one" aria-hidden="true" />
+          <span className="loader__orbit loader__orbit--two" aria-hidden="true" />
+          <span className="loader__play" aria-hidden="true" />
           <div className="loader__identity" aria-label="Sports Against Hunger">
+            <small>WELCOME TO</small>
             <strong>Sports</strong>
             <strong>Against</strong>
             <strong>Hunger</strong>
             <i />
           </div>
         </div>
-        <p>Turning plays into meals</p>
-        <div className="loader__track">
-          <span />
+        <div className="loader__progress">
+          <span>WARMING UP THE FIELD</span>
+          <div><i style={{ width: `${loaderProgress}%` }} /></div>
+          <strong>{String(loaderProgress).padStart(3, "0")}%</strong>
         </div>
       </div>
 
       <div className="scroll-progress" aria-hidden="true">
         <span style={{ width: `${progress}%` }} />
       </div>
+
+      <a
+        className={`back-to-top ${showBackToTop ? "back-to-top--visible" : ""}`}
+        href="#top"
+        aria-label="Back to top"
+      >
+        <span>Back to top</span>
+        <i aria-hidden="true">↑</i>
+      </a>
 
       <header className="site-header">
         <a className="wordmark" href="#top" aria-label="Sports Against Hunger home">
@@ -455,20 +500,29 @@ export default function Home() {
           <div className="mission__statement" data-reveal>
             <p>Our north star</p>
             <h2>
-              Three pillars.
+              Hunger is local.
               <br />
-              One <em>shared win.</em>
+              So is the <em>power to help.</em>
             </h2>
           </div>
           <div className="mission__story" data-reveal>
             <p className="mission__lead">
-              Sports Against Hunger brings together school athletics, local
-              businesses, and food partners to support families facing food insecurity.
+              Sports Against Hunger is a student-led network designed to make
+              generosity visible, measurable, and part of the game-day ritual.
             </p>
             <p>
-              The model gives students meaningful leadership, strengthens school
-              spirit, and creates a program that can grow responsibly. Students
-              coordinate the story—not the money.
+              Schools bring the energy. Businesses make capped commitments.
+              Food pantries define what support is useful and verify every
+              contribution. Students coordinate the story—not the money.
+            </p>
+          </div>
+
+          <div className="pillar-intro" data-reveal>
+            <span>THE IDEOLOGY</span>
+            <h3>Three pillars.<br /><em>One shared win.</em></h3>
+            <p>
+              Every part of the model should make the game more meaningful
+              without making community support depend entirely on winning.
             </p>
           </div>
 
@@ -620,35 +674,8 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="trust section-shell" id="ethics">
-          <div className="section-index">06 / Ethics & transparency</div>
-          <div className="trust__header" data-reveal>
-            <h2>Do good.<br />Show the work.</h2>
-            <p>
-              The system protects dignity first, lets food partners lead the
-              impact, and publishes only what can be verified.
-            </p>
-          </div>
-          <div className="ethics-grid" data-reveal>
-            {ethics.map((item) => (
-              <article key={item.number}>
-                <span>{item.number}</span>
-                <strong>{item.title}</strong>
-                <p>{item.body}</p>
-              </article>
-            ))}
-          </div>
-          <div className="trust-ledger" data-reveal>
-            <span>WHEN THE PILOT GOES LIVE</span>
-            <p>Verified results</p>
-            <p>Partner receipts</p>
-            <p>Impact reports</p>
-            <strong>COMING SOON</strong>
-          </div>
-        </section>
-
         <section className="faq section-shell" id="faq">
-          <div className="section-index">07 / Preemptive Q&amp;A</div>
+          <div className="section-index">06 / Preemptive Q&amp;A</div>
           <div className="faq__heading" data-reveal>
             <span>THE QUESTIONS WORTH ASKING EARLY</span>
             <h2>Preemptive Q&amp;A.</h2>
@@ -662,7 +689,29 @@ export default function Home() {
                   <strong>{item.question}</strong>
                   <i aria-hidden="true">+</i>
                 </summary>
-                <p>{item.answer}</p>
+                {item.kind === "ethics" ? (
+                  <div className="ethics-answer">
+                    <p>{item.answer}</p>
+                    <div className="ethics-answer__grid">
+                      {ethics.map((principle) => (
+                        <article key={principle.number}>
+                          <span>{principle.number}</span>
+                          <strong>{principle.title}</strong>
+                          <p>{principle.body}</p>
+                        </article>
+                      ))}
+                    </div>
+                    <div className="ethics-answer__ledger">
+                      <span>WHEN THE PILOT GOES LIVE</span>
+                      <p>Verified results</p>
+                      <p>Partner receipts</p>
+                      <p>Impact reports</p>
+                      <strong>COMING SOON</strong>
+                    </div>
+                  </div>
+                ) : (
+                  <p>{item.answer}</p>
+                )}
               </details>
             ))}
           </div>
