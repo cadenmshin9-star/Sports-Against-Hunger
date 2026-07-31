@@ -7,6 +7,7 @@ const navItems = [
   ["Impact", "#impact"],
   ["Playbook", "#playbook"],
   ["Partners", "#partners"],
+  ["Contact", "#contact"],
 ];
 
 const impactStats = [
@@ -37,23 +38,46 @@ function Arrow() {
   return <span aria-hidden="true">↗</span>;
 }
 
+function Playmark() {
+  return (
+    <span className="playmark" aria-hidden="true">
+      <span>SAH</span>
+      <i />
+    </span>
+  );
+}
+
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setLoading(false), 1450);
+    const timer = window.setTimeout(() => setLoading(false), 1850);
     const updateProgress = () => {
       const scrollable =
         document.documentElement.scrollHeight - window.innerHeight;
       setProgress(scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0);
     };
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -7% 0px" },
+    );
+    const revealElements = document.querySelectorAll("[data-reveal]");
 
     updateProgress();
+    revealElements.forEach((element) => revealObserver.observe(element));
     window.addEventListener("scroll", updateProgress, { passive: true });
 
     return () => {
       window.clearTimeout(timer);
+      revealObserver.disconnect();
       window.removeEventListener("scroll", updateProgress);
     };
   }, []);
@@ -64,11 +88,21 @@ export default function Home() {
         className={`loader ${loading ? "" : "loader--hidden"}`}
         aria-hidden={!loading}
       >
-        <div className="loader__mark">
-          <span>SAH</span>
-          <i />
+        <div className="loader__score">
+          <span>PRE-GAME</span>
+          <strong>00:01</strong>
+          <span>PLAY WITH PURPOSE</span>
         </div>
-        <p>Turning school spirit into shared meals</p>
+        <div className="loader__field">
+          <i className="loader__yard loader__yard--one" />
+          <i className="loader__yard loader__yard--two" />
+          <i className="loader__yard loader__yard--three" />
+          <span className="loader__ball" />
+          <div className="loader__mark">
+            <Playmark />
+          </div>
+        </div>
+        <p>Turning plays into meals</p>
         <div className="loader__track">
           <span />
         </div>
@@ -80,7 +114,7 @@ export default function Home() {
 
       <header className="site-header">
         <a className="wordmark" href="#top" aria-label="Sports Against Hunger home">
-          <span className="wordmark__badge">S</span>
+          <Playmark />
           <span>Sports Against Hunger</span>
         </a>
         <nav aria-label="Main navigation">
@@ -90,21 +124,23 @@ export default function Home() {
             </a>
           ))}
         </nav>
-        <a className="header-cta" href="#playbook">
-          See the model <Arrow />
+        <a className="header-cta" href="#contact">
+          Become a sponsor <Arrow />
         </a>
       </header>
 
       <main id="top">
         <section className="hero" aria-labelledby="hero-title">
+          <div className="hero__pattern hero__pattern--left" aria-hidden="true" />
+          <div className="hero__pattern hero__pattern--right" aria-hidden="true" />
           <div className="hero__eyebrow">
             <span className="status-dot" />
-            Student-led pilot · Valencia, California
+            Student-led · School-powered · Community-backed
           </div>
 
           <h1 id="hero-title">
-            Every play can
-            <span className="hero__accent"> feed a family.</span>
+            <span className="hero__line">Every play can</span>
+            <span className="hero__accent">feed a family.</span>
           </h1>
 
           <div className="hero__lower">
@@ -112,15 +148,21 @@ export default function Home() {
               We connect high school athletics, local businesses, and food
               pantries to turn verified team achievements into dependable meals.
             </p>
-            <a className="circle-link" href="#mission" aria-label="Explore our mission">
-              <span>Explore</span>
-              <Arrow />
-            </a>
+            <div className="hero__actions">
+              <a className="hero-sponsor" href="#contact">
+                Sponsor a play <Arrow />
+              </a>
+              <a className="circle-link" href="#mission" aria-label="Explore our mission">
+                <span>Explore</span>
+                <Arrow />
+              </a>
+            </div>
           </div>
 
           <div className="hero-field" aria-hidden="true">
             <div className="hero-field__line hero-field__line--one" />
             <div className="hero-field__line hero-field__line--two" />
+            <div className="hero-field__line hero-field__line--three" />
             <div className="hero-field__center">
               <span>1</span>
               <small>team achievement</small>
@@ -131,6 +173,7 @@ export default function Home() {
             </div>
             <div className="ball ball--one" />
             <div className="ball ball--two" />
+            <div className="ball ball--three" />
           </div>
         </section>
 
@@ -147,7 +190,7 @@ export default function Home() {
 
         <section className="mission section-shell" id="mission">
           <div className="section-index">01 / Mission</div>
-          <div className="mission__statement">
+          <div className="mission__statement" data-reveal>
             <p>Our north star</p>
             <h2>
               Hunger is local.
@@ -155,7 +198,7 @@ export default function Home() {
               So is the <em>power to help.</em>
             </h2>
           </div>
-          <div className="mission__story">
+          <div className="mission__story" data-reveal>
             <p className="mission__lead">
               Sports Against Hunger is a student-led network designed to make
               generosity visible, measurable, and part of the game-day ritual.
@@ -167,7 +210,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="role-grid">
+          <div className="role-grid" data-reveal>
             <article>
               <span>THE SCHOOL</span>
               <strong>Creates the moment</strong>
@@ -187,7 +230,7 @@ export default function Home() {
         </section>
 
         <section className="impact" id="impact" aria-labelledby="impact-title">
-          <div className="impact__top section-shell">
+          <div className="impact__top section-shell" data-reveal>
             <div className="section-index section-index--light">02 / Live impact</div>
             <div>
               <span className="impact__live"><i /> Pilot tracker</span>
@@ -199,7 +242,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="impact-grid section-shell">
+          <div className="impact-grid section-shell" data-reveal>
             {impactStats.map((stat) => (
               <article key={stat.label}>
                 <span className="impact-grid__value">{stat.value}</span>
@@ -215,7 +258,7 @@ export default function Home() {
             <div className="season-card__head">
               <div>
                 <span>SEASON 01</span>
-                <strong>Valencia pilot</strong>
+                <strong>Pilot season</strong>
               </div>
               <span className="season-card__status">PRE-SEASON</span>
             </div>
@@ -229,7 +272,7 @@ export default function Home() {
 
         <section className="playbook section-shell" id="playbook">
           <div className="section-index">03 / The playbook</div>
-          <div className="playbook__heading">
+          <div className="playbook__heading" data-reveal>
             <h2>Simple enough to explain.<br />Strong enough to trust.</h2>
             <p>
               A repeatable three-part model keeps the campaign exciting without
@@ -237,7 +280,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="playbook-list">
+          <div className="playbook-list" data-reveal>
             {playbook.map((item) => (
               <article key={item.number}>
                 <span>{item.number}</span>
@@ -248,7 +291,7 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="example-card">
+          <div className="example-card" data-reveal>
             <div className="example-card__label">A SAMPLE PLAY</div>
             <div className="example-card__equation">
               <span>1</span>
@@ -266,12 +309,12 @@ export default function Home() {
 
         <section className="dashboard section-shell" id="dashboard">
           <div className="section-index">04 / Games & achievements</div>
-          <div className="placeholder">
+          <div className="placeholder" data-reveal>
             <span className="placeholder__tag">SCHEDULE LOCKER</span>
             <h2>The next play<br />starts here.</h2>
             <p>
               Game schedules and verified achievements will appear once the
-              Valencia pilot receives approval.
+              pilot receives approval.
             </p>
             <div className="placeholder__lines" aria-hidden="true">
               <i /><i /><i />
@@ -283,7 +326,7 @@ export default function Home() {
         <section className="partners" id="partners">
           <div className="partners__inner section-shell">
             <div className="section-index section-index--light">05 / Founding partners</div>
-            <div className="partners__copy">
+            <div className="partners__copy" data-reveal>
               <span>THE FIRST TEAM IS FORMING</span>
               <h2>Local brands.<br />Lasting impact.</h2>
               <p>
@@ -291,24 +334,28 @@ export default function Home() {
                 partnership is approved and its commitment is confirmed.
               </p>
             </div>
-            <div className="partner-slots" aria-label="Founding partner spaces">
-              <div><span>01</span><strong>Your mark could start here</strong></div>
-              <div><span>02</span><strong>Founding partner</strong></div>
-              <div><span>03</span><strong>Community partner</strong></div>
+            <div className="partner-slots" aria-label="Partner spaces" data-reveal>
+              <div className="partner-slots__school">
+                <span>PARTNERED SCHOOL</span>
+                <strong>Valencia High School</strong>
+                <small>Student and athletics partner</small>
+              </div>
+              <div><span>FOUNDING SPONSOR</span><strong>Your mark could start here</strong></div>
+              <div><span>COMMUNITY PARTNER</span><strong>Partner reveal coming soon</strong></div>
             </div>
           </div>
         </section>
 
         <section className="trust section-shell" id="transparency">
           <div className="section-index">06 / Transparency</div>
-          <div className="trust__header">
+          <div className="trust__header" data-reveal>
             <h2>Proof over promises.</h2>
             <p>
               This section will publish the records that make the program
               accountable as soon as the pilot is active.
             </p>
           </div>
-          <div className="trust-grid">
+          <div className="trust-grid" data-reveal>
             <article><span>01</span><strong>Verified results</strong><small>Awaiting pilot launch</small></article>
             <article><span>02</span><strong>Partner receipts</strong><small>Awaiting pilot launch</small></article>
             <article><span>03</span><strong>Impact reports</strong><small>Awaiting pilot launch</small></article>
@@ -317,26 +364,45 @@ export default function Home() {
 
         <section className="faq section-shell" id="faq">
           <div className="section-index">07 / FAQ</div>
-          <div className="faq__empty">
+          <div className="faq__empty" data-reveal>
             <span>QUESTIONS, ANSWERED CLEARLY</span>
             <h2>The FAQ is being shaped with school and pantry guidance.</h2>
             <p>Every answer will reflect the approved pilot—not assumptions.</p>
           </div>
         </section>
 
-        <section className="final-cta">
-          <div className="final-cta__orb" aria-hidden="true">SAH</div>
-          <div className="final-cta__content">
-            <span>A SMALL PILOT. A REAL START.</span>
-            <h2>Let’s put purpose<br />on the scoreboard.</h2>
-            <a href="#top">Back to the start <Arrow /></a>
+        <section className="final-cta contact" id="contact" aria-labelledby="contact-title">
+          <div className="final-cta__orb" aria-hidden="true">
+            <span>SAH</span>
+            <i />
+          </div>
+          <div className="final-cta__content" data-reveal>
+            <span>BUSINESS SPONSORSHIPS</span>
+            <h2 id="contact-title">Put purpose<br />on the scoreboard.</h2>
+            <p>
+              Interested in sponsoring a team achievement? Start with a simple
+              conversation—no technical setup and no commitment required.
+            </p>
+            <div className="contact__links">
+              <a href="tel:+16615938857">
+                <span>Call</span>
+                <strong>661-593-8857</strong>
+                <Arrow />
+              </a>
+              <a href="mailto:cadenmshin9@gmail.com?subject=Sports%20Against%20Hunger%20Sponsorship">
+                <span>Email</span>
+                <strong>cadenmshin9@gmail.com</strong>
+                <Arrow />
+              </a>
+            </div>
+            <a className="contact__back" href="#top">Back to the start <Arrow /></a>
           </div>
         </section>
       </main>
 
       <footer>
         <a className="wordmark wordmark--footer" href="#top">
-          <span className="wordmark__badge">S</span>
+          <Playmark />
           <span>Sports Against Hunger</span>
         </a>
         <p>Student-led · Community-guided · Built for measurable impact</p>
