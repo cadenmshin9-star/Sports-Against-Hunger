@@ -36,6 +36,15 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /href="tel:\+16615938857"/i);
   assert.match(html, /href="mailto:cadenmshin9@gmail\.com/i);
   assert.match(html, /Valencia High School/);
+  assert.match(html, /Three pillars\./);
+  assert.match(html, />Compete</);
+  assert.match(html, />Unite</);
+  assert.match(html, />Give Back</);
+  assert.match(html, /Preemptive Q&amp;A/);
+  assert.match(html, /Does Sports Against Hunger handle money\?/);
+  assert.match(html, /How are meals calculated\?/);
+  assert.doesNotMatch(html, /Why would businesses be interested\?/);
+  assert.doesNotMatch(html, /How does money get divided/i);
   assert.doesNotMatch(html, /Valencia, California/);
 });
 
@@ -52,8 +61,14 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /Partner reveal coming soon/);
   assert.match(page, /Goal announced after pantry approval/);
   assert.match(page, /Illustrative only\./);
+  assert.match(page, /Sports<\/strong>\s*<strong>Against<\/strong>\s*<strong>Hunger/);
+  assert.match(page, /className="hero-visual__canvas"/);
+  assert.match(page, /Dignity first/);
+  assert.match(page, /Pantry-led impact/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /\[data-reveal\]\.is-visible/);
+  assert.match(css, /\.valencia-crest/);
+  assert.match(css, /\.hero-visual__canvas/);
   assert.match(layout, /images: \[\{ url: socialImage, width: 1200, height: 630 \}\]/);
 
   await access(new URL("../public/og.png", import.meta.url));

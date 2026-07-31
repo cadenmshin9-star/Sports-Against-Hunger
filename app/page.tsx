@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const navItems = [
-  ["Mission", "#mission"],
+  ["About", "#about"],
   ["Impact", "#impact"],
   ["Playbook", "#playbook"],
   ["Partners", "#partners"],
@@ -14,6 +14,47 @@ const impactStats = [
   { value: "0", label: "verified meals", note: "Tracker activates with the pilot" },
   { value: "0", label: "games tracked", note: "Official results only" },
   { value: "0", label: "founding sponsors", note: "Partner reveal coming soon" },
+];
+
+const pillars = [
+  {
+    number: "01",
+    title: "Compete",
+    body: "Inspire excellence in athletics and turn game-day effort into shared purpose.",
+  },
+  {
+    number: "02",
+    title: "Unite",
+    body: "Connect students, families, local businesses, and community partners.",
+  },
+  {
+    number: "03",
+    title: "Give Back",
+    body: "Transform school spirit into practical, verified support for local families.",
+  },
+];
+
+const incentives = [
+  {
+    label: "School",
+    title: "Stronger game days",
+    body: "More school spirit, student ownership, and positive local-business relationships.",
+  },
+  {
+    label: "Students & teams",
+    title: "Real leadership reps",
+    body: "Meaningful roles in events, storytelling, outreach, and impact reporting.",
+  },
+  {
+    label: "Sponsors",
+    title: "Visible local purpose",
+    body: "Game-day recognition, community goodwill, and a clear report of verified impact.",
+  },
+  {
+    label: "Food partner",
+    title: "Support that fits",
+    body: "Direct, pantry-led contributions based on what families actually need.",
+  },
 ];
 
 const playbook = [
@@ -34,6 +75,47 @@ const playbook = [
   },
 ];
 
+const ethics = [
+  {
+    number: "01",
+    title: "Dignity first",
+    body: "Families are never turned into marketing material. Privacy and respect lead every story.",
+  },
+  {
+    number: "02",
+    title: "Pantry-led impact",
+    body: "The food partner decides what support is useful and how meal impact is calculated.",
+  },
+  {
+    number: "03",
+    title: "Fair, safe participation",
+    body: "Students get meaningful leadership with adult oversight, clear boundaries, and no pay-to-play pressure.",
+  },
+  {
+    number: "04",
+    title: "Accountable partners",
+    body: "Sponsors are screened, commitments are capped, and confirmed results are reported honestly.",
+  },
+];
+
+const questions = [
+  {
+    question: "Does Sports Against Hunger handle money?",
+    answer:
+      "No. The program is designed as a closed financial flow: sponsor support moves directly to the approved food partner. Students coordinate the campaign and its reporting, not the funds.",
+  },
+  {
+    question: "What are Sports Against Hunger’s ethics?",
+    answer:
+      "Dignity, pantry leadership, fair participation, student safety, responsible sponsors, and honest reporting. Families are never used as promotional props, and unverified impact is never published.",
+  },
+  {
+    question: "How are meals calculated?",
+    answer:
+      "The approved food partner sets the official dollar-to-meal calculation. Sports Against Hunger publishes that method with the verified results once the pilot is active.",
+  },
+];
+
 function Arrow() {
   return <span aria-hidden="true">↗</span>;
 }
@@ -44,6 +126,177 @@ function Playmark() {
       <span>SAH</span>
       <i />
     </span>
+  );
+}
+
+function HeroFieldCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const context = canvas.getContext("2d");
+    if (!context) return;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const pointer = { x: -1000, y: -1000, active: false };
+    let width = 0;
+    let height = 0;
+    let frame = 0;
+    let particles: Array<{
+      x: number;
+      y: number;
+      tx: number;
+      ty: number;
+      size: number;
+      phase: number;
+      accent: boolean;
+    }> = [];
+
+    const createParticles = () => {
+      const next = [];
+      const count = Math.max(120, Math.min(280, Math.floor(width / 2.2)));
+      const centerX = width * 0.54;
+      const centerY = height * 0.52;
+      const ballWidth = width * 0.58;
+      const ballHeight = height * 0.26;
+
+      for (let index = 0; index < count; index += 1) {
+        const progress = (index / count) * Math.PI * 2;
+        const radiusNoise = 0.82 + Math.random() * 0.22;
+        const tx =
+          centerX + Math.cos(progress) * ballWidth * 0.5 * radiusNoise;
+        const ty =
+          centerY + Math.sin(progress) * ballHeight * 0.5 * radiusNoise;
+        next.push({
+          x: tx + (Math.random() - 0.5) * 80,
+          y: ty + (Math.random() - 0.5) * 80,
+          tx,
+          ty,
+          size: 0.8 + Math.random() * 1.8,
+          phase: Math.random() * Math.PI * 2,
+          accent: index % 13 === 0,
+        });
+      }
+
+      for (let index = 0; index < 54; index += 1) {
+        const lane = index % 6;
+        const column = Math.floor(index / 6);
+        const tx = centerX - ballWidth * 0.12 + column * (ballWidth * 0.03);
+        const ty = centerY - ballHeight * 0.15 + lane * (ballHeight * 0.06);
+        next.push({
+          x: tx,
+          y: ty,
+          tx,
+          ty,
+          size: 1.25,
+          phase: index * 0.31,
+          accent: lane === 2 || lane === 3,
+        });
+      }
+
+      particles = next;
+    };
+
+    const resize = () => {
+      const bounds = canvas.getBoundingClientRect();
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      width = bounds.width;
+      height = bounds.height;
+      canvas.width = Math.floor(width * ratio);
+      canvas.height = Math.floor(height * ratio);
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      createParticles();
+    };
+
+    const render = (time = 0) => {
+      context.clearRect(0, 0, width, height);
+      const centerX = width * 0.54;
+      const centerY = height * 0.52;
+
+      context.save();
+      context.strokeStyle = "rgba(255,255,255,.08)";
+      context.lineWidth = 1;
+      for (let line = -2; line <= 2; line += 1) {
+        context.beginPath();
+        context.moveTo(0, centerY + line * 54);
+        context.lineTo(width, centerY + line * 54 - width * 0.12);
+        context.stroke();
+      }
+      context.restore();
+
+      particles.forEach((particle) => {
+        const drift = prefersReducedMotion ? 0 : Math.sin(time * 0.0014 + particle.phase) * 3;
+        const targetX = particle.tx + drift;
+        const targetY = particle.ty + drift * 0.45;
+        particle.x += (targetX - particle.x) * 0.045;
+        particle.y += (targetY - particle.y) * 0.045;
+
+        const dx = particle.x - pointer.x;
+        const dy = particle.y - pointer.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (pointer.active && distance < 95 && distance > 0) {
+          const force = (95 - distance) / 95;
+          particle.x += (dx / distance) * force * 8;
+          particle.y += (dy / distance) * force * 8;
+        }
+
+        context.beginPath();
+        context.fillStyle = particle.accent
+          ? "rgba(255,90,31,.95)"
+          : distance < 95 && pointer.active
+            ? "rgba(223,255,69,.95)"
+            : "rgba(255,255,255,.72)";
+        context.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        context.fill();
+      });
+
+      context.beginPath();
+      context.arc(centerX, centerY, 7, 0, Math.PI * 2);
+      context.strokeStyle = "rgba(223,255,69,.85)";
+      context.lineWidth = 1.5;
+      context.stroke();
+
+      if (!prefersReducedMotion) {
+        frame = window.requestAnimationFrame(render);
+      }
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      const bounds = canvas.getBoundingClientRect();
+      pointer.x = event.clientX - bounds.left;
+      pointer.y = event.clientY - bounds.top;
+      pointer.active = true;
+    };
+    const onPointerLeave = () => {
+      pointer.active = false;
+    };
+
+    const observer = new ResizeObserver(resize);
+    observer.observe(canvas);
+    canvas.addEventListener("pointermove", onPointerMove);
+    canvas.addEventListener("pointerleave", onPointerLeave);
+    resize();
+    render();
+
+    return () => {
+      observer.disconnect();
+      canvas.removeEventListener("pointermove", onPointerMove);
+      canvas.removeEventListener("pointerleave", onPointerLeave);
+      window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="hero-visual__canvas"
+      aria-label="Interactive particle football representing a team achievement"
+      role="img"
+    />
   );
 }
 
@@ -98,8 +351,11 @@ export default function Home() {
           <i className="loader__yard loader__yard--two" />
           <i className="loader__yard loader__yard--three" />
           <span className="loader__ball" />
-          <div className="loader__mark">
-            <Playmark />
+          <div className="loader__identity" aria-label="Sports Against Hunger">
+            <strong>Sports</strong>
+            <strong>Against</strong>
+            <strong>Hunger</strong>
+            <i />
           </div>
         </div>
         <p>Turning plays into meals</p>
@@ -130,50 +386,56 @@ export default function Home() {
       </header>
 
       <main id="top">
-        <section className="hero" aria-labelledby="hero-title">
-          <div className="hero__pattern hero__pattern--left" aria-hidden="true" />
-          <div className="hero__pattern hero__pattern--right" aria-hidden="true" />
-          <div className="hero__eyebrow">
-            <span className="status-dot" />
-            Student-led · School-powered · Community-backed
+        <section className="hero hero-tech" aria-labelledby="hero-title">
+          <div className="hero-tech__grid" aria-hidden="true" />
+          <div className="hero-tech__frame" aria-hidden="true">
+            <i /><i /><i /><i />
           </div>
 
-          <h1 id="hero-title">
-            <span className="hero__line">Every play can</span>
-            <span className="hero__accent">feed a family.</span>
-          </h1>
-
-          <div className="hero__lower">
+          <div className="hero-tech__copy">
+            <div className="hero__eyebrow">
+              <span className="status-dot" />
+              Student-led / school-powered / community-backed
+            </div>
+            <span className="hero-tech__kicker">LOCAL IMPACT NETWORK / 001</span>
+            <h1 id="hero-title">
+              <span>Every</span>
+              <span>play can</span>
+              <span>feed a</span>
+              <span className="hero-tech__accent">family.</span>
+            </h1>
             <p className="hero__intro">
-              We connect high school athletics, local businesses, and food
-              pantries to turn verified team achievements into dependable meals.
+              High school athletics, local businesses, and food partners—moving
+              together to turn verified achievements into dependable support.
             </p>
             <div className="hero__actions">
               <a className="hero-sponsor" href="#contact">
                 Sponsor a play <Arrow />
               </a>
-              <a className="circle-link" href="#mission" aria-label="Explore our mission">
-                <span>Explore</span>
-                <Arrow />
+              <a className="hero-secondary" href="#about">
+                See how it works <span aria-hidden="true">↓</span>
               </a>
             </div>
           </div>
 
-          <div className="hero-field" aria-hidden="true">
-            <div className="hero-field__line hero-field__line--one" />
-            <div className="hero-field__line hero-field__line--two" />
-            <div className="hero-field__line hero-field__line--three" />
-            <div className="hero-field__center">
-              <span>1</span>
-              <small>team achievement</small>
+          <div className="hero-visual">
+            <HeroFieldCanvas />
+            <div className="hero-visual__topline">
+              <span>INTERACTIVE PLAY MAP</span>
+              <strong>LIVE MOTION</strong>
             </div>
-            <div className="hero-field__result">
-              <span>=</span>
-              <strong>REAL<br />MEALS</strong>
+            <div className="hero-visual__score">
+              <span>01</span>
+              <p><strong>TEAM ACHIEVEMENT</strong><small>UNLOCKS VERIFIED SUPPORT</small></p>
             </div>
-            <div className="ball ball--one" />
-            <div className="ball ball--two" />
-            <div className="ball ball--three" />
+            <div className="hero-visual__prompt">MOVE YOUR CURSOR / SHIFT THE PLAY</div>
+          </div>
+
+          <div className="hero-tech__status" aria-hidden="true">
+            <span>PILOT STATUS</span>
+            <strong>PRE-SEASON</strong>
+            <i />
+            <span>SCROLL TO EXPLORE</span>
           </div>
         </section>
 
@@ -188,44 +450,52 @@ export default function Home() {
           </div>
         </div>
 
-        <section className="mission section-shell" id="mission">
-          <div className="section-index">01 / Mission</div>
+        <section className="mission section-shell" id="about">
+          <div className="section-index">01 / About</div>
           <div className="mission__statement" data-reveal>
             <p>Our north star</p>
             <h2>
-              Hunger is local.
+              Three pillars.
               <br />
-              So is the <em>power to help.</em>
+              One <em>shared win.</em>
             </h2>
           </div>
           <div className="mission__story" data-reveal>
             <p className="mission__lead">
-              Sports Against Hunger is a student-led network designed to make
-              generosity visible, measurable, and part of the game-day ritual.
+              Sports Against Hunger brings together school athletics, local
+              businesses, and food partners to support families facing food insecurity.
             </p>
             <p>
-              Schools bring the energy. Businesses make capped commitments.
-              Food pantries define what support is useful and verify every
-              contribution. Students coordinate the story—not the money.
+              The model gives students meaningful leadership, strengthens school
+              spirit, and creates a program that can grow responsibly. Students
+              coordinate the story—not the money.
             </p>
           </div>
 
-          <div className="role-grid" data-reveal>
-            <article>
-              <span>THE SCHOOL</span>
-              <strong>Creates the moment</strong>
-              <p>Teams, verified results, school spirit, and trusted adult oversight.</p>
-            </article>
-            <article>
-              <span>THE SPONSOR</span>
-              <strong>Backs the promise</strong>
-              <p>A clear contribution, a firm seasonal cap, and community visibility.</p>
-            </article>
-            <article>
-              <span>THE PANTRY</span>
-              <strong>Guides the impact</strong>
-              <p>Directly receives support and determines how meals are counted.</p>
-            </article>
+          <div className="pillar-grid" data-reveal>
+            {pillars.map((pillar) => (
+              <article key={pillar.number}>
+                <span>{pillar.number}</span>
+                <h3>{pillar.title}</h3>
+                <p>{pillar.body}</p>
+              </article>
+            ))}
+          </div>
+
+          <div className="incentives" data-reveal>
+            <div className="incentives__heading">
+              <span>EVERY PARTY HAS A REASON TO PLAY</span>
+              <h3>Aligned incentives.<br />Shared accountability.</h3>
+            </div>
+            <div className="incentive-grid">
+              {incentives.map((item) => (
+                <article key={item.label}>
+                  <span>{item.label}</span>
+                  <strong>{item.title}</strong>
+                  <p>{item.body}</p>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -295,14 +565,14 @@ export default function Home() {
             <div className="example-card__label">A SAMPLE PLAY</div>
             <div className="example-card__equation">
               <span>1</span>
-              <small>touchdown</small>
+              <small>verified achievement</small>
               <i>×</i>
-              <span>100</span>
-              <small>meals unlocked</small>
+              <span className="example-card__variable">—</span>
+              <small>approved sponsor rate</small>
             </div>
             <p>
-              Illustrative only. The food-pantry partner sets the official
-              meal calculation, and each sponsor sets a maximum commitment.
+              Illustrative only. The food partner sets the official meal
+              calculation, and each sponsor sets a maximum commitment.
             </p>
           </div>
         </section>
@@ -336,6 +606,10 @@ export default function Home() {
             </div>
             <div className="partner-slots" aria-label="Partner spaces" data-reveal>
               <div className="partner-slots__school">
+                <div className="valencia-lockup">
+                  <span className="valencia-crest" aria-hidden="true"><i>V</i></span>
+                  <span className="valencia-word">VALENCIA <b>VIKINGS</b></span>
+                </div>
                 <span>PARTNERED SCHOOL</span>
                 <strong>Valencia High School</strong>
                 <small>Student and athletics partner</small>
@@ -346,28 +620,51 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="trust section-shell" id="transparency">
-          <div className="section-index">06 / Transparency</div>
+        <section className="trust section-shell" id="ethics">
+          <div className="section-index">06 / Ethics & transparency</div>
           <div className="trust__header" data-reveal>
-            <h2>Proof over promises.</h2>
+            <h2>Do good.<br />Show the work.</h2>
             <p>
-              This section will publish the records that make the program
-              accountable as soon as the pilot is active.
+              The system protects dignity first, lets food partners lead the
+              impact, and publishes only what can be verified.
             </p>
           </div>
-          <div className="trust-grid" data-reveal>
-            <article><span>01</span><strong>Verified results</strong><small>Awaiting pilot launch</small></article>
-            <article><span>02</span><strong>Partner receipts</strong><small>Awaiting pilot launch</small></article>
-            <article><span>03</span><strong>Impact reports</strong><small>Awaiting pilot launch</small></article>
+          <div className="ethics-grid" data-reveal>
+            {ethics.map((item) => (
+              <article key={item.number}>
+                <span>{item.number}</span>
+                <strong>{item.title}</strong>
+                <p>{item.body}</p>
+              </article>
+            ))}
+          </div>
+          <div className="trust-ledger" data-reveal>
+            <span>WHEN THE PILOT GOES LIVE</span>
+            <p>Verified results</p>
+            <p>Partner receipts</p>
+            <p>Impact reports</p>
+            <strong>COMING SOON</strong>
           </div>
         </section>
 
         <section className="faq section-shell" id="faq">
-          <div className="section-index">07 / FAQ</div>
-          <div className="faq__empty" data-reveal>
-            <span>QUESTIONS, ANSWERED CLEARLY</span>
-            <h2>The FAQ is being shaped with school and pantry guidance.</h2>
-            <p>Every answer will reflect the approved pilot—not assumptions.</p>
+          <div className="section-index">07 / Preemptive Q&amp;A</div>
+          <div className="faq__heading" data-reveal>
+            <span>THE QUESTIONS WORTH ASKING EARLY</span>
+            <h2>Preemptive Q&amp;A.</h2>
+            <p>Clear answers now. Verified details as the pilot takes shape.</p>
+          </div>
+          <div className="faq-list" data-reveal>
+            {questions.map((item, index) => (
+              <details key={item.question}>
+                <summary>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <strong>{item.question}</strong>
+                  <i aria-hidden="true">+</i>
+                </summary>
+                <p>{item.answer}</p>
+              </details>
+            ))}
           </div>
         </section>
 
