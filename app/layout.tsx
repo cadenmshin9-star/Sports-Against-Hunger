@@ -11,29 +11,40 @@ export async function generateMetadata(): Promise<Metadata> {
   const protocol =
     requestHeaders.get("x-forwarded-proto") ??
     (host.startsWith("localhost") ? "http" : "https");
+  const siteUrl = `${protocol}://${host}`;
   const socialImage = `${protocol}://${host}/og.png`;
 
   return {
-    title: "Sports Against Hunger | Play With Purpose",
+    title: "Sports Against Hunger | Game-Day Hunger Relief",
     description:
-      "A student-led pilot turning verified high school athletic achievements into dependable meals for local families.",
+      "A student-led pilot connecting high school athletics, local business sponsors, and food partners to turn verified game-day achievements into support for local families.",
     keywords: [
       "Sports Against Hunger",
-      "student-led nonprofit",
-      "food insecurity",
+      "student-led community service",
+      "game-day giving",
+      "local hunger relief",
+      "food pantry partnerships",
+      "business sponsorships",
       "high school athletics",
-      "community impact",
+      "local food systems",
+      "Valencia High School",
     ],
+    alternates: { canonical: siteUrl },
+    robots: { index: true, follow: true },
     openGraph: {
-      title: "Sports Against Hunger",
-      description: "Every play can feed a family.",
+      title: "Sports Against Hunger | Game-Day Hunger Relief",
+      description:
+        "High school athletics, local sponsors, and food partners moving together for local families.",
       type: "website",
+      url: siteUrl,
+      siteName: "Sports Against Hunger",
       images: [{ url: socialImage, width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Sports Against Hunger",
-      description: "Every play can feed a family.",
+      title: "Sports Against Hunger | Game-Day Hunger Relief",
+      description:
+        "Every play can feed a family through verified, community-led support.",
       images: [socialImage],
     },
   };

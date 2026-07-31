@@ -29,9 +29,9 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>Sports Against Hunger \| Play With Purpose<\/title>/i);
+  assert.match(html, /<title>Sports Against Hunger \| Game-Day Hunger Relief<\/title>/i);
   assert.match(html, /Every play can/);
-  assert.match(html, /feed a family\./i);
+  assert.match(html, />feed a<\/span><span[^>]*>family\.<\/span>/i);
   assert.match(html, /href="#contact">Become a sponsor/i);
   assert.match(html, /href="tel:\+16615938857"/i);
   assert.match(html, /href="mailto:cadenmshin9@gmail\.com/i);
@@ -74,11 +74,13 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /label: "FOOTBALL"/);
   assert.match(page, /label: "BASKETBALL"/);
   assert.match(page, /label: "SOCCER BALL"/);
-  assert.match(page, /label: "BASEBALL"/);
-  assert.match(page, /label: "TENNIS BALL"/);
+  assert.match(page, /label: "BASEBALL GLOVE"/);
+  assert.match(page, /label: "TENNIS RACKET"/);
   assert.match(page, /label: "RUNNING SHOE"/);
   assert.match(page, /fizzleStart/);
   assert.match(page, /drawSolidSport/);
+  assert.match(page, /sports-sprite\.png/);
+  assert.match(page, /role="button"/);
   assert.match(page, /lensRadius/);
   assert.match(page, /className="hero-transition"/);
   assert.match(page, /meal-sticker--plate/);
@@ -86,14 +88,17 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /className="loader__tiles"/);
   assert.match(page, /setLoaderProgress/);
   assert.match(page, /className="ethics-answer__grid"/);
+  assert.match(page, /className="faq-answer-shell"/);
   assert.match(page, /Dignity first/);
   assert.match(page, /Pantry-led impact/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /\[data-reveal\]\.is-visible/);
   assert.match(css, /\.valencia-crest/);
   assert.match(css, /\.hero-visual__canvas/);
-  assert.match(css, /\.sport-cursor/);
+  assert.doesNotMatch(css, /\.sport-cursor/);
+  assert.match(css, /\.faq-item\.is-open \.faq-answer-shell/);
   assert.match(css, /\.meal-sticker--plate/);
+  assert.match(css, /\.meal-sticker--bread/);
   assert.match(css, /\.hero-transition/);
   assert.match(css, /data-reveal="swoosh-left"/);
   assert.match(css, /\.loader__tiles/);
@@ -102,4 +107,5 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(layout, /images: \[\{ url: socialImage, width: 1200, height: 630 \}\]/);
 
   await access(new URL("../public/og.png", import.meta.url));
+  await access(new URL("../public/sports-sprite.png", import.meta.url));
 });

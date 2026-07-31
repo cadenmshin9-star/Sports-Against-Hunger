@@ -7,6 +7,7 @@ const navItems = [
   ["Impact", "#impact"],
   ["Playbook", "#playbook"],
   ["Partners", "#partners"],
+  ["Q & A", "#faq"],
   ["Contact", "#contact"],
 ];
 
@@ -125,8 +126,8 @@ const sportObjects = [
   { label: "FOOTBALL", primary: "#ffd56a", accent: "#ff6a2a" },
   { label: "BASKETBALL", primary: "#ff8a31", accent: "#fff0b2" },
   { label: "SOCCER BALL", primary: "#f7f7e8", accent: "#b8ff46" },
-  { label: "BASEBALL", primary: "#fff4d5", accent: "#ff5a3d" },
-  { label: "TENNIS BALL", primary: "#dfff45", accent: "#fffbe6" },
+  { label: "BASEBALL GLOVE", primary: "#f2ad58", accent: "#fff4d5" },
+  { label: "TENNIS RACKET", primary: "#dfff45", accent: "#72e6ff" },
   { label: "RUNNING SHOE", primary: "#72e6ff", accent: "#ffd56a" },
 ] as const;
 
@@ -193,7 +194,9 @@ function rotatePoint(
 }
 
 function makeSportShape(kind: number, count: number): SportPoint[] {
-  const detailCount = Math.floor(count * (kind === 2 ? 0.28 : 0.18));
+  const detailCount = Math.floor(
+    count * (kind === 2 ? 0.28 : kind === 3 ? 0.24 : kind === 4 ? 0.34 : 0.18),
+  );
   const surfaceCount = count - detailCount;
   const points: SportPoint[] = [];
 
@@ -215,6 +218,92 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
           -0.42,
         ),
       );
+    } else if (kind === 3) {
+      const gloveProgress = index / Math.max(1, surfaceCount - 1);
+
+      if (gloveProgress < 0.63) {
+        const angle = seeded(index, 41) * Math.PI * 2;
+        const radius = Math.sqrt(seeded(index, 42));
+        points.push(
+          rotatePoint(
+            {
+              x: -0.08 + Math.cos(angle) * radius * 0.83,
+              y: 0.24 + Math.sin(angle) * radius * 0.78,
+              z: (seeded(index, 43) - 0.5) * 0.24,
+              emphasis: index % 23 === 0 ? 0.42 : 0,
+            },
+            -0.03,
+            0.08,
+            -0.16,
+          ),
+        );
+      } else {
+        const fingerProgress = (gloveProgress - 0.63) / 0.37;
+        const finger = Math.min(4, Math.floor(fingerProgress * 5));
+        const along = (fingerProgress * 5) % 1;
+        const fingerLengths = [0.66, 0.96, 1.14, 1.04, 0.79];
+        const fingerX = -0.7 + finger * 0.34;
+        const thumbSweep = finger === 0 ? along * -0.3 : 0;
+        points.push(
+          rotatePoint(
+            {
+              x: fingerX + thumbSweep + (seeded(index, 44) - 0.5) * 0.25,
+              y:
+                0.16 -
+                along * fingerLengths[finger] +
+                (seeded(index, 45) - 0.5) * 0.12,
+              z: (seeded(index, 46) - 0.5) * 0.2,
+              emphasis: index % 15 === 0 ? 0.5 : 0,
+            },
+            -0.03,
+            0.08,
+            -0.16,
+          ),
+        );
+      }
+    } else if (kind === 4) {
+      const racketProgress = index / Math.max(1, surfaceCount - 1);
+      let racketPoint: SportPoint;
+
+      if (racketProgress < 0.34) {
+        const angle = (racketProgress / 0.34) * Math.PI * 2;
+        const edgeNoise = (seeded(index, 47) - 0.5) * 0.035;
+        racketPoint = {
+          x: Math.cos(angle) * (0.73 + edgeNoise),
+          y: -0.42 + Math.sin(angle) * (0.92 + edgeNoise),
+          z: (seeded(index, 48) - 0.5) * 0.11,
+          emphasis: 0.75,
+        };
+      } else if (racketProgress < 0.77) {
+        const stringProgress = (racketProgress - 0.34) / 0.43;
+        const vertical = index % 2 === 0;
+        const line = Math.floor(stringProgress * 18) % 9;
+        const along = (stringProgress * 18) % 1;
+        const offset = -0.58 + line * 0.145;
+        racketPoint = vertical
+          ? {
+              x: offset,
+              y: -1.2 + along * 1.56,
+              z: 0.04,
+              emphasis: 0.35,
+            }
+          : {
+              x: -0.65 + along * 1.3,
+              y: -1.14 + line * 0.17,
+              z: 0.04,
+              emphasis: 0.35,
+            };
+      } else {
+        const handleProgress = (racketProgress - 0.77) / 0.23;
+        racketPoint = {
+          x: (seeded(index, 49) - 0.5) * 0.18,
+          y: 0.38 + handleProgress * 1.35,
+          z: (seeded(index, 50) - 0.5) * 0.13,
+          emphasis: handleProgress > 0.72 ? 0.8 : 0.45,
+        };
+      }
+
+      points.push(rotatePoint(racketPoint, -0.03, 0.04, -0.38));
     } else if (kind === 5) {
       const x = -1.28 + seeded(index, 4) * 2.58;
       const normalizedX = (x + 1.28) / 2.58;
@@ -328,17 +417,39 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
         z: Math.sqrt(Math.max(0.08, 1 - x * x - y * y)),
         emphasis: 1,
       });
-    } else if (kind === 3 || kind === 4) {
-      const side = index < detailCount / 2 ? -1 : 1;
-      const angle = progress * Math.PI * 4;
-      const x = Math.cos(angle) * 0.72;
-      const y = Math.sin(angle) * 0.58 + side * 0.19 * Math.cos(angle * 2);
-      points.push({
-        x,
-        y,
-        z: Math.sqrt(Math.max(0.08, 1 - x * x - y * y)),
-        emphasis: 1,
-      });
+    } else if (kind === 3) {
+      const ballPoint = spherePoint(index, detailCount, 0.31);
+      points.push(
+        rotatePoint(
+          {
+            x: ballPoint.x + 0.12,
+            y: ballPoint.y + 0.25,
+            z: ballPoint.z + 0.18,
+            emphasis: 1,
+          },
+          -0.03,
+          0.08,
+          -0.16,
+        ),
+      );
+    } else if (kind === 4) {
+      const isThroat = progress < 0.45;
+      const detailPoint = isThroat
+        ? {
+            x:
+              (progress < 0.225 ? -1 : 1) *
+              (0.08 + (progress % 0.225) * 2.25),
+            y: 0.44 + (progress % 0.225) * 2.2,
+            z: 0.08,
+            emphasis: 1,
+          }
+        : {
+            x: (seeded(index, 51) - 0.5) * 0.22,
+            y: 0.84 + ((progress - 0.45) / 0.55) * 0.88,
+            z: (seeded(index, 52) - 0.5) * 0.16,
+            emphasis: 1,
+          };
+      points.push(rotatePoint(detailPoint, -0.03, 0.04, -0.38));
     } else {
       const lace = Math.floor(progress * 6);
       const across = (progress * 6) % 1;
@@ -717,71 +828,6 @@ function drawSolidSport(
   context.restore();
 }
 
-function CustomCursor() {
-  const cursorRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const cursor = cursorRef.current;
-    if (!cursor || window.matchMedia("(pointer: coarse)").matches) return;
-
-    let targetX = -100;
-    let targetY = -100;
-    let ringX = -100;
-    let ringY = -100;
-    let frame = 0;
-
-    const render = () => {
-      ringX += (targetX - ringX) * 0.18;
-      ringY += (targetY - ringY) * 0.18;
-      cursor.style.setProperty("--cursor-x", `${targetX}px`);
-      cursor.style.setProperty("--cursor-y", `${targetY}px`);
-      cursor.style.setProperty("--ring-x", `${ringX}px`);
-      cursor.style.setProperty("--ring-y", `${ringY}px`);
-      frame = window.requestAnimationFrame(render);
-    };
-    const onMove = (event: PointerEvent) => {
-      targetX = event.clientX;
-      targetY = event.clientY;
-      cursor.classList.add("is-visible");
-    };
-    const onOver = (event: PointerEvent) => {
-      const target = event.target as HTMLElement;
-      const overLens = Boolean(target.closest(".hero-visual"));
-      cursor.classList.toggle("is-lens", overLens);
-      cursor.classList.toggle(
-        "is-hovering",
-        !overLens && Boolean(target.closest("a, button, summary")),
-      );
-    };
-    const onDown = () => cursor.classList.add("is-pressed");
-    const onUp = () => cursor.classList.remove("is-pressed");
-    const onLeave = () => cursor.classList.remove("is-visible");
-
-    window.addEventListener("pointermove", onMove, { passive: true });
-    window.addEventListener("pointerover", onOver, { passive: true });
-    window.addEventListener("pointerdown", onDown, { passive: true });
-    window.addEventListener("pointerup", onUp, { passive: true });
-    document.documentElement.addEventListener("mouseleave", onLeave);
-    frame = window.requestAnimationFrame(render);
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerover", onOver);
-      window.removeEventListener("pointerdown", onDown);
-      window.removeEventListener("pointerup", onUp);
-      document.documentElement.removeEventListener("mouseleave", onLeave);
-    };
-  }, []);
-
-  return (
-    <div ref={cursorRef} className="sport-cursor" aria-hidden="true">
-      <i />
-      <span />
-    </div>
-  );
-}
-
 function HeroFieldCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -791,6 +837,15 @@ function HeroFieldCanvas() {
 
     const context = canvas.getContext("2d");
     if (!context) return;
+
+    const spriteImage = new Image();
+    let spriteReady = false;
+    spriteImage.decoding = "async";
+    spriteImage.src = "/sports-sprite.png";
+    spriteImage.onload = () => {
+      spriteReady = true;
+      if (prefersReducedMotion) render(performance.now());
+    };
 
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -852,18 +907,19 @@ function HeroFieldCanvas() {
       transitionTimer = window.setTimeout(() => {
         applySport(nextSport);
         fizzleStart = -1;
-      }, 1050);
+      }, 1325);
     };
 
     const createParticles = () => {
-      const count = width < 540 ? 340 : Math.min(560, Math.floor(width * 0.82));
+      const count =
+        width < 540 ? 420 : Math.min(760, Math.floor(width * 1.02));
       const targets = makeSportShape(activeSport, count);
       particles = targets.map((target, index) => ({
         x: target.x + (seeded(index, 12) - 0.5) * 2.4,
         y: target.y + (seeded(index, 13) - 0.5) * 2.4,
         z: target.z + (seeded(index, 14) - 0.5) * 2.4,
         target,
-        size: 0.62 + seeded(index, 15) * 1.45,
+        size: 0.82 + seeded(index, 15) * 1.68,
         phase: seeded(index, 16) * Math.PI * 2,
       }));
       setSport(activeSport, true);
@@ -880,6 +936,48 @@ function HeroFieldCanvas() {
       createParticles();
     };
 
+    const drawSpriteSport = (
+      centerX: number,
+      centerY: number,
+      scale: number,
+      time: number,
+    ) => {
+      if (!spriteReady || !spriteImage.naturalWidth) {
+        drawSolidSport(context, activeSport, centerX, centerY, scale, time);
+        return;
+      }
+
+      const columns = 3;
+      const rows = 2;
+      const sourceWidth = spriteImage.naturalWidth / columns;
+      const sourceHeight = spriteImage.naturalHeight / rows;
+      const column = activeSport % columns;
+      const row = Math.floor(activeSport / columns);
+      const displayScales = [3.5, 2.85, 2.85, 3.05, 3.7, 3.35];
+      const yOffsets = [0, 0, 0, scale * 0.04, scale * 0.08, scale * 0.04];
+      const displaySize = scale * displayScales[activeSport];
+      const float = prefersReducedMotion
+        ? 0
+        : Math.sin(time * 0.0011) * scale * 0.018;
+
+      context.save();
+      context.globalAlpha = 0.98;
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = "high";
+      context.drawImage(
+        spriteImage,
+        column * sourceWidth,
+        row * sourceHeight,
+        sourceWidth,
+        sourceHeight,
+        centerX - displaySize / 2,
+        centerY - displaySize / 2 + yOffsets[activeSport] + float,
+        displaySize,
+        displaySize,
+      );
+      context.restore();
+    };
+
     const render = (time = 0) => {
       if (!canvasVisible || document.hidden) {
         frame = window.requestAnimationFrame(render);
@@ -890,16 +988,22 @@ function HeroFieldCanvas() {
       const centerY = height * 0.49;
       const scale =
         Math.min(width, height) *
-        (activeSport === 0 ? 0.25 : activeSport === 5 ? 0.225 : 0.235);
-      const morphEnergy = Math.max(0, 1 - (time - lastMorph) / 1800);
+        (activeSport === 0
+          ? 0.25
+          : activeSport === 4
+            ? 0.205
+            : activeSport === 5
+              ? 0.225
+              : 0.235);
+      const morphEnergy = Math.max(0, 1 - (time - lastMorph) / 2100);
       const fizzleProgress =
         fizzleStart < 0
           ? 0
-          : Math.min(1, Math.max(0, (time - fizzleStart) / 1050));
+          : Math.min(1, Math.max(0, (time - fizzleStart) / 1325));
       const revealProgress =
         revealStart < 0
           ? 1
-          : Math.min(1, Math.max(0, (time - revealStart) / 1550));
+          : Math.min(1, Math.max(0, (time - revealStart) / 1900));
       if (revealStart >= 0 && revealProgress >= 1) revealStart = -1;
       const palette = sportObjects[activeSport];
       const rotationY =
@@ -1028,14 +1132,7 @@ function HeroFieldCanvas() {
           lensRadius * 2,
           lensRadius * 2,
         );
-        drawSolidSport(
-          context,
-          activeSport,
-          centerX,
-          centerY,
-          scale,
-          time,
-        );
+        drawSpriteSport(centerX, centerY, scale, time);
         context.restore();
 
         const rim = context.createLinearGradient(
@@ -1087,6 +1184,25 @@ function HeroFieldCanvas() {
       if (prefersReducedMotion) render(performance.now());
     };
     const onPointerDown = () => setSport(activeSport + 1);
+    const onFocus = () => {
+      pointer.screenX = width * 0.54;
+      pointer.screenY = height * 0.49;
+      pointer.lensX = pointer.screenX;
+      pointer.lensY = pointer.screenY;
+      pointer.active = true;
+      if (prefersReducedMotion) render(performance.now());
+    };
+    const onBlur = () => {
+      pointer.active = false;
+      pointer.x = 0;
+      pointer.y = 0;
+      if (prefersReducedMotion) render(performance.now());
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      setSport(activeSport + 1);
+    };
 
     const observer = new ResizeObserver(resize);
     const visibilityObserver = new IntersectionObserver(
@@ -1100,11 +1216,14 @@ function HeroFieldCanvas() {
     canvas.addEventListener("pointermove", onPointerMove);
     canvas.addEventListener("pointerleave", onPointerLeave);
     canvas.addEventListener("pointerdown", onPointerDown);
+    canvas.addEventListener("focus", onFocus);
+    canvas.addEventListener("blur", onBlur);
+    canvas.addEventListener("keydown", onKeyDown);
     resize();
     render();
     const sportTimer = prefersReducedMotion
       ? 0
-      : window.setInterval(() => setSport(activeSport + 1), 8600);
+      : window.setInterval(() => setSport(activeSport + 1), 11200);
 
     return () => {
       observer.disconnect();
@@ -1112,6 +1231,10 @@ function HeroFieldCanvas() {
       canvas.removeEventListener("pointermove", onPointerMove);
       canvas.removeEventListener("pointerleave", onPointerLeave);
       canvas.removeEventListener("pointerdown", onPointerDown);
+      canvas.removeEventListener("focus", onFocus);
+      canvas.removeEventListener("blur", onBlur);
+      canvas.removeEventListener("keydown", onKeyDown);
+      spriteImage.onload = null;
       if (sportTimer) window.clearInterval(sportTimer);
       if (transitionTimer) window.clearTimeout(transitionTimer);
       window.cancelAnimationFrame(frame);
@@ -1122,8 +1245,10 @@ function HeroFieldCanvas() {
     <canvas
       ref={canvasRef}
       className="hero-visual__canvas"
-      aria-label="Interactive 3D particle sports object. Click to cycle through six sports."
-      role="img"
+      aria-describedby="hero-art-instructions"
+      aria-label="Interactive particle-to-real-life sports artwork"
+      role="button"
+      tabIndex={0}
     />
   );
 }
@@ -1133,6 +1258,7 @@ export default function Home() {
   const [loaderProgress, setLoaderProgress] = useState(0);
   const [progress, setProgress] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [openQuestion, setOpenQuestion] = useState<number | null>(null);
 
   useEffect(() => {
     let loaderFrame = 0;
@@ -1183,7 +1309,6 @@ export default function Home() {
 
   return (
     <>
-      <CustomCursor />
       <div
         className={`loader ${loading ? "" : "loader--hidden"}`}
         aria-hidden={!loading}
@@ -1289,6 +1414,10 @@ export default function Home() {
 
           <div className="hero-visual">
             <HeroFieldCanvas />
+            <p className="sr-only" id="hero-art-instructions">
+              Move over the artwork to reveal its realistic layer. Click, or
+              press Enter or Space, to advance to the next object.
+            </p>
           </div>
 
           <div className="hero-tech__status" aria-hidden="true">
@@ -1423,6 +1552,9 @@ export default function Home() {
         </section>
 
         <section className="playbook section-shell" id="playbook">
+          <div className="meal-sticker meal-sticker--bread" aria-hidden="true">
+            <span /><b /><b /><b />
+          </div>
           <div className="section-index">03 / The playbook</div>
           <div className="playbook__heading" data-reveal="swoosh-left">
             <h2>Simple enough to explain.<br />Strong enough to trust.</h2>
@@ -1460,6 +1592,9 @@ export default function Home() {
         </section>
 
         <section className="dashboard section-shell" id="dashboard">
+          <div className="meal-sticker meal-sticker--utensils" aria-hidden="true">
+            <span /><b /><b /><b />
+          </div>
           <div className="section-index">04 / Games & achievements</div>
           <div className="placeholder" data-reveal>
             <span className="placeholder__tag">SCHEDULE LOCKER</span>
@@ -1506,6 +1641,9 @@ export default function Home() {
         </section>
 
         <section className="faq section-shell" id="faq">
+          <div className="meal-sticker meal-sticker--grain" aria-hidden="true">
+            <span /><b /><b /><b />
+          </div>
           <div className="section-index">06 / Preemptive Q&amp;A</div>
           <div className="faq__heading" data-reveal>
             <span>THE QUESTIONS WORTH ASKING EARLY</span>
@@ -1513,38 +1651,69 @@ export default function Home() {
             <p>Clear answers now. Verified details as the pilot takes shape.</p>
           </div>
           <div className="faq-list" data-reveal>
-            {questions.map((item, index) => (
-              <details key={item.question}>
-                <summary>
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  <strong>{item.question}</strong>
-                  <i aria-hidden="true">+</i>
-                </summary>
-                {item.kind === "ethics" ? (
-                  <div className="ethics-answer">
-                    <p>{item.answer}</p>
-                    <div className="ethics-answer__grid">
-                      {ethics.map((principle) => (
-                        <article key={principle.number}>
-                          <span>{principle.number}</span>
-                          <strong>{principle.title}</strong>
-                          <p>{principle.body}</p>
-                        </article>
-                      ))}
-                    </div>
-                    <div className="ethics-answer__ledger">
-                      <span>WHEN THE PILOT GOES LIVE</span>
-                      <p>Verified results</p>
-                      <p>Partner receipts</p>
-                      <p>Impact reports</p>
-                      <strong>COMING SOON</strong>
+            {questions.map((item, index) => {
+              const isOpen = openQuestion === index;
+              const buttonId = `faq-button-${index + 1}`;
+              const panelId = `faq-panel-${index + 1}`;
+
+              return (
+                <article
+                  className={`faq-item ${isOpen ? "is-open" : ""}`}
+                  key={item.question}
+                >
+                  <h3>
+                    <button
+                      aria-controls={panelId}
+                      aria-expanded={isOpen}
+                      id={buttonId}
+                      onClick={() =>
+                        setOpenQuestion((current) =>
+                          current === index ? null : index,
+                        )
+                      }
+                      type="button"
+                    >
+                      <span>{String(index + 1).padStart(2, "0")}</span>
+                      <strong>{item.question}</strong>
+                      <i aria-hidden="true">+</i>
+                    </button>
+                  </h3>
+                  <div
+                    aria-hidden={!isOpen}
+                    aria-labelledby={buttonId}
+                    className="faq-answer-shell"
+                    id={panelId}
+                    role="region"
+                  >
+                    <div className="faq-answer-inner">
+                      {item.kind === "ethics" ? (
+                        <div className="ethics-answer">
+                          <p>{item.answer}</p>
+                          <div className="ethics-answer__grid">
+                            {ethics.map((principle) => (
+                              <article key={principle.number}>
+                                <span>{principle.number}</span>
+                                <strong>{principle.title}</strong>
+                                <p>{principle.body}</p>
+                              </article>
+                            ))}
+                          </div>
+                          <div className="ethics-answer__ledger">
+                            <span>WHEN THE PILOT GOES LIVE</span>
+                            <p>Verified results</p>
+                            <p>Partner receipts</p>
+                            <p>Impact reports</p>
+                            <strong>COMING SOON</strong>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="faq-answer">{item.answer}</p>
+                      )}
                     </div>
                   </div>
-                ) : (
-                  <p>{item.answer}</p>
-                )}
-              </details>
-            ))}
+                </article>
+              );
+            })}
           </div>
         </section>
 
