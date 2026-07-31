@@ -88,6 +88,8 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /bitangentX/);
   assert.match(page, /panelProgress/);
   assert.match(page, /ventProgress/);
+  assert.match(page, /const shoeWidth/);
+  assert.match(page, /const rail = index % 4/);
   assert.doesNotMatch(page, /sports-sprite\.png/);
   assert.doesNotMatch(page, /publicSportModels/);
   assert.doesNotMatch(page, /sketchfab\.com\/models/);
@@ -103,10 +105,13 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /kind="clipboard"/);
   assert.match(page, /kind="receipt"/);
   assert.match(page, /kind="calendar"/);
-  assert.match(page, /kind="handshake"/);
+  assert.doesNotMatch(page, /kind="handshake"/);
   assert.match(page, /kind="speech"/);
+  assert.match(page, /kind="meal"/);
+  assert.match(page, /kind="whistle"/);
+  assert.match(page, /kind="trophy"/);
   assert.match(page, /Plate, fork, and spoon sticker/);
-  assert.match(page, /Basketball sticker/);
+  assert.match(page, /Warm meal bowl sticker/);
   assert.match(page, /Soccer ball at sunset sticker/);
   assert.doesNotMatch(page, /PLAY \/ FEED \/ REPEAT/);
   assert.doesNotMatch(page, /POINTS → PLATES/);
@@ -137,6 +142,9 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(css, /\.wall-sticker--calendar/);
   assert.match(css, /\.wall-sticker--handshake/);
   assert.match(css, /\.wall-sticker--speech/);
+  assert.match(css, /\.wall-sticker--meal/);
+  assert.match(css, /\.wall-sticker--whistle/);
+  assert.match(css, /\.wall-sticker--trophy/);
   assert.match(css, /\.wall-sticker:hover::after/);
   assert.match(css, /\.hero-transition/);
   assert.match(css, /data-reveal="swoosh-left"/);
