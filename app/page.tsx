@@ -122,12 +122,12 @@ const questions = [
 const loaderTiles = Array.from({ length: 96 });
 
 const sportObjects = [
-  { label: "FOOTBALL", play: "TOUCHDOWN", primary: "#ffd56a", accent: "#ff6a2a" },
-  { label: "BASKETBALL", play: "THREE-POINTER", primary: "#ff8a31", accent: "#fff0b2" },
-  { label: "SOCCER BALL", play: "GOAL", primary: "#f7f7e8", accent: "#b8ff46" },
-  { label: "BASEBALL", play: "HOME RUN", primary: "#fff4d5", accent: "#ff5a3d" },
-  { label: "TENNIS BALL", play: "ACE", primary: "#dfff45", accent: "#fffbe6" },
-  { label: "HOCKEY PUCK", play: "GOAL", primary: "#6dd6ff", accent: "#dfff45" },
+  { label: "FOOTBALL", primary: "#ffd56a", accent: "#ff6a2a" },
+  { label: "BASKETBALL", primary: "#ff8a31", accent: "#fff0b2" },
+  { label: "SOCCER BALL", primary: "#f7f7e8", accent: "#b8ff46" },
+  { label: "BASEBALL", primary: "#fff4d5", accent: "#ff5a3d" },
+  { label: "TENNIS BALL", primary: "#dfff45", accent: "#fffbe6" },
+  { label: "RUNNING SHOE", primary: "#72e6ff", accent: "#ffd56a" },
 ] as const;
 
 type SportPoint = {
@@ -216,24 +216,38 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
         ),
       );
     } else if (kind === 5) {
-      const angle = seeded(index, 4) * Math.PI * 2;
-      const isSide = index < surfaceCount * 0.58;
-      if (isSide) {
-        points.push({
-          x: Math.cos(angle) * 1.05,
-          y: (seeded(index, 9) - 0.5) * 0.47,
-          z: Math.sin(angle) * 1.05,
-          emphasis: index % 17 === 0 ? 0.35 : 0,
-        });
-      } else {
-        const radius = Math.sqrt(seeded(index, 2)) * 1.05;
-        points.push({
-          x: Math.cos(angle) * radius,
-          y: seeded(index, 6) > 0.5 ? -0.235 : 0.235,
-          z: Math.sin(angle) * radius,
-          emphasis: 0,
-        });
-      }
+      const x = -1.28 + seeded(index, 4) * 2.58;
+      const normalizedX = (x + 1.28) / 2.58;
+      const top =
+        x < -0.55
+          ? -0.58 - normalizedX * 0.2
+          : -0.53 + Math.pow(normalizedX, 1.35) * 0.54;
+      const bottom = 0.37 - Math.max(0, x - 0.72) * 0.08;
+      const edge = seeded(index, 5);
+      const y =
+        edge < 0.52
+          ? edge < 0.26
+            ? top
+            : bottom
+          : top + seeded(index, 6) * (bottom - top);
+      const toeTaper = 0.52 + Math.sin(normalizedX * Math.PI) * 0.2;
+      const z =
+        edge >= 0.52
+          ? (edge < 0.76 ? -1 : 1) * toeTaper
+          : (seeded(index, 7) - 0.5) * toeTaper * 2;
+      points.push(
+        rotatePoint(
+          {
+            x,
+            y,
+            z,
+            emphasis: index % 21 === 0 ? 0.4 : 0,
+          },
+          -0.08,
+          -0.12,
+          -0.1,
+        ),
+      );
     } else {
       const fuzzy = kind === 4 ? (seeded(index, 7) - 0.5) * 0.055 : 0;
       points.push({
@@ -326,18 +340,381 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
         emphasis: 1,
       });
     } else {
-      const angle = progress * Math.PI * 6;
-      const logoLine = index < detailCount / 2;
-      points.push({
-        x: logoLine ? -0.62 + progress * 2.48 : Math.cos(angle) * 0.48,
-        y: -0.255,
-        z: logoLine ? 0.2 : Math.sin(angle) * 0.48,
-        emphasis: 1,
-      });
+      const lace = Math.floor(progress * 6);
+      const across = (progress * 6) % 1;
+      const isSole = index < detailCount * 0.35;
+      points.push(
+        rotatePoint(
+          isSole
+            ? {
+                x: -1.22 + progress * 7.15,
+                y: 0.29,
+                z: 0.54,
+                emphasis: 1,
+              }
+            : {
+                x: -0.58 + lace * 0.17,
+                y: -0.43 + lace * 0.055,
+                z: -0.36 + across * 0.72,
+                emphasis: 1,
+              },
+          -0.08,
+          -0.12,
+          -0.1,
+        ),
+      );
     }
   }
 
   return points.slice(0, count);
+}
+
+function drawSolidSport(
+  context: CanvasRenderingContext2D,
+  kind: number,
+  centerX: number,
+  centerY: number,
+  scale: number,
+  time: number,
+) {
+  context.save();
+  context.translate(centerX, centerY);
+  const float = Math.sin(time * 0.0011) * scale * 0.018;
+  context.translate(0, float);
+  context.rotate(kind === 0 ? -0.42 : kind === 5 ? -0.1 : 0);
+  context.lineCap = "round";
+  context.lineJoin = "round";
+
+  if (kind === 0) {
+    const football = new Path2D();
+    football.moveTo(-scale * 1.5, 0);
+    football.bezierCurveTo(
+      -scale * 0.8,
+      -scale * 0.75,
+      scale * 0.8,
+      -scale * 0.75,
+      scale * 1.5,
+      0,
+    );
+    football.bezierCurveTo(
+      scale * 0.8,
+      scale * 0.75,
+      -scale * 0.8,
+      scale * 0.75,
+      -scale * 1.5,
+      0,
+    );
+    const leather = context.createLinearGradient(
+      -scale * 1.3,
+      -scale * 0.5,
+      scale * 1.3,
+      scale * 0.55,
+    );
+    leather.addColorStop(0, "#6f2719");
+    leather.addColorStop(0.46, "#bf5a28");
+    leather.addColorStop(0.72, "#8c351d");
+    leather.addColorStop(1, "#4e1b19");
+    context.fillStyle = leather;
+    context.fill(football);
+    context.save();
+    context.clip(football);
+    context.fillStyle = "rgba(255,225,173,.22)";
+    for (let dot = 0; dot < 88; dot += 1) {
+      const x = (seeded(dot, 31) - 0.5) * scale * 2.85;
+      const y = (seeded(dot, 32) - 0.5) * scale * 1.1;
+      context.beginPath();
+      context.arc(x, y, Math.max(0.55, scale * 0.006), 0, Math.PI * 2);
+      context.fill();
+    }
+    context.strokeStyle = "#f4e7c7";
+    context.lineWidth = Math.max(3, scale * 0.045);
+    [-0.92, 0.92].forEach((offset) => {
+      context.beginPath();
+      context.moveTo(scale * offset, -scale * 0.42);
+      context.lineTo(scale * offset, scale * 0.42);
+      context.stroke();
+    });
+    context.lineWidth = Math.max(2, scale * 0.026);
+    context.beginPath();
+    context.moveTo(-scale * 0.48, 0);
+    context.lineTo(scale * 0.48, 0);
+    context.stroke();
+    for (let lace = -3; lace <= 3; lace += 1) {
+      context.beginPath();
+      context.moveTo(scale * lace * 0.12, -scale * 0.13);
+      context.lineTo(scale * lace * 0.12, scale * 0.13);
+      context.stroke();
+    }
+    context.restore();
+    context.strokeStyle = "rgba(255,245,218,.48)";
+    context.lineWidth = Math.max(1, scale * 0.012);
+    context.stroke(football);
+  } else if (kind === 1) {
+    const radius = scale;
+    const ball = new Path2D();
+    ball.arc(0, 0, radius, 0, Math.PI * 2);
+    const rubber = context.createRadialGradient(
+      -radius * 0.35,
+      -radius * 0.4,
+      radius * 0.08,
+      0,
+      0,
+      radius,
+    );
+    rubber.addColorStop(0, "#ffb24a");
+    rubber.addColorStop(0.55, "#e87522");
+    rubber.addColorStop(1, "#8d2f18");
+    context.fillStyle = rubber;
+    context.fill(ball);
+    context.save();
+    context.clip(ball);
+    context.fillStyle = "rgba(70,25,15,.34)";
+    for (let dot = 0; dot < 110; dot += 1) {
+      const angle = seeded(dot, 35) * Math.PI * 2;
+      const radial = Math.sqrt(seeded(dot, 36)) * radius * 0.95;
+      context.beginPath();
+      context.arc(
+        Math.cos(angle) * radial,
+        Math.sin(angle) * radial,
+        Math.max(0.5, scale * 0.006),
+        0,
+        Math.PI * 2,
+      );
+      context.fill();
+    }
+    context.strokeStyle = "#32170f";
+    context.lineWidth = Math.max(3, scale * 0.04);
+    context.beginPath();
+    context.moveTo(-radius, 0);
+    context.lineTo(radius, 0);
+    context.moveTo(0, -radius);
+    context.bezierCurveTo(-radius * 0.32, -radius * 0.28, -radius * 0.32, radius * 0.28, 0, radius);
+    context.moveTo(0, -radius);
+    context.bezierCurveTo(radius * 0.32, -radius * 0.28, radius * 0.32, radius * 0.28, 0, radius);
+    context.moveTo(-radius * 0.72, -radius * 0.72);
+    context.bezierCurveTo(-radius * 0.22, -radius * 0.2, radius * 0.22, radius * 0.2, radius * 0.72, radius * 0.72);
+    context.stroke();
+    context.restore();
+  } else if (kind === 2) {
+    const radius = scale;
+    const ball = new Path2D();
+    ball.arc(0, 0, radius, 0, Math.PI * 2);
+    const shell = context.createRadialGradient(
+      -radius * 0.34,
+      -radius * 0.42,
+      radius * 0.04,
+      0,
+      0,
+      radius,
+    );
+    shell.addColorStop(0, "#ffffff");
+    shell.addColorStop(0.62, "#ecebdc");
+    shell.addColorStop(1, "#979e9a");
+    context.fillStyle = shell;
+    context.fill(ball);
+    context.save();
+    context.clip(ball);
+    const patches = [
+      [0, 0, 0],
+      [-0.57, -0.38, -0.18],
+      [0.59, -0.35, 0.2],
+      [-0.48, 0.52, 0.18],
+      [0.52, 0.5, -0.2],
+    ];
+    patches.forEach(([x, y, rotation]) => {
+      context.save();
+      context.translate(x * radius, y * radius);
+      context.rotate(rotation);
+      context.beginPath();
+      for (let edge = 0; edge < 5; edge += 1) {
+        const angle = -Math.PI / 2 + (edge / 5) * Math.PI * 2;
+        const px = Math.cos(angle) * radius * 0.19;
+        const py = Math.sin(angle) * radius * 0.19;
+        if (edge === 0) context.moveTo(px, py);
+        else context.lineTo(px, py);
+      }
+      context.closePath();
+      context.fillStyle = "#1b2324";
+      context.fill();
+      context.strokeStyle = "rgba(27,35,36,.42)";
+      context.lineWidth = Math.max(1, scale * 0.012);
+      for (let edge = 0; edge < 5; edge += 1) {
+        const angle = -Math.PI / 2 + (edge / 5) * Math.PI * 2;
+        context.beginPath();
+        context.moveTo(Math.cos(angle) * radius * 0.19, Math.sin(angle) * radius * 0.19);
+        context.lineTo(Math.cos(angle) * radius * 0.43, Math.sin(angle) * radius * 0.43);
+        context.stroke();
+      }
+      context.restore();
+    });
+    context.restore();
+  } else if (kind === 3) {
+    const radius = scale;
+    const ball = new Path2D();
+    ball.arc(0, 0, radius, 0, Math.PI * 2);
+    const hide = context.createRadialGradient(
+      -radius * 0.35,
+      -radius * 0.4,
+      radius * 0.04,
+      0,
+      0,
+      radius,
+    );
+    hide.addColorStop(0, "#fffdf0");
+    hide.addColorStop(0.7, "#f0ead8");
+    hide.addColorStop(1, "#b9ab94");
+    context.fillStyle = hide;
+    context.fill(ball);
+    context.save();
+    context.clip(ball);
+    context.strokeStyle = "#d8493d";
+    context.lineWidth = Math.max(2, scale * 0.026);
+    [-1, 1].forEach((side) => {
+      context.beginPath();
+      context.moveTo(-radius * 0.78, side * radius * 0.17);
+      context.bezierCurveTo(
+        -radius * 0.28,
+        side * radius * 0.78,
+        radius * 0.28,
+        -side * radius * 0.78,
+        radius * 0.78,
+        -side * radius * 0.17,
+      );
+      context.stroke();
+      for (let stitch = 0; stitch < 10; stitch += 1) {
+        const t = stitch / 9;
+        const x = -radius * 0.72 + t * radius * 1.44;
+        const y =
+          side *
+          radius *
+          (0.2 * Math.cos(t * Math.PI * 2) + 0.19 * Math.sin(t * Math.PI));
+        context.beginPath();
+        context.moveTo(x - scale * 0.035, y - scale * 0.05);
+        context.lineTo(x + scale * 0.035, y + scale * 0.05);
+        context.stroke();
+      }
+    });
+    context.restore();
+  } else if (kind === 4) {
+    const radius = scale;
+    const ball = new Path2D();
+    ball.arc(0, 0, radius, 0, Math.PI * 2);
+    const felt = context.createRadialGradient(
+      -radius * 0.32,
+      -radius * 0.42,
+      radius * 0.03,
+      0,
+      0,
+      radius,
+    );
+    felt.addColorStop(0, "#f1ff75");
+    felt.addColorStop(0.58, "#c6ee2d");
+    felt.addColorStop(1, "#6d9a21");
+    context.fillStyle = felt;
+    context.fill(ball);
+    context.save();
+    context.clip(ball);
+    context.strokeStyle = "#f6ffe2";
+    context.lineWidth = Math.max(4, scale * 0.055);
+    context.beginPath();
+    context.moveTo(-radius * 0.88, -radius * 0.46);
+    context.bezierCurveTo(
+      -radius * 0.15,
+      -radius * 0.2,
+      -radius * 0.15,
+      radius * 0.2,
+      -radius * 0.88,
+      radius * 0.46,
+    );
+    context.moveTo(radius * 0.88, -radius * 0.46);
+    context.bezierCurveTo(
+      radius * 0.15,
+      -radius * 0.2,
+      radius * 0.15,
+      radius * 0.2,
+      radius * 0.88,
+      radius * 0.46,
+    );
+    context.stroke();
+    context.fillStyle = "rgba(255,255,255,.2)";
+    for (let fuzz = 0; fuzz < 68; fuzz += 1) {
+      const angle = seeded(fuzz, 39) * Math.PI * 2;
+      const radial = Math.sqrt(seeded(fuzz, 40)) * radius * 0.98;
+      context.fillRect(
+        Math.cos(angle) * radial,
+        Math.sin(angle) * radial,
+        1,
+        1,
+      );
+    }
+    context.restore();
+  } else {
+    const shoe = new Path2D();
+    shoe.moveTo(-scale * 1.3, scale * 0.32);
+    shoe.lineTo(-scale * 1.34, -scale * 0.38);
+    shoe.quadraticCurveTo(-scale * 1.28, -scale * 0.7, -scale * 0.94, -scale * 0.76);
+    shoe.lineTo(-scale * 0.62, -scale * 0.5);
+    shoe.quadraticCurveTo(-scale * 0.18, -scale * 0.44, scale * 0.2, -scale * 0.25);
+    shoe.quadraticCurveTo(scale * 0.72, scale * 0.02, scale * 1.24, scale * 0.08);
+    shoe.quadraticCurveTo(scale * 1.4, scale * 0.12, scale * 1.3, scale * 0.34);
+    shoe.lineTo(scale * 1.15, scale * 0.43);
+    shoe.lineTo(-scale * 1.16, scale * 0.43);
+    shoe.closePath();
+    const mesh = context.createLinearGradient(
+      -scale * 1.2,
+      -scale * 0.7,
+      scale * 1.25,
+      scale * 0.35,
+    );
+    mesh.addColorStop(0, "#143f69");
+    mesh.addColorStop(0.4, "#1e87a6");
+    mesh.addColorStop(0.72, "#62d6d2");
+    mesh.addColorStop(1, "#dfff45");
+    context.fillStyle = mesh;
+    context.fill(shoe);
+    context.save();
+    context.clip(shoe);
+    context.strokeStyle = "rgba(255,255,255,.18)";
+    context.lineWidth = 1;
+    for (let line = -8; line <= 8; line += 1) {
+      context.beginPath();
+      context.moveTo(-scale * 1.4, line * scale * 0.1);
+      context.lineTo(scale * 1.4, (line - 5) * scale * 0.1);
+      context.stroke();
+    }
+    context.fillStyle = "rgba(12,39,66,.5)";
+    context.beginPath();
+    context.moveTo(-scale * 1.28, -scale * 0.38);
+    context.lineTo(-scale * 0.93, -scale * 0.62);
+    context.lineTo(-scale * 0.68, scale * 0.27);
+    context.lineTo(-scale * 1.24, scale * 0.31);
+    context.closePath();
+    context.fill();
+    context.fillStyle = "rgba(255,213,106,.88)";
+    context.beginPath();
+    context.moveTo(-scale * 0.62, scale * 0.04);
+    context.quadraticCurveTo(-scale * 0.05, -scale * 0.12, scale * 0.68, scale * 0.16);
+    context.quadraticCurveTo(scale * 0.04, scale * 0.09, -scale * 0.58, scale * 0.19);
+    context.closePath();
+    context.fill();
+    context.restore();
+    context.fillStyle = "#f2f1de";
+    context.fillRect(-scale * 1.25, scale * 0.29, scale * 2.5, scale * 0.16);
+    context.strokeStyle = "#f7f7ee";
+    context.lineWidth = Math.max(2, scale * 0.03);
+    for (let lace = 0; lace < 6; lace += 1) {
+      const x = -scale * 0.62 + lace * scale * 0.17;
+      context.beginPath();
+      context.moveTo(x - scale * 0.12, -scale * 0.4 + lace * scale * 0.055);
+      context.lineTo(x + scale * 0.12, -scale * 0.31 + lace * scale * 0.055);
+      context.stroke();
+    }
+    context.strokeStyle = "rgba(255,255,255,.5)";
+    context.lineWidth = Math.max(1, scale * 0.012);
+    context.stroke(shoe);
+  }
+
+  context.restore();
 }
 
 function CustomCursor() {
@@ -369,9 +746,11 @@ function CustomCursor() {
     };
     const onOver = (event: PointerEvent) => {
       const target = event.target as HTMLElement;
+      const overLens = Boolean(target.closest(".hero-visual"));
+      cursor.classList.toggle("is-lens", overLens);
       cursor.classList.toggle(
         "is-hovering",
-        Boolean(target.closest("a, button, summary, .hero-visual")),
+        !overLens && Boolean(target.closest("a, button, summary")),
       );
     };
     const onDown = () => cursor.classList.add("is-pressed");
@@ -398,16 +777,12 @@ function CustomCursor() {
   return (
     <div ref={cursorRef} className="sport-cursor" aria-hidden="true">
       <i />
-      <span>PLAY</span>
+      <span />
     </div>
   );
 }
 
-function HeroFieldCanvas({
-  onSportChange,
-}: {
-  onSportChange: (index: number) => void;
-}) {
+function HeroFieldCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -425,11 +800,14 @@ function HeroFieldCanvas({
       y: 0,
       screenX: -1000,
       screenY: -1000,
+      lensX: -1000,
+      lensY: -1000,
       active: false,
     };
     let width = 0;
     let height = 0;
     let frame = 0;
+    let canvasVisible = true;
     let activeSport = 0;
     let lastMorph = performance.now();
     let fizzleStart = -1;
@@ -462,7 +840,6 @@ function HeroFieldCanvas({
       });
       lastMorph = performance.now();
       revealStart = immediate ? -1 : performance.now();
-      onSportChange(activeSport);
     };
 
     const setSport = (nextSport: number, immediate = false) => {
@@ -475,11 +852,11 @@ function HeroFieldCanvas({
       transitionTimer = window.setTimeout(() => {
         applySport(nextSport);
         fizzleStart = -1;
-      }, 560);
+      }, 1050);
     };
 
     const createParticles = () => {
-      const count = width < 540 ? 620 : Math.min(1180, Math.floor(width * 1.6));
+      const count = width < 540 ? 340 : Math.min(560, Math.floor(width * 0.82));
       const targets = makeSportShape(activeSport, count);
       particles = targets.map((target, index) => ({
         x: target.x + (seeded(index, 12) - 0.5) * 2.4,
@@ -494,7 +871,7 @@ function HeroFieldCanvas({
 
     const resize = () => {
       const bounds = canvas.getBoundingClientRect();
-      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
       width = bounds.width;
       height = bounds.height;
       canvas.width = Math.floor(width * ratio);
@@ -504,27 +881,43 @@ function HeroFieldCanvas({
     };
 
     const render = (time = 0) => {
+      if (!canvasVisible || document.hidden) {
+        frame = window.requestAnimationFrame(render);
+        return;
+      }
       context.clearRect(0, 0, width, height);
-      const centerX = width * 0.5;
-      const centerY = height * 0.48;
+      const centerX = width * 0.52;
+      const centerY = height * 0.49;
       const scale =
-        Math.min(width, height) * (activeSport === 0 ? 0.265 : 0.245);
-      const morphEnergy = Math.max(0, 1 - (time - lastMorph) / 1350);
+        Math.min(width, height) *
+        (activeSport === 0 ? 0.25 : activeSport === 5 ? 0.225 : 0.235);
+      const morphEnergy = Math.max(0, 1 - (time - lastMorph) / 1800);
       const fizzleProgress =
         fizzleStart < 0
           ? 0
-          : Math.min(1, Math.max(0, (time - fizzleStart) / 560));
+          : Math.min(1, Math.max(0, (time - fizzleStart) / 1050));
       const revealProgress =
         revealStart < 0
           ? 1
-          : Math.min(1, Math.max(0, (time - revealStart) / 760));
+          : Math.min(1, Math.max(0, (time - revealStart) / 1550));
       if (revealStart >= 0 && revealProgress >= 1) revealStart = -1;
       const palette = sportObjects[activeSport];
       const rotationY =
-        (prefersReducedMotion ? 0.2 : time * 0.00018) + pointer.x * 0.28;
-      const rotationX = -0.08 + pointer.y * 0.2;
+        (prefersReducedMotion ? 0.08 : Math.sin(time * 0.00032) * 0.16) +
+        pointer.x * 0.055;
+      const rotationX = -0.06 + pointer.y * 0.045;
       const rotationZ =
-        activeSport === 5 ? -0.18 : Math.sin(time * 0.00022) * 0.06;
+        activeSport === 5 ? 0 : Math.sin(time * 0.00022) * 0.045;
+      const transitionAlpha =
+        fizzleProgress > 0
+          ? Math.pow(1 - fizzleProgress, 1.12)
+          : Math.pow(revealProgress, 0.64);
+      const lensRadius = Math.max(74, Math.min(106, width * 0.16));
+
+      if (pointer.active) {
+        pointer.lensX += (pointer.screenX - pointer.lensX) * 0.17;
+        pointer.lensY += (pointer.screenY - pointer.lensY) * 0.17;
+      }
 
       const aura = context.createRadialGradient(
         centerX,
@@ -540,26 +933,16 @@ function HeroFieldCanvas({
       context.fillStyle = aura;
       context.fillRect(0, 0, width, height);
 
-      context.save();
-      context.translate(centerX, centerY);
-      context.strokeStyle = "rgba(255,255,255,.12)";
-      context.setLineDash([3, 10]);
-      for (let ring = 1; ring <= 3; ring += 1) {
-        context.beginPath();
-        context.ellipse(
-          0,
-          0,
-          scale * (0.62 + ring * 0.29),
-          scale * (0.2 + ring * 0.08),
-          -0.14,
-          0,
-          Math.PI * 2,
-        );
-        context.stroke();
-      }
-      context.restore();
+      const basePath = new Path2D();
+      const detailPath = new Path2D();
+      const cosX = Math.cos(rotationX);
+      const sinX = Math.sin(rotationX);
+      const cosY = Math.cos(rotationY);
+      const sinY = Math.sin(rotationY);
+      const cosZ = Math.cos(rotationZ);
+      const sinZ = Math.sin(rotationZ);
 
-      const projected = particles.map((particle, index) => {
+      particles.forEach((particle, index) => {
         const spring = 0.046 + morphEnergy * 0.038;
         particle.x += (particle.target.x - particle.x) * spring;
         particle.y += (particle.target.y - particle.y) * spring;
@@ -567,97 +950,117 @@ function HeroFieldCanvas({
         const drift = prefersReducedMotion
           ? 0
           : Math.sin(time * 0.0012 + particle.phase) * 0.008;
-        const rotated = rotatePoint(
-          {
-            x: particle.x + drift,
-            y: particle.y + drift * 0.6,
-            z: particle.z,
-            emphasis: particle.target.emphasis,
-          },
-          rotationX,
-          rotationY,
-          rotationZ,
-        );
-        const perspective = 3.9 / (3.9 - rotated.z);
-        let screenX = centerX + rotated.x * scale * perspective;
-        let screenY = centerY + rotated.y * scale * perspective;
+        const localX = particle.x + drift;
+        const localY = particle.y + drift * 0.6;
+        const y1 = localY * cosX - particle.z * sinX;
+        const z1 = localY * sinX + particle.z * cosX;
+        const x2 = localX * cosY + z1 * sinY;
+        const z2 = -localX * sinY + z1 * cosY;
+        const rotatedX = x2 * cosZ - y1 * sinZ;
+        const rotatedY = x2 * sinZ + y1 * cosZ;
+        const perspective = 3.9 / (3.9 - z2);
+        let screenX = centerX + rotatedX * scale * perspective;
+        let screenY = centerY + rotatedY * scale * perspective;
         if (fizzleProgress > 0) {
-          const burst = fizzleProgress * fizzleProgress * scale * 0.78;
-          const magnitude = Math.max(0.2, Math.sqrt(rotated.x ** 2 + rotated.y ** 2));
+          const burst = fizzleProgress * fizzleProgress * scale * 0.66;
+          const magnitude = Math.max(
+            0.2,
+            Math.sqrt(rotatedX ** 2 + rotatedY ** 2),
+          );
           screenX +=
-            (rotated.x / magnitude) * burst +
-            Math.sin(index * 2.17 + time * 0.012) * fizzleProgress * 18;
+            (rotatedX / magnitude) * burst +
+            Math.sin(index * 2.17 + time * 0.009) * fizzleProgress * 15;
           screenY +=
-            (rotated.y / magnitude) * burst +
-            Math.cos(index * 1.73 + time * 0.01) * fizzleProgress * 18;
+            (rotatedY / magnitude) * burst +
+            Math.cos(index * 1.73 + time * 0.008) * fizzleProgress * 15;
         }
-        const dx = screenX - pointer.screenX;
-        const dy = screenY - pointer.screenY;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        if (pointer.active && distance < 88 && distance > 0) {
-          const repel = Math.pow((88 - distance) / 88, 1.6) * 30;
-          screenX += (dx / distance) * repel;
-          screenY += (dy / distance) * repel;
-        }
-        return {
-          x: screenX,
-          y: screenY,
-          z: rotated.z,
-          size:
-            particle.size *
-            perspective *
-            (0.88 + (rotated.z + 1) * 0.2),
-          emphasis: rotated.emphasis,
-          nearPointer: pointer.active && distance < 88,
-          transitionAlpha:
-            fizzleProgress > 0
-              ? Math.pow(1 - fizzleProgress, 1.35)
-              : Math.pow(revealProgress, 0.72),
-        };
+        const inLens =
+          pointer.active &&
+          Math.hypot(screenX - pointer.lensX, screenY - pointer.lensY) <
+            lensRadius - 2;
+        if (inLens) return;
+        const size = Math.max(
+          0.55,
+          particle.size * perspective * (0.9 + (z2 + 1) * 0.14),
+        );
+        const path =
+          particle.target.emphasis > 0.55 ? detailPath : basePath;
+        path.moveTo(screenX + size, screenY);
+        path.arc(screenX, screenY, size, 0, Math.PI * 2);
       });
 
-      projected.sort((a, b) => a.z - b.z);
       context.globalCompositeOperation = "lighter";
-      projected.forEach((particle) => {
-        const depth = Math.max(
-          0.22,
-          Math.min(1, (particle.z + 1.15) / 2.3),
-        );
+      context.globalAlpha = transitionAlpha * 0.78;
+      context.fillStyle = palette.primary;
+      context.fill(basePath);
+      context.globalAlpha = transitionAlpha;
+      context.fillStyle = palette.accent;
+      context.fill(detailPath);
+      context.globalCompositeOperation = "source-over";
+      context.globalAlpha = 1;
+
+      if (pointer.active && transitionAlpha > 0.03) {
+        context.save();
         context.beginPath();
-        context.fillStyle = particle.nearPointer
-          ? "#ffffff"
-          : particle.emphasis > 0.55
-            ? palette.accent
-            : palette.primary;
-        context.globalAlpha =
-          (particle.nearPointer
-            ? 1
-            : 0.26 + depth * 0.68 + particle.emphasis * 0.12) *
-          particle.transitionAlpha;
-        if (particle.emphasis > 0.55 || particle.nearPointer) {
-          context.shadowBlur = particle.nearPointer ? 18 : 9;
-          context.shadowColor = particle.nearPointer
-            ? "#ffffff"
-            : palette.accent;
-        } else {
-          context.shadowBlur = 0;
-        }
         context.arc(
-          particle.x,
-          particle.y,
-          Math.max(
-            0.38,
-            (particle.size + particle.emphasis * 0.5) *
-              (0.7 + particle.transitionAlpha * 0.3),
-          ),
+          pointer.lensX,
+          pointer.lensY,
+          lensRadius,
           0,
           Math.PI * 2,
         );
-        context.fill();
-      });
-      context.globalAlpha = 1;
-      context.globalCompositeOperation = "source-over";
-      context.shadowBlur = 0;
+        context.clip();
+        context.globalAlpha = transitionAlpha;
+        const lensWash = context.createRadialGradient(
+          pointer.lensX - lensRadius * 0.32,
+          pointer.lensY - lensRadius * 0.35,
+          1,
+          pointer.lensX,
+          pointer.lensY,
+          lensRadius,
+        );
+        lensWash.addColorStop(0, "rgba(255,255,255,.22)");
+        lensWash.addColorStop(1, "rgba(14,43,67,.12)");
+        context.fillStyle = lensWash;
+        context.fillRect(
+          pointer.lensX - lensRadius,
+          pointer.lensY - lensRadius,
+          lensRadius * 2,
+          lensRadius * 2,
+        );
+        drawSolidSport(
+          context,
+          activeSport,
+          centerX,
+          centerY,
+          scale,
+          time,
+        );
+        context.restore();
+
+        const rim = context.createLinearGradient(
+          pointer.lensX - lensRadius,
+          pointer.lensY - lensRadius,
+          pointer.lensX + lensRadius,
+          pointer.lensY + lensRadius,
+        );
+        rim.addColorStop(0, "#72e6ff");
+        rim.addColorStop(0.45, "#dfff45");
+        rim.addColorStop(1, "#ff7a52");
+        context.strokeStyle = rim;
+        context.lineWidth = 2;
+        context.globalAlpha = 0.92;
+        context.beginPath();
+        context.arc(
+          pointer.lensX,
+          pointer.lensY,
+          lensRadius,
+          0,
+          Math.PI * 2,
+        );
+        context.stroke();
+        context.globalAlpha = 1;
+      }
 
       if (!prefersReducedMotion) {
         frame = window.requestAnimationFrame(render);
@@ -668,19 +1071,32 @@ function HeroFieldCanvas({
       const bounds = canvas.getBoundingClientRect();
       pointer.screenX = event.clientX - bounds.left;
       pointer.screenY = event.clientY - bounds.top;
+      if (!pointer.active) {
+        pointer.lensX = pointer.screenX;
+        pointer.lensY = pointer.screenY;
+      }
       pointer.x = (pointer.screenX / Math.max(1, width) - 0.5) * 2;
       pointer.y = (pointer.screenY / Math.max(1, height) - 0.5) * 2;
       pointer.active = true;
+      if (prefersReducedMotion) render(performance.now());
     };
     const onPointerLeave = () => {
       pointer.active = false;
       pointer.x = 0;
       pointer.y = 0;
+      if (prefersReducedMotion) render(performance.now());
     };
     const onPointerDown = () => setSport(activeSport + 1);
 
     const observer = new ResizeObserver(resize);
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        canvasVisible = entry?.isIntersecting ?? true;
+      },
+      { rootMargin: "120px" },
+    );
     observer.observe(canvas);
+    visibilityObserver.observe(canvas);
     canvas.addEventListener("pointermove", onPointerMove);
     canvas.addEventListener("pointerleave", onPointerLeave);
     canvas.addEventListener("pointerdown", onPointerDown);
@@ -688,10 +1104,11 @@ function HeroFieldCanvas({
     render();
     const sportTimer = prefersReducedMotion
       ? 0
-      : window.setInterval(() => setSport(activeSport + 1), 4700);
+      : window.setInterval(() => setSport(activeSport + 1), 8600);
 
     return () => {
       observer.disconnect();
+      visibilityObserver.disconnect();
       canvas.removeEventListener("pointermove", onPointerMove);
       canvas.removeEventListener("pointerleave", onPointerLeave);
       canvas.removeEventListener("pointerdown", onPointerDown);
@@ -699,7 +1116,7 @@ function HeroFieldCanvas({
       if (transitionTimer) window.clearTimeout(transitionTimer);
       window.cancelAnimationFrame(frame);
     };
-  }, [onSportChange]);
+  }, []);
 
   return (
     <canvas
@@ -716,7 +1133,6 @@ export default function Home() {
   const [loaderProgress, setLoaderProgress] = useState(0);
   const [progress, setProgress] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [activeSport, setActiveSport] = useState(0);
 
   useEffect(() => {
     let loaderFrame = 0;
@@ -872,36 +1288,7 @@ export default function Home() {
           </div>
 
           <div className="hero-visual">
-            <HeroFieldCanvas onSportChange={setActiveSport} />
-            <div className="hero-visual__topline">
-              <span>3D IMPACT OBJECT / {String(activeSport + 1).padStart(2, "0")}</span>
-              <strong>LIVE · AUTO LOOP</strong>
-            </div>
-            <div className="hero-visual__identity" aria-live="polite">
-              <small>NOW IN PLAY</small>
-              <strong>{sportObjects[activeSport].label}</strong>
-            </div>
-            <div className="hero-visual__score">
-              <span>1</span>
-              <p>
-                <strong>{sportObjects[activeSport].play}</strong>
-                <small>CAN HELP UNLOCK VERIFIED MEALS</small>
-              </p>
-            </div>
-            <div className="hero-visual__sport-dots" aria-hidden="true">
-              {sportObjects.map((sport, index) => (
-                <i
-                  key={sport.label}
-                  className={index === activeSport ? "is-active" : ""}
-                />
-              ))}
-            </div>
-            <div className="hero-visual__meal-signal" aria-hidden="true">
-              <span>PLAY</span><i>→</i><span>PARTNER</span><i>→</i><strong>MEALS</strong>
-            </div>
-            <div className="hero-visual__prompt">
-              MOVE TO BEND THE PARTICLES<br />CLICK TO SWITCH SPORT
-            </div>
+            <HeroFieldCanvas />
           </div>
 
           <div className="hero-tech__status" aria-hidden="true">
@@ -911,6 +1298,13 @@ export default function Home() {
             <span>SCROLL TO EXPLORE</span>
           </div>
         </section>
+
+        <div className="hero-transition" aria-hidden="true">
+          <i /><i /><i />
+          <div className="meal-sticker meal-sticker--hero">
+            <span /><b /><b /><b />
+          </div>
+        </div>
 
         <div className="marquee" aria-hidden="true">
           <div className="marquee__track">
@@ -925,6 +1319,9 @@ export default function Home() {
 
         <section className="mission section-shell" id="about">
           <div className="section-index">01 / About</div>
+          <div className="meal-sticker meal-sticker--plate" aria-hidden="true">
+            <span /><b /><b /><b />
+          </div>
           <div className="mission__statement" data-reveal="swoosh-left">
             <p>Our north star</p>
             <h2>
@@ -982,6 +1379,9 @@ export default function Home() {
         </section>
 
         <section className="impact" id="impact" aria-labelledby="impact-title">
+          <div className="meal-sticker meal-sticker--bowl" aria-hidden="true">
+            <span /><b /><b /><b />
+          </div>
           <div className="impact__top section-shell" data-reveal>
             <div className="section-index section-index--light">02 / Live impact</div>
             <div>
@@ -1018,36 +1418,6 @@ export default function Home() {
             <div className="season-card__foot">
               <span>0 verified meals</span>
               <span>Goal announced after pantry approval</span>
-            </div>
-          </div>
-        </section>
-
-        <section className="meal-flow" aria-labelledby="meal-flow-title">
-          <div className="meal-flow__copy" data-reveal="swoosh-left">
-            <span>THE MEAL CONNECTION</span>
-            <h2 id="meal-flow-title">
-              A big play becomes<br /><em>something you can share.</em>
-            </h2>
-            <p>
-              Sponsors back a verified achievement. The food partner confirms
-              what that support provides. The result is practical help, not an
-              abstract promise.
-            </p>
-          </div>
-          <div className="meal-flow__visual" data-reveal="swoosh-right" aria-hidden="true">
-            <div className="meal-flow__orbit">
-              <span>01</span><span>02</span><span>03</span>
-              <div className="meal-flow__plate">
-                <i /><i /><i /><i /><i /><i /><i /><i />
-                <strong>MEAL</strong>
-              </div>
-            </div>
-            <div className="meal-flow__steps">
-              <span><b>PLAY</b><small>Official result</small></span>
-              <i>→</i>
-              <span><b>VERIFY</b><small>Partner confirms</small></span>
-              <i>→</i>
-              <span><b>PROVIDE</b><small>Useful support</small></span>
             </div>
           </div>
         </section>
@@ -1106,6 +1476,9 @@ export default function Home() {
         </section>
 
         <section className="partners" id="partners">
+          <div className="meal-sticker meal-sticker--produce" aria-hidden="true">
+            <span /><b /><b /><b />
+          </div>
           <div className="partners__inner section-shell">
             <div className="section-index section-index--light">05 / Founding partners</div>
             <div className="partners__copy" data-reveal>

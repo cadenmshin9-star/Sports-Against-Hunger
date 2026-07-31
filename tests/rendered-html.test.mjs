@@ -76,9 +76,13 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /label: "SOCCER BALL"/);
   assert.match(page, /label: "BASEBALL"/);
   assert.match(page, /label: "TENNIS BALL"/);
-  assert.match(page, /label: "HOCKEY PUCK"/);
+  assert.match(page, /label: "RUNNING SHOE"/);
   assert.match(page, /fizzleStart/);
-  assert.match(page, /className="meal-flow"/);
+  assert.match(page, /drawSolidSport/);
+  assert.match(page, /lensRadius/);
+  assert.match(page, /className="hero-transition"/);
+  assert.match(page, /meal-sticker--plate/);
+  assert.doesNotMatch(page, /className="meal-flow"/);
   assert.match(page, /className="loader__tiles"/);
   assert.match(page, /setLoaderProgress/);
   assert.match(page, /className="ethics-answer__grid"/);
@@ -89,7 +93,8 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(css, /\.valencia-crest/);
   assert.match(css, /\.hero-visual__canvas/);
   assert.match(css, /\.sport-cursor/);
-  assert.match(css, /\.meal-flow__plate/);
+  assert.match(css, /\.meal-sticker--plate/);
+  assert.match(css, /\.hero-transition/);
   assert.match(css, /data-reveal="swoosh-left"/);
   assert.match(css, /\.loader__tiles/);
   assert.match(css, /\.back-to-top/);
