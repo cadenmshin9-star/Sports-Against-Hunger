@@ -5153,9 +5153,10 @@ body {
 }
 
 .wall-sticker--pantry {
-  top: 8%;
-  right: -24px;
-  width: 116px;
+  top: 71%;
+  right: auto;
+  left: -24px;
+  width: 104px;
   border-style: dashed;
   --sticker-angle: 6deg;
   --sticker-bg: #fff2cf;
@@ -5212,7 +5213,7 @@ body {
 }
 
 .wall-sticker--hands {
-  top: 32%;
+  top: 44%;
   right: -26px;
   width: 102px;
   min-height: 102px;
@@ -5667,6 +5668,264 @@ body {
   box-shadow: -34px -15px #101814;
 }
 
+.wall-sticker--clipboard {
+  top: 8%;
+  right: -22px;
+  width: 104px;
+  min-height: 96px;
+  border-radius: 7px;
+  --sticker-angle: 6deg;
+  --sticker-bg: #fff2cf;
+}
+
+.wall-sticker--clipboard > i {
+  top: 18px;
+  left: 50%;
+  width: 58px;
+  height: 63px;
+  border: 3px solid #101814;
+  border-radius: 5px;
+  background: #173450;
+  transform: translateX(-50%);
+}
+
+.wall-sticker--clipboard > i::before {
+  position: absolute;
+  top: -9px;
+  left: 15px;
+  width: 22px;
+  height: 12px;
+  border: 3px solid #101814;
+  border-radius: 7px 7px 2px 2px;
+  background: #72e6ff;
+  content: "";
+}
+
+.wall-sticker--clipboard > b {
+  top: 36px;
+  left: 34px;
+  width: 33px;
+  height: 3px;
+  background: #dfff45;
+  box-shadow: 0 13px #dfff45, 0 26px #dfff45;
+}
+
+.wall-sticker--clipboard > em {
+  top: 29px;
+  left: 24px;
+  width: 7px;
+  height: 12px;
+  border-right: 3px solid #fffdf1;
+  border-bottom: 3px solid #fffdf1;
+  box-shadow: 12px 12px 0 -4px #173450, 14px 14px 0 -4px #fffdf1;
+  transform: rotate(42deg);
+}
+
+.wall-sticker--receipt {
+  top: 69%;
+  right: 1.5%;
+  width: 82px;
+  min-height: 104px;
+  border: 0;
+  clip-path: polygon(0 0, 100% 3%, 97% 93%, 86% 100%, 75% 93%, 63% 100%, 51% 93%, 39% 100%, 27% 93%, 15% 100%, 3% 93%);
+  --sticker-angle: 7deg;
+  --sticker-bg: #dfff45;
+}
+
+.wall-sticker--receipt > i {
+  top: 17px;
+  left: 15px;
+  width: 51px;
+  height: 69px;
+  border: 3px solid #101814;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 12px, rgba(16, 24, 20, 0.2) 12px 14px),
+    #fffdf1;
+}
+
+.wall-sticker--receipt > b,
+.wall-sticker--receipt > em {
+  left: 25px;
+  width: 8px;
+  height: 13px;
+  border-right: 3px solid #173450;
+  border-bottom: 3px solid #173450;
+  transform: rotate(42deg);
+}
+
+.wall-sticker--receipt > b {
+  top: 28px;
+}
+
+.wall-sticker--receipt > em {
+  top: 54px;
+}
+
+.wall-sticker--calendar {
+  top: 13%;
+  right: 1%;
+  width: 94px;
+  min-height: 86px;
+  border-radius: 13px;
+  --sticker-angle: 7deg;
+  --sticker-bg: #ff8058;
+}
+
+.wall-sticker--calendar > i {
+  top: 18px;
+  left: 50%;
+  width: 60px;
+  height: 54px;
+  border: 3px solid #101814;
+  border-radius: 5px;
+  background: #fffdf1;
+  transform: translateX(-50%);
+}
+
+.wall-sticker--calendar > i::before {
+  position: absolute;
+  top: 10px;
+  right: 0;
+  left: 0;
+  height: 4px;
+  background: #101814;
+  content: "";
+}
+
+.wall-sticker--calendar > i::after {
+  position: absolute;
+  inset: 20px 8px 7px;
+  background:
+    repeating-linear-gradient(90deg, #72e6ff 0 7px, transparent 7px 12px),
+    repeating-linear-gradient(180deg, transparent 0 7px, rgba(16, 24, 20, 0.18) 7px 9px);
+  content: "";
+}
+
+.wall-sticker--calendar > b,
+.wall-sticker--calendar > em {
+  top: 13px;
+  width: 5px;
+  height: 16px;
+  border-radius: 999px;
+  background: #101814;
+}
+
+.wall-sticker--calendar > b {
+  left: 31px;
+}
+
+.wall-sticker--calendar > em {
+  right: 30px;
+}
+
+.wall-sticker--handshake {
+  bottom: 11%;
+  left: 1.5%;
+  width: 118px;
+  min-height: 78px;
+  border-radius: 999px;
+  --sticker-angle: -7deg;
+  --sticker-bg: #72e6ff;
+}
+
+.wall-sticker--handshake::before {
+  border-radius: 999px;
+}
+
+.wall-sticker--handshake > i,
+.wall-sticker--handshake > b {
+  top: 29px;
+  width: 53px;
+  height: 22px;
+  border: 3px solid #101814;
+  background: #fffdf1;
+  clip-path: polygon(0 18%, 64% 18%, 100% 56%, 84% 100%, 53% 70%, 0 70%);
+}
+
+.wall-sticker--handshake > i {
+  left: 12px;
+  transform: rotate(13deg);
+}
+
+.wall-sticker--handshake > b {
+  right: 12px;
+  background: #dfff45;
+  transform: rotate(167deg);
+}
+
+.wall-sticker--handshake > em {
+  top: 32px;
+  left: 50%;
+  width: 22px;
+  height: 18px;
+  border: 3px solid #101814;
+  border-radius: 7px;
+  background: #ffd45e;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.wall-sticker--speech {
+  top: 15%;
+  right: -20px;
+  width: 100px;
+  min-height: 88px;
+  border-radius: 18px 18px 6px 18px;
+  --sticker-angle: 7deg;
+  --sticker-bg: #ffd45e;
+}
+
+.wall-sticker--speech > i,
+.wall-sticker--speech > b {
+  border: 3px solid #101814;
+  border-radius: 14px;
+}
+
+.wall-sticker--speech > i {
+  top: 18px;
+  left: 13px;
+  width: 55px;
+  height: 38px;
+  background: #fffdf1;
+}
+
+.wall-sticker--speech > i::after,
+.wall-sticker--speech > b::after {
+  position: absolute;
+  bottom: -10px;
+  width: 14px;
+  height: 14px;
+  background: inherit;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  content: "";
+}
+
+.wall-sticker--speech > i::after {
+  left: 10px;
+}
+
+.wall-sticker--speech > b {
+  right: 11px;
+  bottom: 13px;
+  width: 46px;
+  height: 31px;
+  background: #72e6ff;
+}
+
+.wall-sticker--speech > b::after {
+  right: 8px;
+  transform: scaleX(-1);
+}
+
+.wall-sticker--speech > em {
+  top: 31px;
+  left: 27px;
+  width: 27px;
+  height: 4px;
+  border-radius: 999px;
+  background: #101814;
+  box-shadow: 0 9px #101814;
+}
+
 @keyframes bridgeSweep {
   0%, 100% { transform: translateX(-2%) rotate(-4deg); }
   50% { transform: translateX(7%) rotate(-2.5deg); }
@@ -5726,13 +5985,21 @@ body {
   }
 
   .wall-sticker--valley,
-  .wall-sticker--pantry,
-  .wall-sticker--hands {
+  .wall-sticker--hands,
+  .wall-sticker--clipboard,
+  .wall-sticker--speech {
     right: -8px;
   }
 
-  .wall-sticker--bolt {
+  .wall-sticker--bolt,
+  .wall-sticker--pantry,
+  .wall-sticker--handshake {
     left: -8px;
+  }
+
+  .wall-sticker--calendar,
+  .wall-sticker--receipt {
+    right: 0;
   }
 }
 
@@ -5878,6 +6145,58 @@ body {
     right: 3%;
     width: 98px;
     min-height: 56px;
+  }
+
+  .wall-sticker--clipboard {
+    right: -7px;
+    width: 76px;
+    min-height: 82px;
+  }
+
+  .wall-sticker--receipt {
+    right: -5px;
+    width: 68px;
+    min-height: 90px;
+  }
+
+  .wall-sticker--pantry {
+    left: -8px;
+  }
+
+  .wall-sticker--calendar {
+    right: -7px;
+    width: 78px;
+    min-height: 74px;
+  }
+
+  .wall-sticker--handshake {
+    left: -8px;
+    width: 96px;
+    min-height: 66px;
+  }
+
+  .wall-sticker--speech {
+    right: -8px;
+    width: 82px;
+    min-height: 74px;
+  }
+
+  .wall-sticker--clipboard > i,
+  .wall-sticker--clipboard > b,
+  .wall-sticker--clipboard > em,
+  .wall-sticker--receipt > i,
+  .wall-sticker--receipt > b,
+  .wall-sticker--receipt > em,
+  .wall-sticker--calendar > i,
+  .wall-sticker--calendar > b,
+  .wall-sticker--calendar > em,
+  .wall-sticker--handshake > i,
+  .wall-sticker--handshake > b,
+  .wall-sticker--handshake > em,
+  .wall-sticker--speech > i,
+  .wall-sticker--speech > b,
+  .wall-sticker--speech > em {
+    scale: 0.82;
   }
 }
 

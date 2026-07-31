@@ -126,7 +126,7 @@ const sportObjects = [
   { label: "FOOTBALL", primary: "#ffd56a", accent: "#ff6a2a" },
   { label: "BASKETBALL", primary: "#ff8a31", accent: "#fff0b2" },
   { label: "SOCCER BALL", primary: "#f7f7e8", accent: "#151d1f" },
-  { label: "BASEBALL GLOVE", primary: "#f2ad58", accent: "#fff4d5" },
+  { label: "BASEBALL BAT", primary: "#f2ad58", accent: "#fff4d5" },
   { label: "TENNIS RACKET", primary: "#dfff45", accent: "#72e6ff" },
   { label: "RUNNING SHOE", primary: "#72e6ff", accent: "#ffd56a" },
 ] as const;
@@ -249,59 +249,31 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
         ),
       );
     } else if (kind === 3) {
-      const gloveProgress = index / Math.max(1, surfaceCount - 1);
-
-      if (gloveProgress < 0.53) {
-        const angle = seeded(index, 41) * Math.PI * 2;
-        const radius = Math.sqrt(seeded(index, 42));
-        const cuff = seeded(index, 43) < 0.16;
-        points.push(
-          rotatePoint(
-            {
-              x: cuff
-                ? -0.06 + (seeded(index, 44) - 0.5) * 0.9
-                : -0.04 + Math.cos(angle) * radius * 0.78,
-              y: cuff
-                ? 0.79 + (seeded(index, 45) - 0.5) * 0.34
-                : 0.2 + Math.sin(angle) * radius * 0.7,
-              z: (seeded(index, 46) - 0.5) * (cuff ? 0.18 : 0.3),
-              emphasis: index % 23 === 0 ? 0.42 : 0,
-            },
-            -0.06,
-            0.12,
-            -0.08,
-          ),
-        );
-      } else {
-        const fingerProgress = (gloveProgress - 0.53) / 0.47;
-        const finger = Math.min(4, Math.floor(fingerProgress * 5));
-        const along = (fingerProgress * 5) % 1;
-        const fingerLengths = [0.76, 1.02, 1.2, 1.1, 0.88];
-        const fingerAngles = [-0.58, -0.2, -0.03, 0.16, 0.4];
-        const fingerRoots = [-0.61, -0.34, -0.04, 0.29, 0.57];
-        const fingerLength = fingerLengths[finger];
-        const fingerAngle = fingerAngles[finger];
-        const fingerWidth = 0.22 - along * 0.08;
-        points.push(
-          rotatePoint(
-            {
-              x:
-                fingerRoots[finger] +
-                Math.sin(fingerAngle) * along * fingerLength +
-                (seeded(index, 47) - 0.5) * fingerWidth,
-              y:
-                -0.06 -
-                Math.cos(fingerAngle) * along * fingerLength +
-                (seeded(index, 48) - 0.5) * fingerWidth,
-              z: (seeded(index, 49) - 0.5) * fingerWidth * 1.4,
-              emphasis: along > 0.82 || index % 14 === 0 ? 0.58 : 0.16,
-            },
-            -0.06,
-            0.12,
-            -0.08,
-          ),
-        );
-      }
+      const batProgress = index / Math.max(1, surfaceCount - 1);
+      const axial = -1.36 + batProgress * 2.72;
+      const radius =
+        batProgress < 0.09
+          ? 0.18 - (batProgress / 0.09) * 0.075
+          : batProgress < 0.4
+            ? 0.095 + Math.sin(batProgress * Math.PI * 5) * 0.008
+            : batProgress < 0.62
+              ? 0.1 + Math.pow((batProgress - 0.4) / 0.22, 0.72) * 0.2
+              : 0.3 + Math.sin(((batProgress - 0.62) / 0.38) * Math.PI) * 0.025;
+      const angle = seeded(index, 41) * Math.PI * 2;
+      const radial = Math.sqrt(seeded(index, 42)) * radius;
+      points.push(
+        rotatePoint(
+          {
+            x: axial,
+            y: Math.cos(angle) * radial,
+            z: Math.sin(angle) * radial,
+            emphasis: batProgress < 0.39 && index % 13 === 0 ? 0.48 : 0,
+          },
+          -0.12,
+          0.18,
+          -0.58,
+        ),
+      );
     } else if (kind === 4) {
       const racketProgress = index / Math.max(1, surfaceCount - 1);
       let racketPoint: SportPoint;
@@ -392,7 +364,7 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
         x: sphere.x * (1 + fuzzy),
         y: sphere.y * (1 + fuzzy),
         z: sphere.z * (1 + fuzzy),
-        emphasis: kind === 2 && index % 23 === 0 ? 0.25 : 0,
+            emphasis: 0,
       });
     }
   }
@@ -450,77 +422,79 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
             : rotatePoint(vertical, 0, 0, seam === 2 ? 0.68 : -0.68);
       points.push({ ...point, emphasis: 1 });
     } else if (kind === 2) {
-      const patchCenters = [
-        [0, 0],
-        [-0.58, -0.34],
-        [0.58, -0.34],
-        [-0.5, 0.48],
-        [0.5, 0.48],
-        [0, -0.72],
-      ];
-      const patch = patchCenters[index % patchCenters.length];
-      const angle = seeded(index, 61) * Math.PI * 2;
-      const radius = Math.sqrt(seeded(index, 62)) * 0.2;
-      const x = patch[0] + Math.cos(angle) * radius;
-      const y = patch[1] + Math.sin(angle) * radius;
+      const patchCount = 12;
+      const patchIndex = index % patchCount;
+      const center = spherePoint(patchIndex, patchCount, 0.985);
+      const reference = Math.abs(center.y) < 0.88
+        ? { x: 0, y: 1, z: 0 }
+        : { x: 1, y: 0, z: 0 };
+      const tangentXRaw = center.y * reference.z - center.z * reference.y;
+      const tangentYRaw = center.z * reference.x - center.x * reference.z;
+      const tangentZRaw = center.x * reference.y - center.y * reference.x;
+      const tangentLength = Math.hypot(tangentXRaw, tangentYRaw, tangentZRaw);
+      const tangentX = tangentXRaw / tangentLength;
+      const tangentY = tangentYRaw / tangentLength;
+      const tangentZ = tangentZRaw / tangentLength;
+      const bitangentX = center.y * tangentZ - center.z * tangentY;
+      const bitangentY = center.z * tangentX - center.x * tangentZ;
+      const bitangentZ = center.x * tangentY - center.y * tangentX;
+      const patchAngle = seeded(index, 61) * Math.PI * 2;
+      const patchRadius = Math.sqrt(seeded(index, 62)) * 0.19;
+      const x = center.x +
+        (tangentX * Math.cos(patchAngle) + bitangentX * Math.sin(patchAngle)) *
+          patchRadius;
+      const y = center.y +
+        (tangentY * Math.cos(patchAngle) + bitangentY * Math.sin(patchAngle)) *
+          patchRadius;
+      const z = center.z +
+        (tangentZ * Math.cos(patchAngle) + bitangentZ * Math.sin(patchAngle)) *
+          patchRadius;
+      const length = Math.hypot(x, y, z);
       points.push({
-        x,
-        y,
-        z: Math.sqrt(Math.max(0.06, 1 - x * x - y * y)) + 0.015,
+        x: x / length,
+        y: y / length,
+        z: z / length,
         emphasis: 1,
       });
     } else if (kind === 3) {
-      if (progress < 0.48) {
-        const ballPoint = spherePoint(index, Math.ceil(detailCount * 0.48), 0.3);
-        points.push(
-          rotatePoint(
-            {
-              x: ballPoint.x - 0.03,
-              y: ballPoint.y + 0.14,
-              z: ballPoint.z + 0.24,
-              emphasis: 1,
-            },
-            -0.06,
-            0.12,
-            -0.08,
-          ),
-        );
-      } else if (progress < 0.8) {
-        const webProgress = (progress - 0.48) / 0.32;
-        const vertical = index % 2 === 0;
-        const line = Math.floor(seeded(index, 63) * 6);
-        const along = seeded(index, 64);
-        const webPoint = vertical
-          ? {
-              x: -0.58 + line * 0.1,
-              y: -0.72 + along * 0.72,
-              z: 0.18,
-              emphasis: 1,
-            }
-          : {
-              x: -0.62 + along * 0.58,
-              y: -0.66 + line * 0.12,
-              z: 0.18,
-              emphasis: 1,
-            };
-        points.push(rotatePoint(webPoint, -0.06, 0.12, -0.08));
+      let batDetail: SportPoint;
+      if (progress < 0.55) {
+        const gripProgress = progress / 0.55;
+        const gripAngle = gripProgress * Math.PI * 14;
+        batDetail = {
+          x: -1.2 + gripProgress * 0.82,
+          y: Math.cos(gripAngle) * 0.108,
+          z: Math.sin(gripAngle) * 0.108,
+          emphasis: 1,
+        };
+      } else if (progress < 0.72) {
+        const knobProgress = (progress - 0.55) / 0.17;
+        const knobAngle = knobProgress * Math.PI * 6;
+        batDetail = {
+          x: -1.34 + Math.sin(knobProgress * Math.PI) * 0.025,
+          y: Math.cos(knobAngle) * 0.17,
+          z: Math.sin(knobAngle) * 0.17,
+          emphasis: 1,
+        };
+      } else if (progress < 0.9) {
+        const markProgress = (progress - 0.72) / 0.18;
+        batDetail = {
+          x: 0.16 + markProgress * 0.62,
+          y: Math.sin(markProgress * Math.PI * 2) * 0.07,
+          z: 0.305,
+          emphasis: 1,
+        };
       } else {
-        const stitchProgress = (progress - 0.8) / 0.2;
-        const angle = stitchProgress * Math.PI * 2;
-        points.push(
-          rotatePoint(
-            {
-              x: -0.04 + Math.cos(angle) * 0.48,
-              y: 0.2 + Math.sin(angle) * 0.39,
-              z: 0.28,
-              emphasis: 1,
-            },
-            -0.06,
-            0.12,
-            -0.08,
-          ),
-        );
+        const capProgress = (progress - 0.9) / 0.1;
+        const capAngle = capProgress * Math.PI * 2;
+        batDetail = {
+          x: 1.36,
+          y: Math.cos(capAngle) * 0.3,
+          z: Math.sin(capAngle) * 0.3,
+          emphasis: 1,
+        };
       }
+      points.push(rotatePoint(batDetail, -0.12, 0.18, -0.58));
     } else if (kind === 4) {
       const isThroat = progress < 0.5;
       const throatProgress = isThroat ? seeded(index, 55) : 0;
@@ -540,29 +514,45 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
           };
       points.push(rotatePoint(detailPoint, -0.03, 0.04, -0.38));
     } else {
-      const lace = Math.floor(progress * 6);
-      const across = (progress * 6) % 1;
-      const isSole = index < detailCount * 0.35;
-      points.push(
-        rotatePoint(
-          isSole
-            ? {
-                x: -1.22 + progress * 7.15,
-                y: 0.29,
-                z: 0.54,
-                emphasis: 1,
-              }
-            : {
-                x: -0.58 + lace * 0.17,
-                y: -0.43 + lace * 0.055,
-                z: -0.36 + across * 0.72,
-                emphasis: 1,
-              },
-          -0.08,
-          -0.12,
-          -0.1,
-        ),
-      );
+      let shoeDetail: SportPoint;
+      if (progress < 0.28) {
+        const soleProgress = progress / 0.28;
+        const side = index % 2 === 0 ? -1 : 1;
+        shoeDetail = {
+          x: -1.22 + soleProgress * 2.5,
+          y: 0.31 - Math.max(0, soleProgress - 0.78) * 0.14,
+          z: side * 0.53,
+          emphasis: 1,
+        };
+      } else if (progress < 0.65) {
+        const laceProgress = (progress - 0.28) / 0.37;
+        const lace = Math.min(6, Math.floor(laceProgress * 7));
+        const across = (laceProgress * 7) % 1;
+        shoeDetail = {
+          x: -0.58 + lace * 0.18,
+          y: -0.43 + lace * 0.058,
+          z: -0.38 + across * 0.76,
+          emphasis: 1,
+        };
+      } else if (progress < 0.86) {
+        const panelProgress = (progress - 0.65) / 0.21;
+        shoeDetail = {
+          x: -0.98 + panelProgress * 1.86,
+          y: -0.02 - Math.sin(panelProgress * Math.PI) * 0.22,
+          z: 0.54,
+          emphasis: 1,
+        };
+      } else {
+        const ventProgress = (progress - 0.86) / 0.14;
+        const row = index % 3;
+        shoeDetail = {
+          x: 0.66 + ventProgress * 0.5,
+          y: -0.1 + row * 0.09,
+          z: 0.46 + Math.sin(ventProgress * Math.PI) * 0.08,
+          emphasis: 1,
+        };
+      }
+      points.push(rotatePoint(shoeDetail, -0.08, -0.12, -0.1));
     }
   }
 
@@ -1608,6 +1598,10 @@ export default function Home() {
             kind="valley"
             label="Santa Clarita mountains and sun sticker"
           />
+          <WallSticker
+            kind="hands"
+            label="Hands holding wheat sticker"
+          />
           <div className="mission__statement" data-reveal="swoosh-left">
             <p>Our north star</p>
             <h2>
@@ -1669,6 +1663,10 @@ export default function Home() {
             kind="score"
             label="Basketball sticker"
           />
+          <WallSticker
+            kind="receipt"
+            label="Verified contribution receipt sticker"
+          />
           <div className="impact__top section-shell" data-reveal>
             <div className="section-index section-index--light">02 / Live impact</div>
             <div>
@@ -1710,6 +1708,10 @@ export default function Home() {
         </section>
 
         <section className="playbook section-shell" id="playbook">
+          <WallSticker
+            kind="clipboard"
+            label="Three-step playbook clipboard sticker"
+          />
           <WallSticker
             kind="pantry"
             label="Grocery bag and produce sticker"
@@ -1755,6 +1757,10 @@ export default function Home() {
             kind="bolt"
             label="Running shoe sticker"
           />
+          <WallSticker
+            kind="calendar"
+            label="Game schedule calendar sticker"
+          />
           <div className="section-index">04 / Games & achievements</div>
           <div className="placeholder" data-reveal>
             <span className="placeholder__tag">SCHEDULE LOCKER</span>
@@ -1774,6 +1780,10 @@ export default function Home() {
           <WallSticker
             kind="heart"
             label="Heart sticker"
+          />
+          <WallSticker
+            kind="handshake"
+            label="Community partnership handshake sticker"
           />
           <div className="partners__inner section-shell">
             <div className="section-index section-index--light">05 / Founding partners</div>
@@ -1803,8 +1813,8 @@ export default function Home() {
 
         <section className="faq section-shell" id="faq">
           <WallSticker
-            kind="hands"
-            label="Wheat and hands sticker"
+            kind="speech"
+            label="Questions and answers speech bubble sticker"
           />
           <div className="section-index">06 / Preemptive Q&amp;A</div>
           <div className="faq__heading" data-reveal>

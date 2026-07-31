@@ -75,7 +75,8 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /label: "FOOTBALL"/);
   assert.match(page, /label: "BASKETBALL"/);
   assert.match(page, /label: "SOCCER BALL"/);
-  assert.match(page, /label: "BASEBALL GLOVE"/);
+  assert.match(page, /label: "BASEBALL BAT"/);
+  assert.doesNotMatch(page, /label: "BASEBALL GLOVE"/);
   assert.match(page, /label: "TENNIS RACKET"/);
   assert.match(page, /label: "RUNNING SHOE"/);
   assert.match(page, /fizzleStart/);
@@ -83,6 +84,10 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /releasePulseStart/);
   assert.match(page, /pointer\.down/);
   assert.match(page, /quadraticCurveTo/);
+  assert.match(page, /patchCount = 12/);
+  assert.match(page, /bitangentX/);
+  assert.match(page, /panelProgress/);
+  assert.match(page, /ventProgress/);
   assert.doesNotMatch(page, /sports-sprite\.png/);
   assert.doesNotMatch(page, /publicSportModels/);
   assert.doesNotMatch(page, /sketchfab\.com\/models/);
@@ -95,6 +100,11 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /kind="feed"/);
   assert.match(page, /kind="pantry"/);
   assert.match(page, /kind="hands"/);
+  assert.match(page, /kind="clipboard"/);
+  assert.match(page, /kind="receipt"/);
+  assert.match(page, /kind="calendar"/);
+  assert.match(page, /kind="handshake"/);
+  assert.match(page, /kind="speech"/);
   assert.match(page, /Plate, fork, and spoon sticker/);
   assert.match(page, /Basketball sticker/);
   assert.match(page, /Soccer ball at sunset sticker/);
@@ -122,6 +132,11 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(css, /\.wall-sticker--feed/);
   assert.match(css, /\.wall-sticker--pantry/);
   assert.match(css, /\.wall-sticker--sunset/);
+  assert.match(css, /\.wall-sticker--clipboard/);
+  assert.match(css, /\.wall-sticker--receipt/);
+  assert.match(css, /\.wall-sticker--calendar/);
+  assert.match(css, /\.wall-sticker--handshake/);
+  assert.match(css, /\.wall-sticker--speech/);
   assert.match(css, /\.wall-sticker:hover::after/);
   assert.match(css, /\.hero-transition/);
   assert.match(css, /data-reveal="swoosh-left"/);
