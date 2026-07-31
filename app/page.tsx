@@ -1546,7 +1546,9 @@ export default function Home() {
               <span className="status-dot" />
               Student-led / school-powered / community-backed
             </div>
-            <span className="hero-tech__kicker">LOCAL IMPACT NETWORK / 001</span>
+            <span className="hero-tech__kicker">
+              SANTA CLARITA, CA / LOCAL IMPACT NETWORK
+            </span>
             <h1 id="hero-title">
               <span>Every</span>
               <span>play can</span>
@@ -1588,8 +1590,8 @@ export default function Home() {
           <i aria-hidden="true" /><i aria-hidden="true" /><i aria-hidden="true" />
           <WallSticker
             kind="feed"
-            note="A good play echoes past the buzzer."
-            text="FEED THE CITY"
+            note="Game-day energy becomes neighborhood support."
+            text="PLAY / FEED / REPEAT"
           />
         </div>
 
@@ -1608,8 +1610,8 @@ export default function Home() {
           <div className="section-index">01 / About</div>
           <WallSticker
             kind="valley"
-            note="Raised in the 661. Built for every block."
-            text="661 / LOCAL"
+            note="Home court: Santa Clarita, California."
+            text="SCV / 661"
           />
           <div className="mission__statement" data-reveal="swoosh-left">
             <p>Our north star</p>
@@ -1670,8 +1672,8 @@ export default function Home() {
         <section className="impact" id="impact" aria-labelledby="impact-title">
           <WallSticker
             kind="score"
-            note="Make the number mean something."
-            text="SCORE / SHARE"
+            note="Every verified achievement can help a neighbor."
+            text="SCORE → SHARE"
           />
           <div className="impact__top section-shell" data-reveal>
             <div className="section-index section-index--light">02 / Live impact</div>
@@ -1758,8 +1760,8 @@ export default function Home() {
         <section className="dashboard section-shell" id="dashboard">
           <WallSticker
             kind="bolt"
-            note="Turn game energy into local meals."
-            text="ENERGY → MEALS"
+            note="Turn the scoreboard into real community support."
+            text="POINTS → PLATES"
           />
           <div className="section-index">04 / Games & achievements</div>
           <div className="placeholder" data-reveal>

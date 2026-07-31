@@ -36,6 +36,7 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /href="tel:\+16615938857"/i);
   assert.match(html, /href="mailto:cadenmshin9@gmail\.com/i);
   assert.match(html, /Valencia High School/);
+  assert.match(html, /SANTA CLARITA, CA \/ LOCAL IMPACT NETWORK/);
   assert.match(html, /Hunger is local\./);
   assert.match(html, /So is the/);
   assert.match(html, /Sports Against Hunger is a student-led network designed to make/);
@@ -94,6 +95,8 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /kind="feed"/);
   assert.match(page, /kind="pantry"/);
   assert.match(page, /kind="hands"/);
+  assert.match(page, /PLAY \/ FEED \/ REPEAT/);
+  assert.match(page, /POINTS → PLATES/);
   assert.doesNotMatch(page, /meal-sticker--plate/);
   assert.doesNotMatch(page, /className="meal-flow"/);
   assert.match(page, /className="loader__tiles"/);
