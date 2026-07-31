@@ -125,37 +125,10 @@ const loaderTiles = Array.from({ length: 96 });
 const sportObjects = [
   { label: "FOOTBALL", primary: "#ffd56a", accent: "#ff6a2a" },
   { label: "BASKETBALL", primary: "#ff8a31", accent: "#fff0b2" },
-  { label: "SOCCER BALL", primary: "#f7f7e8", accent: "#b8ff46" },
+  { label: "SOCCER BALL", primary: "#f7f7e8", accent: "#151d1f" },
   { label: "BASEBALL GLOVE", primary: "#f2ad58", accent: "#fff4d5" },
   { label: "TENNIS RACKET", primary: "#dfff45", accent: "#72e6ff" },
   { label: "RUNNING SHOE", primary: "#72e6ff", accent: "#ffd56a" },
-] as const;
-
-const publicSportModels = [
-  {
-    sport: 3,
-    label: "Baseball glove",
-    author: "puihung",
-    source: "https://sketchfab.com/3d-models/baseball-gloves-e7f88026659a46128ee84611015441db",
-    embed:
-      "https://sketchfab.com/models/e7f88026659a46128ee84611015441db/embed?autostart=1&preload=1&transparent=1&ui_controls=0&ui_infos=0&ui_inspector=0&ui_stop=0&ui_watermark=0&ui_watermark_link=0",
-  },
-  {
-    sport: 4,
-    label: "Tennis racket",
-    author: "kazma",
-    source: "https://sketchfab.com/3d-models/tennis-rasket-e4f8adc5e77c48949ddb542156d1fdcc",
-    embed:
-      "https://sketchfab.com/models/e4f8adc5e77c48949ddb542156d1fdcc/embed?autostart=1&preload=1&transparent=1&ui_controls=0&ui_infos=0&ui_inspector=0&ui_stop=0&ui_watermark=0&ui_watermark_link=0",
-  },
-  {
-    sport: 5,
-    label: "Running shoe",
-    author: "shyambhanushali3",
-    source: "https://sketchfab.com/3d-models/running-shoe-759202749ca548c09d7cad02046588d8",
-    embed:
-      "https://sketchfab.com/models/759202749ca548c09d7cad02046588d8/embed?autostart=1&preload=1&transparent=1&ui_controls=0&ui_infos=0&ui_inspector=0&ui_stop=0&ui_watermark=0&ui_watermark_link=0",
-  },
 ] as const;
 
 type SportPoint = {
@@ -167,6 +140,29 @@ type SportPoint = {
 
 function Arrow() {
   return <span aria-hidden="true">↗</span>;
+}
+
+function WallSticker({
+  kind,
+  text,
+  note,
+}: {
+  kind: string;
+  text: string;
+  note: string;
+}) {
+  return (
+    <span
+      aria-label={`${text}. ${note}`}
+      className={`wall-sticker wall-sticker--${kind}`}
+      data-note={note}
+      role="img"
+      tabIndex={0}
+    >
+      <strong>{text}</strong>
+      <i aria-hidden="true" />
+    </span>
+  );
 }
 
 function Playmark() {
@@ -226,7 +222,7 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
       (kind === 1
         ? 0.34
         : kind === 2
-          ? 0.28
+          ? 0.38
           : kind === 3
             ? 0.31
             : kind === 4
@@ -312,40 +308,48 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
       const racketProgress = index / Math.max(1, surfaceCount - 1);
       let racketPoint: SportPoint;
 
-      if (racketProgress < 0.34) {
-        const angle = (racketProgress / 0.34) * Math.PI * 2;
-        const edgeNoise = (seeded(index, 47) - 0.5) * 0.035;
+      if (racketProgress < 0.3) {
+        const angle = (racketProgress / 0.3) * Math.PI * 2;
+        const edgeNoise = (seeded(index, 47) - 0.5) * 0.025;
         racketPoint = {
-          x: Math.cos(angle) * (0.73 + edgeNoise),
-          y: -0.42 + Math.sin(angle) * (0.92 + edgeNoise),
+          x: Math.cos(angle) * (0.7 + edgeNoise),
+          y: -0.45 + Math.sin(angle) * (0.9 + edgeNoise),
           z: (seeded(index, 48) - 0.5) * 0.11,
           emphasis: 0.75,
         };
-      } else if (racketProgress < 0.77) {
-        const stringProgress = (racketProgress - 0.34) / 0.43;
+      } else if (racketProgress < 0.76) {
+        const gridLine = Math.min(9, Math.floor(seeded(index, 53) * 10));
+        const along = seeded(index, 54);
         const vertical = index % 2 === 0;
-        const line = Math.floor(stringProgress * 18) % 9;
-        const along = (stringProgress * 18) % 1;
-        const offset = -0.58 + line * 0.145;
-        racketPoint = vertical
-          ? {
-              x: offset,
-              y: -1.2 + along * 1.56,
-              z: 0.04,
-              emphasis: 0.35,
-            }
-          : {
-              x: -0.65 + along * 1.3,
-              y: -1.14 + line * 0.17,
-              z: 0.04,
-              emphasis: 0.35,
-            };
+
+        if (vertical) {
+          const x = -0.56 + gridLine * (1.12 / 9);
+          const halfHeight =
+            0.9 * Math.sqrt(Math.max(0, 1 - (x * x) / (0.7 * 0.7)));
+          racketPoint = {
+            x,
+            y: -0.45 - halfHeight + along * halfHeight * 2,
+            z: 0.035,
+            emphasis: 0.32,
+          };
+        } else {
+          const y = -1.17 + gridLine * (1.44 / 9);
+          const normalizedY = (y + 0.45) / 0.9;
+          const halfWidth =
+            0.7 * Math.sqrt(Math.max(0, 1 - normalizedY * normalizedY));
+          racketPoint = {
+            x: -halfWidth + along * halfWidth * 2,
+            y,
+            z: 0.035,
+            emphasis: 0.32,
+          };
+        }
       } else {
-        const handleProgress = (racketProgress - 0.77) / 0.23;
+        const handleProgress = (racketProgress - 0.76) / 0.24;
         racketPoint = {
-          x: (seeded(index, 49) - 0.5) * 0.18,
-          y: 0.38 + handleProgress * 1.35,
-          z: (seeded(index, 50) - 0.5) * 0.13,
+          x: (seeded(index, 49) - 0.5) * (0.15 - handleProgress * 0.025),
+          y: 0.38 + handleProgress * 1.28,
+          z: (seeded(index, 50) - 0.5) * 0.11,
           emphasis: handleProgress > 0.72 ? 0.8 : 0.45,
         };
       }
@@ -431,42 +435,45 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
       }
     } else if (kind === 1) {
       const seam = index % 4;
-      const angle = progress * Math.PI * 8;
+      const seamIndex = Math.floor(index / 4);
+      const seamLength = Math.max(2, Math.ceil(detailCount / 4));
+      const angle = (seamIndex / (seamLength - 1)) * Math.PI * 2;
+      const vertical = {
+        x: 0,
+        y: Math.cos(angle),
+        z: Math.sin(angle),
+        emphasis: 1,
+      };
       const point =
         seam === 0
-          ? { x: 0, y: Math.cos(angle), z: Math.sin(angle) }
+          ? vertical
           : seam === 1
-            ? { x: Math.cos(angle), y: 0, z: Math.sin(angle) }
-            : seam === 2
-              ? { x: Math.cos(angle), y: Math.sin(angle) * 0.52, z: Math.sin(angle) * 0.84 }
-              : { x: Math.cos(angle) * 0.54, y: Math.sin(angle), z: Math.cos(angle) * 0.84 };
+            ? { x: Math.cos(angle), y: 0, z: Math.sin(angle), emphasis: 1 }
+            : rotatePoint(vertical, 0, 0, seam === 2 ? 0.68 : -0.68);
       points.push({ ...point, emphasis: 1 });
     } else if (kind === 2) {
       const patchCenters = [
-        [0, 0, 0.98],
-        [-0.58, -0.34, 0.7],
-        [0.58, -0.34, 0.7],
-        [-0.5, 0.48, 0.7],
-        [0.5, 0.48, 0.7],
+        [0, 0],
+        [-0.58, -0.34],
+        [0.58, -0.34],
+        [-0.5, 0.48],
+        [0.5, 0.48],
+        [0, -0.72],
       ];
       const patch = patchCenters[index % patchCenters.length];
-      const angle =
-        (Math.floor(index / patchCenters.length) /
-          Math.ceil(detailCount / patchCenters.length)) *
-        Math.PI *
-        10;
-      const radius = 0.17 + 0.04 * Math.sin(angle * 5);
+      const angle = seeded(index, 61) * Math.PI * 2;
+      const radius = Math.sqrt(seeded(index, 62)) * 0.2;
       const x = patch[0] + Math.cos(angle) * radius;
       const y = patch[1] + Math.sin(angle) * radius;
       points.push({
         x,
         y,
-        z: Math.sqrt(Math.max(0.08, 1 - x * x - y * y)),
+        z: Math.sqrt(Math.max(0.06, 1 - x * x - y * y)) + 0.015,
         emphasis: 1,
       });
     } else if (kind === 3) {
-      if (progress < 0.62) {
-        const ballPoint = spherePoint(index, Math.ceil(detailCount * 0.62), 0.3);
+      if (progress < 0.48) {
+        const ballPoint = spherePoint(index, Math.ceil(detailCount * 0.48), 0.3);
         points.push(
           rotatePoint(
             {
@@ -480,11 +487,11 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
             -0.08,
           ),
         );
-      } else {
-        const webProgress = (progress - 0.62) / 0.38;
+      } else if (progress < 0.8) {
+        const webProgress = (progress - 0.48) / 0.32;
         const vertical = index % 2 === 0;
-        const line = Math.floor(webProgress * 12) % 6;
-        const along = (webProgress * 12) % 1;
+        const line = Math.floor(seeded(index, 63) * 6);
+        const along = seeded(index, 64);
         const webPoint = vertical
           ? {
               x: -0.58 + line * 0.1,
@@ -499,22 +506,38 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
               emphasis: 1,
             };
         points.push(rotatePoint(webPoint, -0.06, 0.12, -0.08));
+      } else {
+        const stitchProgress = (progress - 0.8) / 0.2;
+        const angle = stitchProgress * Math.PI * 2;
+        points.push(
+          rotatePoint(
+            {
+              x: -0.04 + Math.cos(angle) * 0.48,
+              y: 0.2 + Math.sin(angle) * 0.39,
+              z: 0.28,
+              emphasis: 1,
+            },
+            -0.06,
+            0.12,
+            -0.08,
+          ),
+        );
       }
     } else if (kind === 4) {
-      const isThroat = progress < 0.45;
+      const isThroat = progress < 0.5;
+      const throatProgress = isThroat ? seeded(index, 55) : 0;
+      const side = index % 2 === 0 ? -1 : 1;
       const detailPoint = isThroat
         ? {
-            x:
-              (progress < 0.225 ? -1 : 1) *
-              (0.08 + (progress % 0.225) * 2.25),
-            y: 0.44 + (progress % 0.225) * 2.2,
-            z: 0.08,
+            x: side * (0.36 - throatProgress * 0.27),
+            y: 0.3 + throatProgress * 0.48,
+            z: 0.07,
             emphasis: 1,
           }
         : {
-            x: (seeded(index, 51) - 0.5) * 0.22,
-            y: 0.84 + ((progress - 0.45) / 0.55) * 0.88,
-            z: (seeded(index, 52) - 0.5) * 0.16,
+            x: Math.sin(index * 1.7) * 0.075,
+            y: 0.76 + ((progress - 0.5) / 0.5) * 0.86,
+            z: Math.cos(index * 1.7) * 0.055,
             emphasis: 1,
           };
       points.push(rotatePoint(detailPoint, -0.03, 0.04, -0.38));
@@ -898,40 +921,25 @@ function drawSolidSport(
 
 function HeroFieldCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const fieldRef = useRef<HTMLDivElement>(null);
-  const [displaySport, setDisplaySport] = useState(0);
-  const [modelChanging, setModelChanging] = useState(false);
-  const [seenModels, setSeenModels] = useState<number[]>([]);
-  const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const field = fieldRef.current;
     if (!canvas) return;
 
     const context = canvas.getContext("2d");
     if (!context) return;
 
-    const spriteImage = new Image();
-    let spriteReady = false;
-    spriteImage.decoding = "async";
-    spriteImage.src = "/sports-sprite.png";
-    spriteImage.onload = () => {
-      spriteReady = true;
-      if (prefersReducedMotion) render(performance.now());
-    };
-
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    setReducedMotion(prefersReducedMotion);
     const pointer = {
       x: 0,
       y: 0,
       screenX: -1000,
       screenY: -1000,
-      lensX: -1000,
-      lensY: -1000,
+      velocityX: 0,
+      velocityY: 0,
+      down: false,
       active: false,
     };
     let width = 0;
@@ -942,6 +950,8 @@ function HeroFieldCanvas() {
     let lastMorph = performance.now();
     let fizzleStart = -1;
     let revealStart = -1;
+    let releasePulseStart = -1;
+    let woundStrength = 0;
     let transitionTimer = 0;
     const transitionDuration = 880;
     let particles: Array<{
@@ -955,13 +965,6 @@ function HeroFieldCanvas() {
 
     const applySport = (nextSport: number, immediate = false) => {
       activeSport = nextSport % sportObjects.length;
-      setDisplaySport(activeSport);
-      setModelChanging(false);
-      if (activeSport >= 3) {
-        setSeenModels((current) =>
-          current.includes(activeSport) ? current : [...current, activeSport],
-        );
-      }
       const targets = makeSportShape(activeSport, particles.length);
       particles.forEach((particle, index) => {
         particle.target = targets[index];
@@ -986,7 +989,6 @@ function HeroFieldCanvas() {
       }
       if (fizzleStart >= 0) return;
       fizzleStart = performance.now();
-      setModelChanging(true);
       transitionTimer = window.setTimeout(() => {
         applySport(nextSport);
         fizzleStart = -1;
@@ -1017,64 +1019,6 @@ function HeroFieldCanvas() {
       canvas.height = Math.floor(height * ratio);
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
       createParticles();
-    };
-
-    const drawSpriteSport = (
-      centerX: number,
-      centerY: number,
-      scale: number,
-      time: number,
-      alpha: number,
-      rotationX: number,
-      rotationY: number,
-      rotationZ: number,
-    ) => {
-      if (!spriteReady || !spriteImage.naturalWidth) {
-        context.globalAlpha = alpha;
-        drawSolidSport(context, activeSport, centerX, centerY, scale, time);
-        context.globalAlpha = 1;
-        return;
-      }
-
-      const columns = 3;
-      const rows = 2;
-      const sourceWidth = spriteImage.naturalWidth / columns;
-      const sourceHeight = spriteImage.naturalHeight / rows;
-      const column = activeSport % columns;
-      const row = Math.floor(activeSport / columns);
-      const displayScales = [3.5, 2.85, 2.85, 3.05, 3.7, 3.35];
-      const yOffsets = [0, 0, 0, scale * 0.04, scale * 0.08, scale * 0.04];
-      const displaySize = scale * displayScales[activeSport];
-      const float = prefersReducedMotion
-        ? 0
-        : Math.sin(time * 0.0011) * scale * 0.018;
-
-      context.save();
-      context.translate(centerX, centerY + yOffsets[activeSport] + float);
-      context.rotate(rotationZ);
-      context.transform(
-        1 - Math.abs(Math.sin(rotationY)) * 0.08,
-        Math.sin(rotationX) * 0.025,
-        Math.sin(rotationY) * 0.018,
-        1 + Math.sin(rotationX) * 0.025,
-        0,
-        0,
-      );
-      context.globalAlpha = alpha;
-      context.imageSmoothingEnabled = true;
-      context.imageSmoothingQuality = "high";
-      context.drawImage(
-        spriteImage,
-        column * sourceWidth,
-        row * sourceHeight,
-        sourceWidth,
-        sourceHeight,
-        -displaySize / 2,
-        -displaySize / 2,
-        displaySize,
-        displaySize,
-      );
-      context.restore();
     };
 
     const render = (time = 0) => {
@@ -1113,23 +1057,35 @@ function HeroFieldCanvas() {
         pointer.x * 0.055;
       const rotationX = -0.06 + pointer.y * 0.045;
       const rotationZ =
-        activeSport === 5 ? 0 : Math.sin(time * 0.00022) * 0.045;
+        (activeSport === 5 ? 0 : Math.sin(time * 0.00022) * 0.045) +
+        (pointer.down ? pointer.velocityX * 0.0007 : 0);
       const fizzleEase =
-        fizzleProgress * fizzleProgress * (3 - 2 * fizzleProgress);
+        fizzleProgress *
+        fizzleProgress *
+        fizzleProgress *
+        (fizzleProgress * (fizzleProgress * 6 - 15) + 10);
       const revealEase = 1 - Math.pow(1 - revealProgress, 3);
       const transitionAlpha =
         fizzleProgress > 0
           ? Math.pow(1 - fizzleEase, 0.82)
           : revealEase;
-      const lensRadius = Math.max(52, Math.min(76, width * 0.105));
-      const ballSport = activeSport <= 2;
-
-      if (pointer.active) {
-        pointer.lensX += (pointer.screenX - pointer.lensX) * 0.22;
-        pointer.lensY += (pointer.screenY - pointer.lensY) * 0.22;
+      const forceRadius = Math.max(92, Math.min(154, width * 0.2));
+      woundStrength +=
+        ((pointer.down ? 1 : 0) - woundStrength) *
+        (pointer.down ? 0.13 : 0.08);
+      const releaseProgress =
+        releasePulseStart < 0
+          ? 1
+          : Math.min(1, (time - releasePulseStart) / 720);
+      if (releasePulseStart >= 0 && releaseProgress >= 1) {
+        releasePulseStart = -1;
       }
-      field?.style.setProperty("--model-turn", `${rotationZ * 0.72}rad`);
-      field?.style.setProperty("--model-tilt", `${pointer.y * 1.8}deg`);
+      const releasePulse =
+        releasePulseStart < 0
+          ? 0
+          : Math.sin(releaseProgress * Math.PI) * (1 - releaseProgress);
+      pointer.velocityX *= 0.92;
+      pointer.velocityY *= 0.92;
 
       const aura = context.createRadialGradient(
         centerX,
@@ -1145,66 +1101,23 @@ function HeroFieldCanvas() {
       context.fillStyle = aura;
       context.fillRect(0, 0, width, height);
 
-      if (ballSport && transitionAlpha > 0.02) {
-        drawSpriteSport(
-          centerX,
-          centerY,
-          scale,
-          time,
-          transitionAlpha * 0.24,
-          rotationX,
-          rotationY,
-          rotationZ,
-        );
-      }
-
-      if (
-        ballSport &&
-        pointer.active &&
-        transitionAlpha > 0.03
-      ) {
-        const patchAngle =
-          Math.atan2(pointer.lensY - centerY, pointer.lensX - centerX) * 0.28;
-        context.save();
-        context.beginPath();
-        context.ellipse(
-          pointer.lensX,
-          pointer.lensY,
-          lensRadius,
-          lensRadius * 0.72,
-          patchAngle,
+      if (pointer.active) {
+        const gravityAura = context.createRadialGradient(
+          pointer.screenX,
+          pointer.screenY,
           0,
-          Math.PI * 2,
+          pointer.screenX,
+          pointer.screenY,
+          forceRadius,
         );
-        context.clip();
-        const patchWash = context.createRadialGradient(
-          pointer.lensX - lensRadius * 0.25,
-          pointer.lensY - lensRadius * 0.25,
-          1,
-          pointer.lensX,
-          pointer.lensY,
-          lensRadius,
+        gravityAura.addColorStop(
+          0,
+          pointer.down ? `${palette.accent}30` : `${palette.primary}18`,
         );
-        patchWash.addColorStop(0, "rgba(255,255,255,.2)");
-        patchWash.addColorStop(1, "rgba(6,27,45,.18)");
-        context.fillStyle = patchWash;
-        context.fillRect(
-          pointer.lensX - lensRadius,
-          pointer.lensY - lensRadius,
-          lensRadius * 2,
-          lensRadius * 2,
-        );
-        drawSpriteSport(
-          centerX,
-          centerY,
-          scale,
-          time,
-          transitionAlpha,
-          rotationX,
-          rotationY,
-          rotationZ,
-        );
-        context.restore();
+        gravityAura.addColorStop(0.35, `${palette.accent}0d`);
+        gravityAura.addColorStop(1, "rgba(255,255,255,0)");
+        context.fillStyle = gravityAura;
+        context.fillRect(0, 0, width, height);
       }
 
       const basePath = new Path2D();
@@ -1249,9 +1162,39 @@ function HeroFieldCanvas() {
             centerY +
             (localScreenX * sinSpiral + localScreenY * cosSpiral) * compact;
         }
+        let interactionEnergy = 0;
+        if (pointer.active && fizzleProgress === 0) {
+          const pointerDx = screenX - pointer.screenX;
+          const pointerDy = screenY - pointer.screenY;
+          const pointerDistance = Math.hypot(pointerDx, pointerDy);
+          if (pointerDistance < forceRadius) {
+            const force = Math.pow(1 - pointerDistance / forceRadius, 2);
+            const normalX = pointerDx / Math.max(1, pointerDistance);
+            const normalY = pointerDy / Math.max(1, pointerDistance);
+            const radialShift = (pointer.down ? -28 : 21) * force;
+            screenX += normalX * radialShift;
+            screenY += normalY * radialShift;
+            if (pointer.down) {
+              const split =
+                Math.sin(index * 12.9898 + particle.phase * 4.1) >= 0 ? 1 : -1;
+              const shear = woundStrength * force * (12 + morphEnergy * 5);
+              screenX += -normalY * split * shear;
+              screenY += normalX * split * shear;
+            }
+            interactionEnergy = force;
+          }
+        }
+        if (releasePulse > 0) {
+          const implode = 1 - releasePulse * 0.28;
+          screenX = centerX + (screenX - centerX) * implode;
+          screenY = centerY + (screenY - centerY) * implode;
+        }
         const size = Math.max(
           0.55,
-          particle.size * perspective * (0.9 + (z2 + 1) * 0.14),
+          particle.size *
+            perspective *
+            (0.9 + (z2 + 1) * 0.14) *
+            (1 + interactionEnergy * woundStrength * 0.55),
         );
         const path =
           particle.target.emphasis > 0.55 ? detailPath : basePath;
@@ -1269,74 +1212,73 @@ function HeroFieldCanvas() {
       context.globalCompositeOperation = "source-over";
       context.globalAlpha = 1;
 
-      if (ballSport && pointer.active && transitionAlpha > 0.03) {
-        const patchAngle =
-          Math.atan2(pointer.lensY - centerY, pointer.lensX - centerX) * 0.28;
-        const rim = context.createLinearGradient(
-          pointer.lensX - lensRadius,
-          pointer.lensY - lensRadius,
-          pointer.lensX + lensRadius,
-          pointer.lensY + lensRadius,
+      if (pointer.active && woundStrength > 0.02 && transitionAlpha > 0.03) {
+        const woundX =
+          centerX +
+          Math.max(-scale * 0.54, Math.min(scale * 0.54, pointer.screenX - centerX));
+        const woundY =
+          centerY +
+          Math.max(-scale * 0.54, Math.min(scale * 0.54, pointer.screenY - centerY));
+        const seamAngle =
+          Math.atan2(pointer.screenY - centerY, pointer.screenX - centerX) +
+          Math.PI / 2;
+        const seamLength = scale * (0.58 + woundStrength * 0.28);
+        const seamDx = Math.cos(seamAngle) * seamLength;
+        const seamDy = Math.sin(seamAngle) * seamLength;
+        const controlX = woundX + pointer.velocityX * 0.75;
+        const controlY = woundY + pointer.velocityY * 0.75;
+        const woundGradient = context.createLinearGradient(
+          woundX - seamDx,
+          woundY - seamDy,
+          woundX + seamDx,
+          woundY + seamDy,
         );
-        rim.addColorStop(0, "#72e6ff");
-        rim.addColorStop(0.45, "#dfff45");
-        rim.addColorStop(1, "#ff7a52");
+        woundGradient.addColorStop(0, `${palette.accent}00`);
+        woundGradient.addColorStop(0.32, palette.accent);
+        woundGradient.addColorStop(0.52, "#fffbe8");
+        woundGradient.addColorStop(0.72, palette.primary);
+        woundGradient.addColorStop(1, `${palette.primary}00`);
         context.save();
-        context.strokeStyle = rim;
-        context.lineWidth = 1.6;
-        context.globalAlpha = transitionAlpha * 0.94;
-        context.shadowColor = "rgba(7, 25, 42, .46)";
-        context.shadowBlur = 13;
-        context.shadowOffsetY = 7;
+        context.strokeStyle = woundGradient;
+        context.lineCap = "round";
+        context.lineWidth = 2.2 + woundStrength * 2.4;
+        context.globalAlpha = transitionAlpha * woundStrength;
+        context.shadowColor = palette.accent;
+        context.shadowBlur = 18 + woundStrength * 24;
         context.beginPath();
-        context.ellipse(
-          pointer.lensX,
-          pointer.lensY,
-          lensRadius,
-          lensRadius * 0.72,
-          patchAngle,
-          0,
-          Math.PI * 2,
+        context.moveTo(woundX - seamDx, woundY - seamDy);
+        context.quadraticCurveTo(
+          controlX,
+          controlY,
+          woundX + seamDx,
+          woundY + seamDy,
         );
         context.stroke();
-        context.shadowColor = "transparent";
-        context.strokeStyle = "rgba(255,255,255,.58)";
-        context.lineWidth = 0.9;
+        context.strokeStyle = "rgba(255,255,255,.82)";
+        context.lineWidth = 0.75;
+        context.shadowBlur = 0;
         context.beginPath();
-        context.ellipse(
-          pointer.lensX - lensRadius * 0.05,
-          pointer.lensY - lensRadius * 0.08,
-          lensRadius * 0.86,
-          lensRadius * 0.58,
-          patchAngle,
-          Math.PI * 1.08,
-          Math.PI * 1.8,
+        context.moveTo(woundX - seamDx * 0.86, woundY - seamDy * 0.86);
+        context.quadraticCurveTo(
+          controlX + Math.sin(time * 0.008) * 7,
+          controlY + Math.cos(time * 0.007) * 7,
+          woundX + seamDx * 0.86,
+          woundY + seamDy * 0.86,
         );
         context.stroke();
         context.restore();
-      } else if (!ballSport && pointer.active && transitionAlpha > 0.03) {
-        const traceWidth =
-          activeSport === 4 ? scale * 1.22 : scale * 1.54;
-        const traceHeight =
-          activeSport === 5 ? scale * 0.72 : scale * 1.35;
-        const traceOffset = Math.sin(time * 0.0016) * 0.18;
+      } else if (pointer.active && transitionAlpha > 0.03) {
         context.save();
-        context.translate(centerX, centerY);
-        context.rotate(rotationZ);
-        context.strokeStyle = `${palette.accent}8f`;
-        context.lineWidth = 1.1;
-        context.setLineDash([2, 8]);
-        context.lineDashOffset = -time * 0.012;
+        context.translate(pointer.screenX, pointer.screenY);
+        context.rotate(Math.atan2(pointer.velocityY, pointer.velocityX || 1));
+        context.strokeStyle = `${palette.accent}b8`;
+        context.lineWidth = 1.3;
+        context.setLineDash([8, 7]);
+        context.lineDashOffset = -time * 0.018;
         context.beginPath();
-        context.ellipse(
-          0,
-          0,
-          traceWidth,
-          traceHeight,
-          traceOffset,
-          Math.PI * 0.12,
-          Math.PI * 1.42,
-        );
+        context.arc(0, 0, 19 + Math.sin(time * 0.005) * 2, -0.82, 0.82);
+        context.moveTo(-15, -12);
+        context.arc(0, 0, 19, Math.PI - 0.62, Math.PI + 0.62);
         context.stroke();
         context.restore();
       }
@@ -1348,36 +1290,60 @@ function HeroFieldCanvas() {
 
     const onPointerMove = (event: PointerEvent) => {
       const bounds = canvas.getBoundingClientRect();
-      pointer.screenX = event.clientX - bounds.left;
-      pointer.screenY = event.clientY - bounds.top;
-      if (!pointer.active) {
-        pointer.lensX = pointer.screenX;
-        pointer.lensY = pointer.screenY;
-      }
+      const nextX = event.clientX - bounds.left;
+      const nextY = event.clientY - bounds.top;
+      pointer.velocityX =
+        (nextX - (pointer.active ? pointer.screenX : nextX)) * 0.58 +
+        pointer.velocityX * 0.42;
+      pointer.velocityY =
+        (nextY - (pointer.active ? pointer.screenY : nextY)) * 0.58 +
+        pointer.velocityY * 0.42;
+      pointer.screenX = nextX;
+      pointer.screenY = nextY;
       pointer.x = (pointer.screenX / Math.max(1, width) - 0.5) * 2;
       pointer.y = (pointer.screenY / Math.max(1, height) - 0.5) * 2;
       pointer.active = true;
-      field?.style.setProperty("--focus-x", `${pointer.screenX}px`);
-      field?.style.setProperty("--focus-y", `${pointer.screenY}px`);
       if (prefersReducedMotion) render(performance.now());
     };
     const onPointerLeave = () => {
+      if (pointer.down) return;
       pointer.active = false;
       pointer.x = 0;
       pointer.y = 0;
       if (prefersReducedMotion) render(performance.now());
     };
-    const onPointerDown = () => setSport(activeSport + 1);
+    const onPointerDown = (event: PointerEvent) => {
+      onPointerMove(event);
+      pointer.down = true;
+      canvas.setPointerCapture?.(event.pointerId);
+      if (prefersReducedMotion) render(performance.now());
+    };
+    const onPointerUp = (event: PointerEvent) => {
+      if (!pointer.down) return;
+      pointer.down = false;
+      releasePulseStart = performance.now();
+      setSport(activeSport + 1);
+      if (canvas.hasPointerCapture?.(event.pointerId)) {
+        canvas.releasePointerCapture(event.pointerId);
+      }
+      if (prefersReducedMotion) render(performance.now());
+    };
+    const onPointerCancel = (event: PointerEvent) => {
+      pointer.down = false;
+      pointer.active = false;
+      if (canvas.hasPointerCapture?.(event.pointerId)) {
+        canvas.releasePointerCapture(event.pointerId);
+      }
+    };
     const onFocus = () => {
       pointer.screenX = width * 0.54;
       pointer.screenY = height * 0.49;
-      pointer.lensX = pointer.screenX;
-      pointer.lensY = pointer.screenY;
       pointer.active = true;
       if (prefersReducedMotion) render(performance.now());
     };
     const onBlur = () => {
       pointer.active = false;
+      pointer.down = false;
       pointer.x = 0;
       pointer.y = 0;
       if (prefersReducedMotion) render(performance.now());
@@ -1400,6 +1366,8 @@ function HeroFieldCanvas() {
     canvas.addEventListener("pointermove", onPointerMove);
     canvas.addEventListener("pointerleave", onPointerLeave);
     canvas.addEventListener("pointerdown", onPointerDown);
+    canvas.addEventListener("pointerup", onPointerUp);
+    canvas.addEventListener("pointercancel", onPointerCancel);
     canvas.addEventListener("focus", onFocus);
     canvas.addEventListener("blur", onBlur);
     canvas.addEventListener("keydown", onKeyDown);
@@ -1407,7 +1375,9 @@ function HeroFieldCanvas() {
     render();
     const sportTimer = prefersReducedMotion
       ? 0
-      : window.setInterval(() => setSport(activeSport + 1), 11200);
+      : window.setInterval(() => {
+          if (!pointer.down) setSport(activeSport + 1);
+        }, 11200);
 
     return () => {
       observer.disconnect();
@@ -1415,77 +1385,26 @@ function HeroFieldCanvas() {
       canvas.removeEventListener("pointermove", onPointerMove);
       canvas.removeEventListener("pointerleave", onPointerLeave);
       canvas.removeEventListener("pointerdown", onPointerDown);
+      canvas.removeEventListener("pointerup", onPointerUp);
+      canvas.removeEventListener("pointercancel", onPointerCancel);
       canvas.removeEventListener("focus", onFocus);
       canvas.removeEventListener("blur", onBlur);
       canvas.removeEventListener("keydown", onKeyDown);
-      spriteImage.onload = null;
       if (sportTimer) window.clearInterval(sportTimer);
       if (transitionTimer) window.clearTimeout(transitionTimer);
       window.cancelAnimationFrame(frame);
     };
   }, []);
 
-  const activePublicModel = publicSportModels.find(
-    (model) => model.sport === displaySport,
-  );
-
   return (
-    <div
-      ref={fieldRef}
-      className={`hero-sport-field hero-sport-field--sport-${displaySport}${
-        modelChanging ? " is-changing" : ""
-      }`}
-    >
-      <div className="hero-model-stack" aria-hidden="true">
-        {publicSportModels
-          .filter((model) => seenModels.includes(model.sport))
-          .map((model) => (
-            <iframe
-              key={model.sport}
-              className={`hero-model hero-model--${model.sport}${
-                displaySport === model.sport && !modelChanging
-                  ? " is-active"
-                  : ""
-              }`}
-              src={`${model.embed}&autospin=${reducedMotion ? 0 : 0.18}`}
-              title={`${model.label} interactive 3D model`}
-              loading="lazy"
-              allow="autoplay; fullscreen; xr-spatial-tracking"
-            />
-          ))}
-        <i className="hero-model__scan" />
-      </div>
-
-      <canvas
-        ref={canvasRef}
-        className="hero-visual__canvas"
-        aria-describedby="hero-art-instructions"
-        aria-label="Interactive particle and 3D sports artwork"
-        role="button"
-        tabIndex={0}
-      />
-
-      {activePublicModel ? (
-        <p className="hero-model-credit">
-          3D model by{" "}
-          <a
-            href={activePublicModel.source}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {activePublicModel.author}
-          </a>
-          {" / "}
-          <a
-            href="https://creativecommons.org/licenses/by/4.0/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            CC BY
-          </a>
-        </p>
-      ) : null}
-    </div>
+    <canvas
+      ref={canvasRef}
+      className="hero-visual__canvas"
+      aria-describedby="hero-art-instructions"
+      aria-label="Interactive gravity-distorted particle sports artwork"
+      role="button"
+      tabIndex={0}
+    />
   );
 }
 
@@ -1651,9 +1570,9 @@ export default function Home() {
           <div className="hero-visual">
             <HeroFieldCanvas />
             <p className="sr-only" id="hero-art-instructions">
-              Move over a ball to reveal its curved realistic detail sticker.
-              Equipment uses full 3D model reveals. Click, or press Enter or
-              Space, to advance to the next object.
+              Move over the artwork to bend its particles. Press and hold to
+              tear open a gravity seam, then release to rebuild the next sports
+              object. Press Enter or Space to advance with a keyboard.
             </p>
           </div>
 
@@ -1665,11 +1584,13 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="hero-transition" aria-hidden="true">
-          <i /><i /><i />
-          <div className="meal-sticker meal-sticker--hero">
-            <span /><b /><b /><b />
-          </div>
+        <div className="hero-transition">
+          <i aria-hidden="true" /><i aria-hidden="true" /><i aria-hidden="true" />
+          <WallSticker
+            kind="feed"
+            note="A good play echoes past the buzzer."
+            text="FEED THE CITY"
+          />
         </div>
 
         <div className="marquee" aria-hidden="true">
@@ -1685,9 +1606,11 @@ export default function Home() {
 
         <section className="mission section-shell" id="about">
           <div className="section-index">01 / About</div>
-          <div className="meal-sticker meal-sticker--plate" aria-hidden="true">
-            <span /><b /><b /><b />
-          </div>
+          <WallSticker
+            kind="valley"
+            note="Raised in the 661. Built for every block."
+            text="661 / LOCAL"
+          />
           <div className="mission__statement" data-reveal="swoosh-left">
             <p>Our north star</p>
             <h2>
@@ -1745,9 +1668,11 @@ export default function Home() {
         </section>
 
         <section className="impact" id="impact" aria-labelledby="impact-title">
-          <div className="meal-sticker meal-sticker--bowl" aria-hidden="true">
-            <span /><b /><b /><b />
-          </div>
+          <WallSticker
+            kind="score"
+            note="Make the number mean something."
+            text="SCORE / SHARE"
+          />
           <div className="impact__top section-shell" data-reveal>
             <div className="section-index section-index--light">02 / Live impact</div>
             <div>
@@ -1789,9 +1714,11 @@ export default function Home() {
         </section>
 
         <section className="playbook section-shell" id="playbook">
-          <div className="meal-sticker meal-sticker--bread" aria-hidden="true">
-            <span /><b /><b /><b />
-          </div>
+          <WallSticker
+            kind="pantry"
+            note="The only acceptable final score."
+            text="NO EMPTY PLATES"
+          />
           <div className="section-index">03 / The playbook</div>
           <div className="playbook__heading" data-reveal="swoosh-left">
             <h2>Simple enough to explain.<br />Strong enough to trust.</h2>
@@ -1829,9 +1756,11 @@ export default function Home() {
         </section>
 
         <section className="dashboard section-shell" id="dashboard">
-          <div className="meal-sticker meal-sticker--utensils" aria-hidden="true">
-            <span /><b /><b /><b />
-          </div>
+          <WallSticker
+            kind="bolt"
+            note="Turn game energy into local meals."
+            text="ENERGY → MEALS"
+          />
           <div className="section-index">04 / Games & achievements</div>
           <div className="placeholder" data-reveal>
             <span className="placeholder__tag">SCHEDULE LOCKER</span>
@@ -1848,9 +1777,11 @@ export default function Home() {
         </section>
 
         <section className="partners" id="partners">
-          <div className="meal-sticker meal-sticker--produce" aria-hidden="true">
-            <span /><b /><b /><b />
-          </div>
+          <WallSticker
+            kind="heart"
+            note="Love your team. Feed your block."
+            text="LOVE YOUR BLOCK"
+          />
           <div className="partners__inner section-shell">
             <div className="section-index section-index--light">05 / Founding partners</div>
             <div className="partners__copy" data-reveal>
@@ -1878,9 +1809,11 @@ export default function Home() {
         </section>
 
         <section className="faq section-shell" id="faq">
-          <div className="meal-sticker meal-sticker--grain" aria-hidden="true">
-            <span /><b /><b /><b />
-          </div>
+          <WallSticker
+            kind="hands"
+            note="Trust is the strongest assist."
+            text="TEAMWORK FEEDS"
+          />
           <div className="section-index">06 / Preemptive Q&amp;A</div>
           <div className="faq__heading" data-reveal>
             <span>THE QUESTIONS WORTH ASKING EARLY</span>
@@ -1955,6 +1888,11 @@ export default function Home() {
         </section>
 
         <section className="final-cta contact" id="contact" aria-labelledby="contact-title">
+          <WallSticker
+            kind="sunset"
+            note="A small local promise can travel far."
+            text="PLAY FOR LA"
+          />
           <div className="final-cta__orb" aria-hidden="true">
             <span>SAH</span>
             <i />

@@ -4515,156 +4515,11 @@ body {
 }
 
 .hero-visual__canvas {
-  cursor: zoom-in;
-}
-
-.hero-sport-field {
-  --focus-x: 50%;
-  --focus-y: 50%;
-  --model-turn: 0rad;
-  --model-tilt: 0deg;
-  position: absolute;
-  z-index: 2;
-  inset: 0;
-  overflow: hidden;
-  isolation: isolate;
-}
-
-.hero-model-stack {
-  position: absolute;
-  z-index: 1;
-  inset: 2% 1% 0;
-  overflow: hidden;
-  pointer-events: none;
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    #000 9%,
-    #000 91%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    #000 9%,
-    #000 91%,
-    transparent 100%
-  );
-}
-
-.hero-model {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  min-height: 0;
-  border: 0;
-  opacity: 0;
-  filter: saturate(1.08) contrast(1.05) drop-shadow(0 25px 38px rgba(7, 24, 38, 0.32));
-  pointer-events: none;
-  transform: rotate(var(--model-turn)) rotateX(var(--model-tilt)) scale(0.96);
-  transition:
-    opacity 0.56s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.56s ease,
-    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform;
-}
-
-.hero-model.is-active {
-  opacity: 0.9;
-  filter: saturate(1.08) contrast(1.06) drop-shadow(0 29px 42px rgba(7, 24, 38, 0.38));
-  transform: rotate(var(--model-turn)) rotateX(var(--model-tilt)) scale(1);
-}
-
-.hero-model--3 {
-  top: -8%;
-  left: -3%;
-  width: 106%;
-  height: 112%;
-}
-
-.hero-model--4 {
-  top: -11%;
-  left: -8%;
-  width: 116%;
-  height: 121%;
-}
-
-.hero-model--5 {
-  top: -5%;
-  left: -9%;
-  width: 118%;
-  height: 109%;
-}
-
-.hero-model__scan {
-  position: absolute;
-  z-index: 3;
-  top: 9%;
-  bottom: 10%;
-  left: var(--focus-x);
-  width: 1px;
-  opacity: 0;
-  background: linear-gradient(
-    transparent,
-    rgba(223, 255, 69, 0.18) 12%,
-    rgba(223, 255, 69, 0.88) 50%,
-    rgba(114, 230, 255, 0.16) 88%,
-    transparent
-  );
-  box-shadow:
-    0 0 14px rgba(223, 255, 69, 0.42),
-    26px 0 44px rgba(114, 230, 255, 0.1);
-  transform: skewX(-7deg);
-  transition:
-    left 0.18s ease-out,
-    opacity 0.35s ease;
-}
-
-.hero-sport-field--sport-3 .hero-model__scan,
-.hero-sport-field--sport-4 .hero-model__scan,
-.hero-sport-field--sport-5 .hero-model__scan {
-  opacity: 0.72;
-}
-
-.hero-sport-field.is-changing .hero-model__scan {
-  opacity: 0;
-}
-
-.hero-sport-field--sport-3 .hero-visual__canvas,
-.hero-sport-field--sport-4 .hero-visual__canvas,
-.hero-sport-field--sport-5 .hero-visual__canvas {
   cursor: grab;
 }
 
-.hero-model-credit {
-  position: absolute;
-  z-index: 5;
-  right: 28px;
-  bottom: 28px;
-  margin: 0;
-  padding: 5px 8px;
-  border: 1px solid rgba(255, 255, 255, 0.13);
-  background: rgba(10, 30, 47, 0.46);
-  color: rgba(255, 255, 255, 0.52);
-  font-size: 7px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  text-transform: uppercase;
-  backdrop-filter: blur(8px);
-}
-
-.hero-model-credit a {
-  color: rgba(223, 255, 69, 0.86);
-  text-decoration: none;
-}
-
-.hero-model-credit a:hover,
-.hero-model-credit a:focus-visible {
-  text-decoration: underline;
+.hero-visual__canvas:active {
+  cursor: grabbing;
 }
 
 .hero-visual__topline,
@@ -5093,6 +4948,248 @@ body {
   left: 23px;
 }
 
+.wall-sticker {
+  --sticker-angle: -5deg;
+  --sticker-bg: #dfff45;
+  --sticker-ink: #101814;
+  position: absolute;
+  z-index: 4;
+  display: grid;
+  width: 104px;
+  min-height: 78px;
+  place-items: center;
+  padding: 13px 12px;
+  border: 2px solid var(--sticker-ink);
+  background: var(--sticker-bg);
+  box-shadow:
+    4px 5px 0 var(--sticker-ink),
+    0 17px 28px rgba(16, 24, 20, 0.17);
+  color: var(--sticker-ink);
+  cursor: help;
+  isolation: isolate;
+  outline: 0;
+  text-align: center;
+  transform: rotate(var(--sticker-angle));
+  transform-origin: 50% 72%;
+  transition:
+    transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.3s ease;
+}
+
+.wall-sticker strong {
+  position: relative;
+  z-index: 2;
+  max-width: 9ch;
+  font-family: var(--font-display), sans-serif;
+  font-size: 15px;
+  font-weight: 950;
+  letter-spacing: -0.045em;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.wall-sticker > i {
+  position: absolute;
+  z-index: 1;
+  right: 9px;
+  bottom: 8px;
+  width: 17px;
+  height: 4px;
+  background: currentColor;
+  content: "";
+  transform: rotate(-14deg);
+}
+
+.wall-sticker::before {
+  position: absolute;
+  z-index: 0;
+  inset: 5px;
+  border: 1px dashed color-mix(in srgb, currentColor 42%, transparent);
+  content: "";
+  pointer-events: none;
+}
+
+.wall-sticker::after {
+  position: absolute;
+  z-index: 12;
+  top: calc(100% + 13px);
+  right: -8px;
+  width: 172px;
+  padding: 9px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 2px;
+  background: #101814;
+  box-shadow: 0 12px 24px rgba(16, 24, 20, 0.24);
+  color: #fffbe8;
+  content: attr(data-note);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  line-height: 1.35;
+  opacity: 0;
+  pointer-events: none;
+  text-align: left;
+  text-transform: uppercase;
+  transform: translateY(-7px) rotate(2deg) scale(0.94);
+  transform-origin: top right;
+  transition:
+    opacity 0.2s ease,
+    transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.wall-sticker:hover,
+.wall-sticker:focus-visible {
+  z-index: 20;
+  filter: saturate(1.12);
+  box-shadow:
+    7px 9px 0 var(--sticker-ink),
+    0 25px 40px rgba(16, 24, 20, 0.24);
+  transform: translateY(-11px) rotate(0deg) scale(1.07);
+}
+
+.wall-sticker:hover::after,
+.wall-sticker:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0) rotate(0deg) scale(1);
+}
+
+.wall-sticker:focus-visible {
+  outline: 3px solid #72e6ff;
+  outline-offset: 5px;
+}
+
+.wall-sticker--feed {
+  right: 8%;
+  bottom: 18%;
+  width: 92px;
+  min-height: 92px;
+  border-radius: 50%;
+  --sticker-angle: 9deg;
+  --sticker-bg: #dfff45;
+}
+
+.wall-sticker--feed::before {
+  border-radius: 50%;
+}
+
+.wall-sticker--feed::after {
+  top: auto;
+  bottom: calc(100% + 12px);
+  transform-origin: bottom right;
+}
+
+.wall-sticker--valley {
+  top: 7%;
+  right: -20px;
+  --sticker-angle: 7deg;
+  --sticker-bg: #ff8058;
+  clip-path: polygon(7% 0, 100% 5%, 94% 100%, 0 92%);
+}
+
+.wall-sticker--score {
+  top: 48%;
+  left: 18px;
+  width: 112px;
+  min-height: 66px;
+  border-radius: 50%;
+  --sticker-angle: -8deg;
+  --sticker-bg: #72e6ff;
+}
+
+.wall-sticker--score::before {
+  border-radius: 50%;
+}
+
+.wall-sticker--score::after,
+.wall-sticker--bolt::after {
+  right: auto;
+  left: -8px;
+  transform-origin: top left;
+}
+
+.wall-sticker--pantry {
+  top: 8%;
+  right: -24px;
+  width: 116px;
+  border-style: dashed;
+  --sticker-angle: 6deg;
+  --sticker-bg: #fff2cf;
+}
+
+.wall-sticker--pantry strong {
+  font-family: var(--font-body), sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  line-height: 1.05;
+}
+
+.wall-sticker--bolt {
+  top: 14%;
+  left: -22px;
+  width: 114px;
+  min-height: 104px;
+  border: 0;
+  clip-path: polygon(50% 0, 61% 25%, 88% 12%, 77% 39%, 100% 50%, 76% 61%, 87% 88%, 61% 76%, 50% 100%, 39% 76%, 12% 88%, 24% 61%, 0 50%, 24% 39%, 13% 12%, 39% 25%);
+  --sticker-angle: -6deg;
+  --sticker-bg: #337e9c;
+  --sticker-ink: #fffbe8;
+}
+
+.wall-sticker--bolt::before {
+  inset: 13px;
+  border-radius: 50%;
+}
+
+.wall-sticker--heart {
+  top: 8%;
+  right: 20px;
+  width: 108px;
+  border-radius: 54% 46% 48% 52% / 46% 54% 45% 55%;
+  --sticker-angle: 8deg;
+  --sticker-bg: #ff4f58;
+  --sticker-ink: #fffbe8;
+}
+
+.wall-sticker--heart::before {
+  border-radius: 50%;
+}
+
+.wall-sticker--hands {
+  top: 32%;
+  right: -26px;
+  width: 102px;
+  min-height: 102px;
+  --sticker-angle: 8deg;
+  --sticker-bg: #101814;
+  --sticker-ink: #dfff45;
+  transform: rotate(calc(var(--sticker-angle) + 45deg));
+}
+
+.wall-sticker--hands strong,
+.wall-sticker--hands > i {
+  transform: rotate(-45deg);
+}
+
+.wall-sticker--hands:hover,
+.wall-sticker--hands:focus-visible {
+  transform: translateY(-11px) rotate(45deg) scale(1.07);
+}
+
+.wall-sticker--sunset {
+  top: 10%;
+  right: 6%;
+  width: 126px;
+  min-height: 70px;
+  border-radius: 999px;
+  --sticker-angle: -8deg;
+  --sticker-bg: linear-gradient(135deg, #ffd45e 0 45%, #ff7656 46% 68%, #ba57a5 69%);
+}
+
+.wall-sticker--sunset::before {
+  border-radius: 999px;
+}
+
 @keyframes bridgeSweep {
   0%, 100% { transform: translateX(-2%) rotate(-4deg); }
   50% { transform: translateX(7%) rotate(-2.5deg); }
@@ -5149,6 +5246,16 @@ body {
   .meal-sticker--bowl {
     top: 6%;
     left: 2%;
+  }
+
+  .wall-sticker--valley,
+  .wall-sticker--pantry,
+  .wall-sticker--hands {
+    right: -8px;
+  }
+
+  .wall-sticker--bolt {
+    left: -8px;
   }
 }
 
@@ -5247,16 +5354,57 @@ body {
     opacity: 0.9;
   }
 
-  .hero-model-stack {
-    inset: 5% 0 2%;
-    opacity: 0.84;
+  .wall-sticker {
+    width: 82px;
+    min-height: 62px;
+    padding: 9px 8px;
+    opacity: 0.92;
   }
 
-  .hero-model-credit {
-    right: 18px;
-    bottom: 20px;
-    max-width: 170px;
-    font-size: 6px;
+  .wall-sticker strong {
+    font-size: 12px;
+  }
+
+  .wall-sticker::after {
+    width: 142px;
+    font-size: 8px;
+  }
+
+  .wall-sticker--feed {
+    right: 4%;
+    bottom: 8%;
+    width: 70px;
+    min-height: 70px;
+  }
+
+  .wall-sticker--score {
+    left: -7px;
+    width: 88px;
+    min-height: 55px;
+  }
+
+  .wall-sticker--bolt {
+    left: -8px;
+    width: 88px;
+    min-height: 82px;
+  }
+
+  .wall-sticker--heart {
+    right: -6px;
+    width: 86px;
+  }
+
+  .wall-sticker--hands {
+    right: -9px;
+    width: 76px;
+    min-height: 76px;
+  }
+
+  .wall-sticker--sunset {
+    top: 7%;
+    right: 3%;
+    width: 98px;
+    min-height: 56px;
   }
 }
 
@@ -5268,8 +5416,8 @@ body {
     animation: none;
   }
 
-  .hero-model,
-  .hero-model__scan {
+  .wall-sticker,
+  .wall-sticker::after {
     transition: none;
   }
 
