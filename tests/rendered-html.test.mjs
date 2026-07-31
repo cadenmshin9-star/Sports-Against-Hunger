@@ -80,6 +80,11 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /fizzleStart/);
   assert.match(page, /drawSolidSport/);
   assert.match(page, /sports-sprite\.png/);
+  assert.match(page, /publicSportModels/);
+  assert.match(page, /sketchfab\.com\/models/);
+  assert.match(page, /className="hero-model-stack"/);
+  assert.match(page, /context\.ellipse/);
+  assert.match(page, /fizzleEase/);
   assert.match(page, /role="button"/);
   assert.match(page, /lensRadius/);
   assert.match(page, /className="hero-transition"/);
@@ -95,6 +100,9 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(css, /\[data-reveal\]\.is-visible/);
   assert.match(css, /\.valencia-crest/);
   assert.match(css, /\.hero-visual__canvas/);
+  assert.match(css, /\.hero-sport-field/);
+  assert.match(css, /\.hero-model\.is-active/);
+  assert.match(css, /\.hero-model__scan/);
   assert.doesNotMatch(css, /\.sport-cursor/);
   assert.match(css, /\.faq-item\.is-open \.faq-answer-shell/);
   assert.match(css, /\.meal-sticker--plate/);

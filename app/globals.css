@@ -4518,6 +4518,155 @@ body {
   cursor: zoom-in;
 }
 
+.hero-sport-field {
+  --focus-x: 50%;
+  --focus-y: 50%;
+  --model-turn: 0rad;
+  --model-tilt: 0deg;
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero-model-stack {
+  position: absolute;
+  z-index: 1;
+  inset: 2% 1% 0;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 9%,
+    #000 91%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 9%,
+    #000 91%,
+    transparent 100%
+  );
+}
+
+.hero-model {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  border: 0;
+  opacity: 0;
+  filter: saturate(1.08) contrast(1.05) drop-shadow(0 25px 38px rgba(7, 24, 38, 0.32));
+  pointer-events: none;
+  transform: rotate(var(--model-turn)) rotateX(var(--model-tilt)) scale(0.96);
+  transition:
+    opacity 0.56s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.56s ease,
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.hero-model.is-active {
+  opacity: 0.9;
+  filter: saturate(1.08) contrast(1.06) drop-shadow(0 29px 42px rgba(7, 24, 38, 0.38));
+  transform: rotate(var(--model-turn)) rotateX(var(--model-tilt)) scale(1);
+}
+
+.hero-model--3 {
+  top: -8%;
+  left: -3%;
+  width: 106%;
+  height: 112%;
+}
+
+.hero-model--4 {
+  top: -11%;
+  left: -8%;
+  width: 116%;
+  height: 121%;
+}
+
+.hero-model--5 {
+  top: -5%;
+  left: -9%;
+  width: 118%;
+  height: 109%;
+}
+
+.hero-model__scan {
+  position: absolute;
+  z-index: 3;
+  top: 9%;
+  bottom: 10%;
+  left: var(--focus-x);
+  width: 1px;
+  opacity: 0;
+  background: linear-gradient(
+    transparent,
+    rgba(223, 255, 69, 0.18) 12%,
+    rgba(223, 255, 69, 0.88) 50%,
+    rgba(114, 230, 255, 0.16) 88%,
+    transparent
+  );
+  box-shadow:
+    0 0 14px rgba(223, 255, 69, 0.42),
+    26px 0 44px rgba(114, 230, 255, 0.1);
+  transform: skewX(-7deg);
+  transition:
+    left 0.18s ease-out,
+    opacity 0.35s ease;
+}
+
+.hero-sport-field--sport-3 .hero-model__scan,
+.hero-sport-field--sport-4 .hero-model__scan,
+.hero-sport-field--sport-5 .hero-model__scan {
+  opacity: 0.72;
+}
+
+.hero-sport-field.is-changing .hero-model__scan {
+  opacity: 0;
+}
+
+.hero-sport-field--sport-3 .hero-visual__canvas,
+.hero-sport-field--sport-4 .hero-visual__canvas,
+.hero-sport-field--sport-5 .hero-visual__canvas {
+  cursor: grab;
+}
+
+.hero-model-credit {
+  position: absolute;
+  z-index: 5;
+  right: 28px;
+  bottom: 28px;
+  margin: 0;
+  padding: 5px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  background: rgba(10, 30, 47, 0.46);
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+.hero-model-credit a {
+  color: rgba(223, 255, 69, 0.86);
+  text-decoration: none;
+}
+
+.hero-model-credit a:hover,
+.hero-model-credit a:focus-visible {
+  text-decoration: underline;
+}
+
 .hero-visual__topline,
 .hero-visual__identity,
 .hero-visual__score,
@@ -5097,6 +5246,18 @@ body {
     width: 48px;
     opacity: 0.9;
   }
+
+  .hero-model-stack {
+    inset: 5% 0 2%;
+    opacity: 0.84;
+  }
+
+  .hero-model-credit {
+    right: 18px;
+    bottom: 20px;
+    max-width: 170px;
+    font-size: 6px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -5105,6 +5266,11 @@ body {
   .meal-sticker--bowl > span::before,
   .meal-sticker--bowl > span::after {
     animation: none;
+  }
+
+  .hero-model,
+  .hero-model__scan {
+    transition: none;
   }
 
   .faq-answer-shell {

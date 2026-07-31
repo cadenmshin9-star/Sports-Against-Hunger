@@ -131,6 +131,33 @@ const sportObjects = [
   { label: "RUNNING SHOE", primary: "#72e6ff", accent: "#ffd56a" },
 ] as const;
 
+const publicSportModels = [
+  {
+    sport: 3,
+    label: "Baseball glove",
+    author: "puihung",
+    source: "https://sketchfab.com/3d-models/baseball-gloves-e7f88026659a46128ee84611015441db",
+    embed:
+      "https://sketchfab.com/models/e7f88026659a46128ee84611015441db/embed?autostart=1&preload=1&transparent=1&ui_controls=0&ui_infos=0&ui_inspector=0&ui_stop=0&ui_watermark=0&ui_watermark_link=0",
+  },
+  {
+    sport: 4,
+    label: "Tennis racket",
+    author: "kazma",
+    source: "https://sketchfab.com/3d-models/tennis-rasket-e4f8adc5e77c48949ddb542156d1fdcc",
+    embed:
+      "https://sketchfab.com/models/e4f8adc5e77c48949ddb542156d1fdcc/embed?autostart=1&preload=1&transparent=1&ui_controls=0&ui_infos=0&ui_inspector=0&ui_stop=0&ui_watermark=0&ui_watermark_link=0",
+  },
+  {
+    sport: 5,
+    label: "Running shoe",
+    author: "shyambhanushali3",
+    source: "https://sketchfab.com/3d-models/running-shoe-759202749ca548c09d7cad02046588d8",
+    embed:
+      "https://sketchfab.com/models/759202749ca548c09d7cad02046588d8/embed?autostart=1&preload=1&transparent=1&ui_controls=0&ui_infos=0&ui_inspector=0&ui_stop=0&ui_watermark=0&ui_watermark_link=0",
+  },
+] as const;
+
 type SportPoint = {
   x: number;
   y: number;
@@ -195,7 +222,16 @@ function rotatePoint(
 
 function makeSportShape(kind: number, count: number): SportPoint[] {
   const detailCount = Math.floor(
-    count * (kind === 2 ? 0.28 : kind === 3 ? 0.24 : kind === 4 ? 0.34 : 0.18),
+    count *
+      (kind === 1
+        ? 0.34
+        : kind === 2
+          ? 0.28
+          : kind === 3
+            ? 0.31
+            : kind === 4
+              ? 0.34
+              : 0.18),
   );
   const surfaceCount = count - detailCount;
   const points: SportPoint[] = [];
@@ -221,43 +257,54 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
     } else if (kind === 3) {
       const gloveProgress = index / Math.max(1, surfaceCount - 1);
 
-      if (gloveProgress < 0.63) {
+      if (gloveProgress < 0.53) {
         const angle = seeded(index, 41) * Math.PI * 2;
         const radius = Math.sqrt(seeded(index, 42));
+        const cuff = seeded(index, 43) < 0.16;
         points.push(
           rotatePoint(
             {
-              x: -0.08 + Math.cos(angle) * radius * 0.83,
-              y: 0.24 + Math.sin(angle) * radius * 0.78,
-              z: (seeded(index, 43) - 0.5) * 0.24,
+              x: cuff
+                ? -0.06 + (seeded(index, 44) - 0.5) * 0.9
+                : -0.04 + Math.cos(angle) * radius * 0.78,
+              y: cuff
+                ? 0.79 + (seeded(index, 45) - 0.5) * 0.34
+                : 0.2 + Math.sin(angle) * radius * 0.7,
+              z: (seeded(index, 46) - 0.5) * (cuff ? 0.18 : 0.3),
               emphasis: index % 23 === 0 ? 0.42 : 0,
             },
-            -0.03,
-            0.08,
-            -0.16,
+            -0.06,
+            0.12,
+            -0.08,
           ),
         );
       } else {
-        const fingerProgress = (gloveProgress - 0.63) / 0.37;
+        const fingerProgress = (gloveProgress - 0.53) / 0.47;
         const finger = Math.min(4, Math.floor(fingerProgress * 5));
         const along = (fingerProgress * 5) % 1;
-        const fingerLengths = [0.66, 0.96, 1.14, 1.04, 0.79];
-        const fingerX = -0.7 + finger * 0.34;
-        const thumbSweep = finger === 0 ? along * -0.3 : 0;
+        const fingerLengths = [0.76, 1.02, 1.2, 1.1, 0.88];
+        const fingerAngles = [-0.58, -0.2, -0.03, 0.16, 0.4];
+        const fingerRoots = [-0.61, -0.34, -0.04, 0.29, 0.57];
+        const fingerLength = fingerLengths[finger];
+        const fingerAngle = fingerAngles[finger];
+        const fingerWidth = 0.22 - along * 0.08;
         points.push(
           rotatePoint(
             {
-              x: fingerX + thumbSweep + (seeded(index, 44) - 0.5) * 0.25,
+              x:
+                fingerRoots[finger] +
+                Math.sin(fingerAngle) * along * fingerLength +
+                (seeded(index, 47) - 0.5) * fingerWidth,
               y:
-                0.16 -
-                along * fingerLengths[finger] +
-                (seeded(index, 45) - 0.5) * 0.12,
-              z: (seeded(index, 46) - 0.5) * 0.2,
-              emphasis: index % 15 === 0 ? 0.5 : 0,
+                -0.06 -
+                Math.cos(fingerAngle) * along * fingerLength +
+                (seeded(index, 48) - 0.5) * fingerWidth,
+              z: (seeded(index, 49) - 0.5) * fingerWidth * 1.4,
+              emphasis: along > 0.82 || index % 14 === 0 ? 0.58 : 0.16,
             },
-            -0.03,
-            0.08,
-            -0.16,
+            -0.06,
+            0.12,
+            -0.08,
           ),
         );
       }
@@ -418,20 +465,41 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
         emphasis: 1,
       });
     } else if (kind === 3) {
-      const ballPoint = spherePoint(index, detailCount, 0.31);
-      points.push(
-        rotatePoint(
-          {
-            x: ballPoint.x + 0.12,
-            y: ballPoint.y + 0.25,
-            z: ballPoint.z + 0.18,
-            emphasis: 1,
-          },
-          -0.03,
-          0.08,
-          -0.16,
-        ),
-      );
+      if (progress < 0.62) {
+        const ballPoint = spherePoint(index, Math.ceil(detailCount * 0.62), 0.3);
+        points.push(
+          rotatePoint(
+            {
+              x: ballPoint.x - 0.03,
+              y: ballPoint.y + 0.14,
+              z: ballPoint.z + 0.24,
+              emphasis: 1,
+            },
+            -0.06,
+            0.12,
+            -0.08,
+          ),
+        );
+      } else {
+        const webProgress = (progress - 0.62) / 0.38;
+        const vertical = index % 2 === 0;
+        const line = Math.floor(webProgress * 12) % 6;
+        const along = (webProgress * 12) % 1;
+        const webPoint = vertical
+          ? {
+              x: -0.58 + line * 0.1,
+              y: -0.72 + along * 0.72,
+              z: 0.18,
+              emphasis: 1,
+            }
+          : {
+              x: -0.62 + along * 0.58,
+              y: -0.66 + line * 0.12,
+              z: 0.18,
+              emphasis: 1,
+            };
+        points.push(rotatePoint(webPoint, -0.06, 0.12, -0.08));
+      }
     } else if (kind === 4) {
       const isThroat = progress < 0.45;
       const detailPoint = isThroat
@@ -830,9 +898,15 @@ function drawSolidSport(
 
 function HeroFieldCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const fieldRef = useRef<HTMLDivElement>(null);
+  const [displaySport, setDisplaySport] = useState(0);
+  const [modelChanging, setModelChanging] = useState(false);
+  const [seenModels, setSeenModels] = useState<number[]>([]);
+  const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    const field = fieldRef.current;
     if (!canvas) return;
 
     const context = canvas.getContext("2d");
@@ -850,6 +924,7 @@ function HeroFieldCanvas() {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+    setReducedMotion(prefersReducedMotion);
     const pointer = {
       x: 0,
       y: 0,
@@ -868,6 +943,7 @@ function HeroFieldCanvas() {
     let fizzleStart = -1;
     let revealStart = -1;
     let transitionTimer = 0;
+    const transitionDuration = 880;
     let particles: Array<{
       x: number;
       y: number;
@@ -879,6 +955,13 @@ function HeroFieldCanvas() {
 
     const applySport = (nextSport: number, immediate = false) => {
       activeSport = nextSport % sportObjects.length;
+      setDisplaySport(activeSport);
+      setModelChanging(false);
+      if (activeSport >= 3) {
+        setSeenModels((current) =>
+          current.includes(activeSport) ? current : [...current, activeSport],
+        );
+      }
       const targets = makeSportShape(activeSport, particles.length);
       particles.forEach((particle, index) => {
         particle.target = targets[index];
@@ -887,10 +970,9 @@ function HeroFieldCanvas() {
           particle.y = targets[index].y;
           particle.z = targets[index].z;
         } else {
-          const scatter = 1.5 + seeded(index, activeSport + 20) * 0.8;
-          particle.x = targets[index].x * scatter;
-          particle.y = targets[index].y * scatter;
-          particle.z = targets[index].z * scatter;
+          particle.x = (seeded(index, activeSport + 20) - 0.5) * 0.18;
+          particle.y = (seeded(index, activeSport + 21) - 0.5) * 0.18;
+          particle.z = (seeded(index, activeSport + 22) - 0.5) * 0.18;
         }
       });
       lastMorph = performance.now();
@@ -904,22 +986,23 @@ function HeroFieldCanvas() {
       }
       if (fizzleStart >= 0) return;
       fizzleStart = performance.now();
+      setModelChanging(true);
       transitionTimer = window.setTimeout(() => {
         applySport(nextSport);
         fizzleStart = -1;
-      }, 1325);
+      }, transitionDuration);
     };
 
     const createParticles = () => {
       const count =
-        width < 540 ? 420 : Math.min(760, Math.floor(width * 1.02));
+        width < 540 ? 520 : Math.min(980, Math.floor(width * 1.3));
       const targets = makeSportShape(activeSport, count);
       particles = targets.map((target, index) => ({
         x: target.x + (seeded(index, 12) - 0.5) * 2.4,
         y: target.y + (seeded(index, 13) - 0.5) * 2.4,
         z: target.z + (seeded(index, 14) - 0.5) * 2.4,
         target,
-        size: 0.82 + seeded(index, 15) * 1.68,
+        size: 0.94 + seeded(index, 15) * 1.82,
         phase: seeded(index, 16) * Math.PI * 2,
       }));
       setSport(activeSport, true);
@@ -941,9 +1024,15 @@ function HeroFieldCanvas() {
       centerY: number,
       scale: number,
       time: number,
+      alpha: number,
+      rotationX: number,
+      rotationY: number,
+      rotationZ: number,
     ) => {
       if (!spriteReady || !spriteImage.naturalWidth) {
+        context.globalAlpha = alpha;
         drawSolidSport(context, activeSport, centerX, centerY, scale, time);
+        context.globalAlpha = 1;
         return;
       }
 
@@ -961,7 +1050,17 @@ function HeroFieldCanvas() {
         : Math.sin(time * 0.0011) * scale * 0.018;
 
       context.save();
-      context.globalAlpha = 0.98;
+      context.translate(centerX, centerY + yOffsets[activeSport] + float);
+      context.rotate(rotationZ);
+      context.transform(
+        1 - Math.abs(Math.sin(rotationY)) * 0.08,
+        Math.sin(rotationX) * 0.025,
+        Math.sin(rotationY) * 0.018,
+        1 + Math.sin(rotationX) * 0.025,
+        0,
+        0,
+      );
+      context.globalAlpha = alpha;
       context.imageSmoothingEnabled = true;
       context.imageSmoothingQuality = "high";
       context.drawImage(
@@ -970,8 +1069,8 @@ function HeroFieldCanvas() {
         row * sourceHeight,
         sourceWidth,
         sourceHeight,
-        centerX - displaySize / 2,
-        centerY - displaySize / 2 + yOffsets[activeSport] + float,
+        -displaySize / 2,
+        -displaySize / 2,
         displaySize,
         displaySize,
       );
@@ -999,29 +1098,38 @@ function HeroFieldCanvas() {
       const fizzleProgress =
         fizzleStart < 0
           ? 0
-          : Math.min(1, Math.max(0, (time - fizzleStart) / 1325));
+          : Math.min(
+              1,
+              Math.max(0, (time - fizzleStart) / transitionDuration),
+            );
       const revealProgress =
         revealStart < 0
           ? 1
-          : Math.min(1, Math.max(0, (time - revealStart) / 1900));
+          : Math.min(1, Math.max(0, (time - revealStart) / 1500));
       if (revealStart >= 0 && revealProgress >= 1) revealStart = -1;
       const palette = sportObjects[activeSport];
       const rotationY =
-        (prefersReducedMotion ? 0.08 : Math.sin(time * 0.00032) * 0.16) +
+        (prefersReducedMotion ? 0.08 : time * 0.00017) +
         pointer.x * 0.055;
       const rotationX = -0.06 + pointer.y * 0.045;
       const rotationZ =
         activeSport === 5 ? 0 : Math.sin(time * 0.00022) * 0.045;
+      const fizzleEase =
+        fizzleProgress * fizzleProgress * (3 - 2 * fizzleProgress);
+      const revealEase = 1 - Math.pow(1 - revealProgress, 3);
       const transitionAlpha =
         fizzleProgress > 0
-          ? Math.pow(1 - fizzleProgress, 1.12)
-          : Math.pow(revealProgress, 0.64);
-      const lensRadius = Math.max(74, Math.min(106, width * 0.16));
+          ? Math.pow(1 - fizzleEase, 0.82)
+          : revealEase;
+      const lensRadius = Math.max(52, Math.min(76, width * 0.105));
+      const ballSport = activeSport <= 2;
 
       if (pointer.active) {
-        pointer.lensX += (pointer.screenX - pointer.lensX) * 0.17;
-        pointer.lensY += (pointer.screenY - pointer.lensY) * 0.17;
+        pointer.lensX += (pointer.screenX - pointer.lensX) * 0.22;
+        pointer.lensY += (pointer.screenY - pointer.lensY) * 0.22;
       }
+      field?.style.setProperty("--model-turn", `${rotationZ * 0.72}rad`);
+      field?.style.setProperty("--model-tilt", `${pointer.y * 1.8}deg`);
 
       const aura = context.createRadialGradient(
         centerX,
@@ -1037,6 +1145,68 @@ function HeroFieldCanvas() {
       context.fillStyle = aura;
       context.fillRect(0, 0, width, height);
 
+      if (ballSport && transitionAlpha > 0.02) {
+        drawSpriteSport(
+          centerX,
+          centerY,
+          scale,
+          time,
+          transitionAlpha * 0.24,
+          rotationX,
+          rotationY,
+          rotationZ,
+        );
+      }
+
+      if (
+        ballSport &&
+        pointer.active &&
+        transitionAlpha > 0.03
+      ) {
+        const patchAngle =
+          Math.atan2(pointer.lensY - centerY, pointer.lensX - centerX) * 0.28;
+        context.save();
+        context.beginPath();
+        context.ellipse(
+          pointer.lensX,
+          pointer.lensY,
+          lensRadius,
+          lensRadius * 0.72,
+          patchAngle,
+          0,
+          Math.PI * 2,
+        );
+        context.clip();
+        const patchWash = context.createRadialGradient(
+          pointer.lensX - lensRadius * 0.25,
+          pointer.lensY - lensRadius * 0.25,
+          1,
+          pointer.lensX,
+          pointer.lensY,
+          lensRadius,
+        );
+        patchWash.addColorStop(0, "rgba(255,255,255,.2)");
+        patchWash.addColorStop(1, "rgba(6,27,45,.18)");
+        context.fillStyle = patchWash;
+        context.fillRect(
+          pointer.lensX - lensRadius,
+          pointer.lensY - lensRadius,
+          lensRadius * 2,
+          lensRadius * 2,
+        );
+        drawSpriteSport(
+          centerX,
+          centerY,
+          scale,
+          time,
+          transitionAlpha,
+          rotationX,
+          rotationY,
+          rotationZ,
+        );
+        context.restore();
+      }
+
       const basePath = new Path2D();
       const detailPath = new Path2D();
       const cosX = Math.cos(rotationX);
@@ -1047,7 +1217,7 @@ function HeroFieldCanvas() {
       const sinZ = Math.sin(rotationZ);
 
       particles.forEach((particle, index) => {
-        const spring = 0.046 + morphEnergy * 0.038;
+        const spring = 0.03 + (1 - morphEnergy) * 0.016;
         particle.x += (particle.target.x - particle.x) * spring;
         particle.y += (particle.target.y - particle.y) * spring;
         particle.z += (particle.target.z - particle.z) * spring;
@@ -1066,23 +1236,19 @@ function HeroFieldCanvas() {
         let screenX = centerX + rotatedX * scale * perspective;
         let screenY = centerY + rotatedY * scale * perspective;
         if (fizzleProgress > 0) {
-          const burst = fizzleProgress * fizzleProgress * scale * 0.66;
-          const magnitude = Math.max(
-            0.2,
-            Math.sqrt(rotatedX ** 2 + rotatedY ** 2),
-          );
-          screenX +=
-            (rotatedX / magnitude) * burst +
-            Math.sin(index * 2.17 + time * 0.009) * fizzleProgress * 15;
-          screenY +=
-            (rotatedY / magnitude) * burst +
-            Math.cos(index * 1.73 + time * 0.008) * fizzleProgress * 15;
+          const localScreenX = screenX - centerX;
+          const localScreenY = screenY - centerY;
+          const spiral = fizzleEase * 0.82;
+          const compact = 1 - fizzleEase * 0.91;
+          const cosSpiral = Math.cos(spiral);
+          const sinSpiral = Math.sin(spiral);
+          screenX =
+            centerX +
+            (localScreenX * cosSpiral - localScreenY * sinSpiral) * compact;
+          screenY =
+            centerY +
+            (localScreenX * sinSpiral + localScreenY * cosSpiral) * compact;
         }
-        const inLens =
-          pointer.active &&
-          Math.hypot(screenX - pointer.lensX, screenY - pointer.lensY) <
-            lensRadius - 2;
-        if (inLens) return;
         const size = Math.max(
           0.55,
           particle.size * perspective * (0.9 + (z2 + 1) * 0.14),
@@ -1103,38 +1269,9 @@ function HeroFieldCanvas() {
       context.globalCompositeOperation = "source-over";
       context.globalAlpha = 1;
 
-      if (pointer.active && transitionAlpha > 0.03) {
-        context.save();
-        context.beginPath();
-        context.arc(
-          pointer.lensX,
-          pointer.lensY,
-          lensRadius,
-          0,
-          Math.PI * 2,
-        );
-        context.clip();
-        context.globalAlpha = transitionAlpha;
-        const lensWash = context.createRadialGradient(
-          pointer.lensX - lensRadius * 0.32,
-          pointer.lensY - lensRadius * 0.35,
-          1,
-          pointer.lensX,
-          pointer.lensY,
-          lensRadius,
-        );
-        lensWash.addColorStop(0, "rgba(255,255,255,.22)");
-        lensWash.addColorStop(1, "rgba(14,43,67,.12)");
-        context.fillStyle = lensWash;
-        context.fillRect(
-          pointer.lensX - lensRadius,
-          pointer.lensY - lensRadius,
-          lensRadius * 2,
-          lensRadius * 2,
-        );
-        drawSpriteSport(centerX, centerY, scale, time);
-        context.restore();
-
+      if (ballSport && pointer.active && transitionAlpha > 0.03) {
+        const patchAngle =
+          Math.atan2(pointer.lensY - centerY, pointer.lensX - centerX) * 0.28;
         const rim = context.createLinearGradient(
           pointer.lensX - lensRadius,
           pointer.lensY - lensRadius,
@@ -1144,19 +1281,64 @@ function HeroFieldCanvas() {
         rim.addColorStop(0, "#72e6ff");
         rim.addColorStop(0.45, "#dfff45");
         rim.addColorStop(1, "#ff7a52");
+        context.save();
         context.strokeStyle = rim;
-        context.lineWidth = 2;
-        context.globalAlpha = 0.92;
+        context.lineWidth = 1.6;
+        context.globalAlpha = transitionAlpha * 0.94;
+        context.shadowColor = "rgba(7, 25, 42, .46)";
+        context.shadowBlur = 13;
+        context.shadowOffsetY = 7;
         context.beginPath();
-        context.arc(
+        context.ellipse(
           pointer.lensX,
           pointer.lensY,
           lensRadius,
+          lensRadius * 0.72,
+          patchAngle,
           0,
           Math.PI * 2,
         );
         context.stroke();
-        context.globalAlpha = 1;
+        context.shadowColor = "transparent";
+        context.strokeStyle = "rgba(255,255,255,.58)";
+        context.lineWidth = 0.9;
+        context.beginPath();
+        context.ellipse(
+          pointer.lensX - lensRadius * 0.05,
+          pointer.lensY - lensRadius * 0.08,
+          lensRadius * 0.86,
+          lensRadius * 0.58,
+          patchAngle,
+          Math.PI * 1.08,
+          Math.PI * 1.8,
+        );
+        context.stroke();
+        context.restore();
+      } else if (!ballSport && pointer.active && transitionAlpha > 0.03) {
+        const traceWidth =
+          activeSport === 4 ? scale * 1.22 : scale * 1.54;
+        const traceHeight =
+          activeSport === 5 ? scale * 0.72 : scale * 1.35;
+        const traceOffset = Math.sin(time * 0.0016) * 0.18;
+        context.save();
+        context.translate(centerX, centerY);
+        context.rotate(rotationZ);
+        context.strokeStyle = `${palette.accent}8f`;
+        context.lineWidth = 1.1;
+        context.setLineDash([2, 8]);
+        context.lineDashOffset = -time * 0.012;
+        context.beginPath();
+        context.ellipse(
+          0,
+          0,
+          traceWidth,
+          traceHeight,
+          traceOffset,
+          Math.PI * 0.12,
+          Math.PI * 1.42,
+        );
+        context.stroke();
+        context.restore();
       }
 
       if (!prefersReducedMotion) {
@@ -1175,6 +1357,8 @@ function HeroFieldCanvas() {
       pointer.x = (pointer.screenX / Math.max(1, width) - 0.5) * 2;
       pointer.y = (pointer.screenY / Math.max(1, height) - 0.5) * 2;
       pointer.active = true;
+      field?.style.setProperty("--focus-x", `${pointer.screenX}px`);
+      field?.style.setProperty("--focus-y", `${pointer.screenY}px`);
       if (prefersReducedMotion) render(performance.now());
     };
     const onPointerLeave = () => {
@@ -1241,15 +1425,67 @@ function HeroFieldCanvas() {
     };
   }, []);
 
+  const activePublicModel = publicSportModels.find(
+    (model) => model.sport === displaySport,
+  );
+
   return (
-    <canvas
-      ref={canvasRef}
-      className="hero-visual__canvas"
-      aria-describedby="hero-art-instructions"
-      aria-label="Interactive particle-to-real-life sports artwork"
-      role="button"
-      tabIndex={0}
-    />
+    <div
+      ref={fieldRef}
+      className={`hero-sport-field hero-sport-field--sport-${displaySport}${
+        modelChanging ? " is-changing" : ""
+      }`}
+    >
+      <div className="hero-model-stack" aria-hidden="true">
+        {publicSportModels
+          .filter((model) => seenModels.includes(model.sport))
+          .map((model) => (
+            <iframe
+              key={model.sport}
+              className={`hero-model hero-model--${model.sport}${
+                displaySport === model.sport && !modelChanging
+                  ? " is-active"
+                  : ""
+              }`}
+              src={`${model.embed}&autospin=${reducedMotion ? 0 : 0.18}`}
+              title={`${model.label} interactive 3D model`}
+              loading="lazy"
+              allow="autoplay; fullscreen; xr-spatial-tracking"
+            />
+          ))}
+        <i className="hero-model__scan" />
+      </div>
+
+      <canvas
+        ref={canvasRef}
+        className="hero-visual__canvas"
+        aria-describedby="hero-art-instructions"
+        aria-label="Interactive particle and 3D sports artwork"
+        role="button"
+        tabIndex={0}
+      />
+
+      {activePublicModel ? (
+        <p className="hero-model-credit">
+          3D model by{" "}
+          <a
+            href={activePublicModel.source}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {activePublicModel.author}
+          </a>
+          {" / "}
+          <a
+            href="https://creativecommons.org/licenses/by/4.0/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            CC BY
+          </a>
+        </p>
+      ) : null}
+    </div>
   );
 }
 
@@ -1415,8 +1651,9 @@ export default function Home() {
           <div className="hero-visual">
             <HeroFieldCanvas />
             <p className="sr-only" id="hero-art-instructions">
-              Move over the artwork to reveal its realistic layer. Click, or
-              press Enter or Space, to advance to the next object.
+              Move over a ball to reveal its curved realistic detail sticker.
+              Equipment uses full 3D model reveals. Click, or press Enter or
+              Space, to advance to the next object.
             </p>
           </div>
 
