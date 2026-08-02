@@ -326,26 +326,25 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
 
       points.push(rotatePoint(racketPoint, -0.03, 0.04, -0.38));
     } else if (kind === 5) {
-      const x = -1.16 + seeded(index, 4) * 2.42;
-      const normalizedX = (x + 1.16) / 2.42;
+      const x = -1.28 + seeded(index, 4) * 2.58;
+      const normalizedX = (x + 1.28) / 2.58;
       const top =
-        normalizedX < 0.32
-          ? -0.73 + normalizedX * 0.14
-          : -0.685 + Math.pow((normalizedX - 0.32) / 0.68, 1.18) * 0.67;
-      const bottom = 0.4 - Math.max(0, normalizedX - 0.76) * 0.47;
+        x < -0.55
+          ? -0.58 - normalizedX * 0.2
+          : -0.53 + Math.pow(normalizedX, 1.35) * 0.54;
+      const bottom = 0.37 - Math.max(0, x - 0.72) * 0.08;
       const edge = seeded(index, 5);
       const y =
-        edge < 0.58
-          ? edge < 0.29
+        edge < 0.52
+          ? edge < 0.26
             ? top
             : bottom
           : top + seeded(index, 6) * (bottom - top);
-      const shoeWidth =
-        0.33 + Math.sin(normalizedX * Math.PI) * 0.14 - normalizedX * 0.035;
+      const toeTaper = 0.52 + Math.sin(normalizedX * Math.PI) * 0.2;
       const z =
-        edge >= 0.58
-          ? (edge < 0.79 ? -1 : 1) * shoeWidth
-          : (seeded(index, 7) - 0.5) * shoeWidth * 2;
+        edge >= 0.52
+          ? (edge < 0.76 ? -1 : 1) * toeTaper
+          : (seeded(index, 7) - 0.5) * toeTaper * 2;
       points.push(
         rotatePoint(
           {
@@ -515,53 +514,29 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
           };
       points.push(rotatePoint(detailPoint, -0.03, 0.04, -0.38));
     } else {
-      let shoeDetail: SportPoint;
-      if (progress < 0.42) {
-        const soleProgress = progress / 0.42;
-        const rail = index % 4;
-        const soleWidth =
-          0.35 + Math.sin(soleProgress * Math.PI) * 0.14 - soleProgress * 0.035;
-        shoeDetail = {
-          x: -1.16 + soleProgress * 2.42,
-          y:
-            (rail < 2 ? 0.34 : 0.43) -
-            Math.max(0, soleProgress - 0.76) * 0.45,
-          z: (rail % 2 === 0 ? -1 : 1) * soleWidth,
-          emphasis: 1,
-        };
-      } else if (progress < 0.69) {
-        const laceProgress = (progress - 0.42) / 0.27;
-        const lace = Math.min(6, Math.floor(laceProgress * 7));
-        const across = (laceProgress * 7) % 1;
-        shoeDetail = {
-          x: -0.5 + lace * 0.17,
-          y: -0.55 + lace * 0.08,
-          z: -0.3 + across * 0.6,
-          emphasis: 1,
-        };
-      } else if (progress < 0.9) {
-        const panelProgress = (progress - 0.69) / 0.21;
-        const panelSide = index % 2 === 0 ? -1 : 1;
-        shoeDetail = {
-          x: -0.98 + panelProgress * 1.92,
-          y: -0.08 - Math.sin(panelProgress * Math.PI) * 0.31,
-          z:
-            panelSide *
-            (0.34 + Math.sin(panelProgress * Math.PI) * 0.13),
-          emphasis: 1,
-        };
-      } else {
-        const ventProgress = (progress - 0.9) / 0.1;
-        const row = index % 3;
-        shoeDetail = {
-          x: 0.66 + ventProgress * 0.46,
-          y: -0.12 + row * 0.085,
-          z: (index % 2 === 0 ? -1 : 1) *
-            (0.28 + Math.sin(ventProgress * Math.PI) * 0.08),
-          emphasis: 1,
-        };
-      }
-      points.push(rotatePoint(shoeDetail, -0.08, -0.12, -0.1));
+      const lace = Math.floor(progress * 6);
+      const across = (progress * 6) % 1;
+      const isSole = index < detailCount * 0.35;
+      points.push(
+        rotatePoint(
+          isSole
+            ? {
+                x: -1.22 + progress * 7.15,
+                y: 0.29,
+                z: 0.54,
+                emphasis: 1,
+              }
+            : {
+                x: -0.58 + lace * 0.17,
+                y: -0.43 + lace * 0.055,
+                z: -0.36 + across * 0.72,
+                emphasis: 1,
+              },
+          -0.08,
+          -0.12,
+          -0.1,
+        ),
+      );
     }
   }
 
@@ -1024,8 +999,9 @@ function HeroFieldCanvas() {
         return;
       }
       context.clearRect(0, 0, width, height);
-      const centerX = width * 0.52;
-      const centerY = height * 0.49;
+      const compactViewport = width <= 620;
+      const centerX = width * (compactViewport ? 0.5 : 0.52);
+      const centerY = height * (compactViewport ? 0.52 : 0.49);
       const scale =
         Math.min(width, height) *
         (activeSport === 0
@@ -1142,7 +1118,8 @@ function HeroFieldCanvas() {
         const z2 = -localX * sinY + z1 * cosY;
         const rotatedX = x2 * cosZ - y1 * sinZ;
         const rotatedY = x2 * sinZ + y1 * cosZ;
-        const perspective = 3.9 / (3.9 - z2);
+        const perspectiveDistance = compactViewport ? 4.6 : 3.9;
+        const perspective = perspectiveDistance / (perspectiveDistance - z2);
         let screenX = centerX + rotatedX * scale * perspective;
         let screenY = centerY + rotatedY * scale * perspective;
         if (fizzleProgress > 0) {
@@ -1286,6 +1263,7 @@ function HeroFieldCanvas() {
     };
 
     const onPointerMove = (event: PointerEvent) => {
+      if (pointer.down) event.preventDefault();
       const bounds = canvas.getBoundingClientRect();
       const nextX = event.clientX - bounds.left;
       const nextY = event.clientY - bounds.top;
@@ -1310,6 +1288,7 @@ function HeroFieldCanvas() {
       if (prefersReducedMotion) render(performance.now());
     };
     const onPointerDown = (event: PointerEvent) => {
+      event.preventDefault();
       onPointerMove(event);
       pointer.down = true;
       canvas.setPointerCapture?.(event.pointerId);

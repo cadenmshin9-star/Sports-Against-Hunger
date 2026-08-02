@@ -86,10 +86,13 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /quadraticCurveTo/);
   assert.match(page, /patchCount = 12/);
   assert.match(page, /bitangentX/);
-  assert.match(page, /panelProgress/);
-  assert.match(page, /ventProgress/);
-  assert.match(page, /const shoeWidth/);
-  assert.match(page, /const rail = index % 4/);
+  assert.match(page, /const toeTaper/);
+  assert.match(page, /const isSole = index < detailCount \* 0\.35/);
+  assert.match(page, /x: -1\.22 \+ progress \* 7\.15/);
+  assert.match(page, /if \(pointer\.down\) event\.preventDefault\(\)/);
+  assert.match(page, /const perspectiveDistance = compactViewport \? 4\.6 : 3\.9/);
+  assert.match(css, /touch-action:\s*none/);
+  assert.match(css, /min-height:\s*clamp\(340px, 96vw, 430px\)/);
   assert.doesNotMatch(page, /sports-sprite\.png/);
   assert.doesNotMatch(page, /publicSportModels/);
   assert.doesNotMatch(page, /sketchfab\.com\/models/);

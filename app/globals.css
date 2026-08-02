@@ -4541,6 +4541,9 @@ body {
 
 .hero-visual__canvas {
   cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .hero-visual__canvas:active {
@@ -6173,7 +6176,9 @@ body {
 
 @media (max-width: 620px) {
   .hero.hero-tech {
-    min-height: 990px;
+    display: flex;
+    min-height: auto;
+    flex-direction: column;
   }
 
   .hero.hero-tech h1 {
@@ -6181,11 +6186,16 @@ body {
   }
 
   .hero-visual {
-    top: 480px;
-    right: -26vw;
-    bottom: 20px;
-    width: 138vw;
-    opacity: 0.72;
+    position: relative;
+    z-index: 5;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    width: calc(100% + 40px);
+    min-height: clamp(340px, 96vw, 430px);
+    margin: 30px -20px -18px;
+    opacity: 1;
   }
 
   .hero-transition {
