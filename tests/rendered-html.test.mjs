@@ -86,9 +86,10 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /quadraticCurveTo/);
   assert.match(page, /patchCount = 12/);
   assert.match(page, /bitangentX/);
-  assert.match(page, /const toeTaper/);
-  assert.match(page, /const isSole = index < detailCount \* 0\.35/);
-  assert.match(page, /x: -1\.22 \+ progress \* 7\.15/);
+  assert.match(page, /function runningShoeProfile/);
+  assert.match(page, /const forefoot = Math\.exp/);
+  assert.match(page, /const isSole = progress < 0\.52/);
+  assert.match(page, /top = blend\(-0\.31, -0\.61/);
   assert.match(page, /if \(pointer\.down\) event\.preventDefault\(\)/);
   assert.match(page, /const perspectiveDistance = compactViewport \? 4\.6 : 3\.9/);
   assert.match(css, /touch-action:\s*none/);

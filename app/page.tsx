@@ -214,6 +214,39 @@ function rotatePoint(
   };
 }
 
+function runningShoeProfile(progress: number) {
+  const t = Math.max(0, Math.min(1, progress));
+  const ease = (value: number) => value * value * (3 - 2 * value);
+  const blend = (from: number, to: number, value: number) =>
+    from + (to - from) * ease(Math.max(0, Math.min(1, value)));
+
+  let top: number;
+  if (t < 0.08) {
+    top = blend(-0.46, -0.63, t / 0.08);
+  } else if (t < 0.21) {
+    top = blend(-0.63, -0.31, (t - 0.08) / 0.13);
+  } else if (t < 0.34) {
+    top = blend(-0.31, -0.61, (t - 0.21) / 0.13);
+  } else if (t < 0.58) {
+    top = blend(-0.61, -0.39, (t - 0.34) / 0.24);
+  } else if (t < 0.82) {
+    top = blend(-0.39, -0.14, (t - 0.58) / 0.24);
+  } else {
+    top = blend(-0.14, 0.03, (t - 0.82) / 0.18);
+  }
+
+  const toeLift = ease(Math.max(0, (t - 0.7) / 0.3));
+  const bottom = 0.37 + Math.sin(t * Math.PI) * 0.025 - toeLift * 0.19;
+  const heelRound = 0.72 + ease(Math.min(1, t / 0.08)) * 0.28;
+  const toeRound = 1 - ease(Math.max(0, (t - 0.82) / 0.18)) * 0.76;
+  const forefoot = Math.exp(-Math.pow((t - 0.72) / 0.22, 2));
+  const heel = Math.exp(-Math.pow((t - 0.09) / 0.15, 2));
+  const halfWidth =
+    (0.235 + forefoot * 0.115 + heel * 0.045) * heelRound * toeRound;
+
+  return { top, bottom, halfWidth };
+}
+
 function makeSportShape(kind: number, count: number): SportPoint[] {
   const detailCount = Math.floor(
     count *
@@ -326,25 +359,26 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
 
       points.push(rotatePoint(racketPoint, -0.03, 0.04, -0.38));
     } else if (kind === 5) {
-      const x = -1.28 + seeded(index, 4) * 2.58;
-      const normalizedX = (x + 1.28) / 2.58;
-      const top =
-        x < -0.55
-          ? -0.58 - normalizedX * 0.2
-          : -0.53 + Math.pow(normalizedX, 1.35) * 0.54;
-      const bottom = 0.37 - Math.max(0, x - 0.72) * 0.08;
-      const edge = seeded(index, 5);
-      const y =
-        edge < 0.52
-          ? edge < 0.26
-            ? top
-            : bottom
-          : top + seeded(index, 6) * (bottom - top);
-      const toeTaper = 0.52 + Math.sin(normalizedX * Math.PI) * 0.2;
-      const z =
-        edge >= 0.52
-          ? (edge < 0.76 ? -1 : 1) * toeTaper
-          : (seeded(index, 7) - 0.5) * toeTaper * 2;
+      const shoeProgress = seeded(index, 4);
+      const x = -1.28 + shoeProgress * 2.64;
+      const { top, bottom, halfWidth } = runningShoeProfile(shoeProgress);
+      const surfaceBand = seeded(index, 5);
+      let y: number;
+      let z: number;
+
+      if (surfaceBand < 0.24) {
+        y = top + seeded(index, 6) * 0.025;
+        z = (seeded(index, 7) - 0.5) * halfWidth * 1.78;
+      } else if (surfaceBand < 0.48) {
+        y = bottom - seeded(index, 6) * 0.025;
+        z = (seeded(index, 7) - 0.5) * halfWidth * 1.88;
+      } else if (surfaceBand < 0.74) {
+        y = top + seeded(index, 6) * (bottom - top);
+        z = (surfaceBand < 0.61 ? -1 : 1) * halfWidth;
+      } else {
+        y = top + seeded(index, 6) * (bottom - top);
+        z = (seeded(index, 7) - 0.5) * halfWidth * 2;
+      }
       points.push(
         rotatePoint(
           {
@@ -514,22 +548,29 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
           };
       points.push(rotatePoint(detailPoint, -0.03, 0.04, -0.38));
     } else {
-      const lace = Math.floor(progress * 6);
-      const across = (progress * 6) % 1;
-      const isSole = index < detailCount * 0.35;
+      const isSole = progress < 0.52;
+      const detailProgress = isSole
+        ? progress / 0.52
+        : (progress - 0.52) / 0.48;
+      const shoeProgress = isSole
+        ? detailProgress
+        : 0.28 + Math.min(6, Math.floor(detailProgress * 7)) * 0.052;
+      const x = -1.28 + shoeProgress * 2.64;
+      const { top, bottom, halfWidth } = runningShoeProfile(shoeProgress);
+      const across = (detailProgress * 7) % 1;
       points.push(
         rotatePoint(
           isSole
             ? {
-                x: -1.22 + progress * 7.15,
-                y: 0.29,
-                z: 0.54,
+                x,
+                y: bottom - 0.012,
+                z: (index % 2 === 0 ? -1 : 1) * halfWidth * 0.92,
                 emphasis: 1,
               }
             : {
-                x: -0.58 + lace * 0.17,
-                y: -0.43 + lace * 0.055,
-                z: -0.36 + across * 0.72,
+                x,
+                y: top + 0.075,
+                z: -halfWidth * 0.78 + across * halfWidth * 1.56,
                 emphasis: 1,
               },
           -0.08,
