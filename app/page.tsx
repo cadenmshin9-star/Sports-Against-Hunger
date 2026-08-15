@@ -1951,14 +1951,9 @@ export default function Home() {
               conversation—no technical setup and no commitment required.
             </p>
             <div className="contact__links">
-              <a href="tel:+16615938857">
-                <span>Call</span>
-                <strong>661-593-8857</strong>
-                <Arrow />
-              </a>
-              <a href="mailto:cadenmshin9@gmail.com?subject=Sports%20Against%20Hunger%20Sponsorship">
+              <a href="mailto:sportsagainsthunger@gmail.com?subject=Sports%20Against%20Hunger%20Sponsorship">
                 <span>Email</span>
-                <strong>cadenmshin9@gmail.com</strong>
+                <strong>sportsagainsthunger@gmail.com</strong>
                 <Arrow />
               </a>
             </div>

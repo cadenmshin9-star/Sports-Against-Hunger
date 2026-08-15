@@ -1777,8 +1777,8 @@ footer > span {
 
 .contact__links {
   display: grid;
-  width: min(900px, 100%);
-  grid-template-columns: repeat(2, 1fr);
+  width: min(680px, 100%);
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
 }
 
