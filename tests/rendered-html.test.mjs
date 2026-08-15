@@ -36,6 +36,8 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /href="tel:\+16615938857"/i);
   assert.match(html, /href="mailto:cadenmshin9@gmail\.com/i);
   assert.match(html, /Valencia High School/);
+  assert.match(html, /SCV Food Pantry/);
+  assert.match(html, /scv-food-pantry-logo\.jpg/);
   assert.match(html, /Based in Santa Clarita, California\./);
   assert.match(html, /Hunger is local\./);
   assert.match(html, /So is the/);
@@ -132,6 +134,7 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /\[data-reveal\]\.is-visible/);
   assert.match(css, /\.valencia-crest/);
+  assert.match(css, /\.partner-slots__pantry/);
   assert.match(css, /\.hero-visual__canvas/);
   assert.doesNotMatch(css, /\.hero-sport-field/);
   assert.doesNotMatch(css, /\.hero-model\.is-active/);

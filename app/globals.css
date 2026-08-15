@@ -2933,6 +2933,64 @@ footer > span {
   color: #ffc72c;
 }
 
+.partner-slots__pantry {
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 88% 18%, rgba(247, 148, 30, 0.25), transparent 24%),
+    #fffdf8;
+  color: #007a47;
+}
+
+.partner-slots__pantry:hover {
+  background:
+    radial-gradient(circle at 88% 18%, rgba(247, 148, 30, 0.34), transparent 26%),
+    #fffdf8 !important;
+  color: #007a47 !important;
+}
+
+.partner-slots__pantry::before {
+  position: absolute;
+  z-index: -1;
+  top: -22%;
+  right: -7%;
+  color: rgba(227, 24, 55, 0.07);
+  content: "SCV";
+  font-size: 116px;
+  font-weight: 950;
+  letter-spacing: -0.12em;
+  transform: rotate(-7deg);
+}
+
+.partner-slots__pantry .scv-lockup {
+  display: flex;
+  min-height: 0;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 18px;
+  padding: 0;
+  border: 0;
+}
+
+.partner-slots__pantry .scv-lockup::after {
+  display: none;
+}
+
+.scv-lockup img {
+  width: 78px;
+  height: 78px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.partner-slots__pantry > span {
+  color: #d71f36;
+}
+
+.partner-slots__pantry > small {
+  color: #a94b18;
+}
+
 .ethics-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

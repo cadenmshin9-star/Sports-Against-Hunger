@@ -1841,7 +1841,17 @@ export default function Home() {
                 <small>Student and athletics partner</small>
               </div>
               <div><span>FOUNDING SPONSOR</span><strong>Your mark could start here</strong></div>
-              <div><span>COMMUNITY PARTNER</span><strong>Partner reveal coming soon</strong></div>
+              <div className="partner-slots__pantry">
+                <div className="scv-lockup">
+                  <img
+                    src="/scv-food-pantry-logo.jpg"
+                    alt="Santa Clarita Valley Food Pantry logo"
+                  />
+                </div>
+                <span>COMMUNITY PARTNER</span>
+                <strong>SCV Food Pantry</strong>
+                <small>Food access and impact partner</small>
+              </div>
             </div>
           </div>
         </section>
