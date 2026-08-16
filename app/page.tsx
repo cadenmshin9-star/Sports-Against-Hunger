@@ -154,7 +154,6 @@ function WallSticker({
       aria-label={label}
       className={`wall-sticker wall-sticker--${kind}`}
       role="img"
-      tabIndex={0}
     >
       <i aria-hidden="true" />
       <b aria-hidden="true" />
@@ -584,354 +583,6 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
   return points.slice(0, count);
 }
 
-function drawSolidSport(
-  context: CanvasRenderingContext2D,
-  kind: number,
-  centerX: number,
-  centerY: number,
-  scale: number,
-  time: number,
-) {
-  context.save();
-  context.translate(centerX, centerY);
-  const float = Math.sin(time * 0.0011) * scale * 0.018;
-  context.translate(0, float);
-  context.rotate(kind === 0 ? -0.42 : kind === 5 ? -0.1 : 0);
-  context.lineCap = "round";
-  context.lineJoin = "round";
-
-  if (kind === 0) {
-    const football = new Path2D();
-    football.moveTo(-scale * 1.5, 0);
-    football.bezierCurveTo(
-      -scale * 0.8,
-      -scale * 0.75,
-      scale * 0.8,
-      -scale * 0.75,
-      scale * 1.5,
-      0,
-    );
-    football.bezierCurveTo(
-      scale * 0.8,
-      scale * 0.75,
-      -scale * 0.8,
-      scale * 0.75,
-      -scale * 1.5,
-      0,
-    );
-    const leather = context.createLinearGradient(
-      -scale * 1.3,
-      -scale * 0.5,
-      scale * 1.3,
-      scale * 0.55,
-    );
-    leather.addColorStop(0, "#6f2719");
-    leather.addColorStop(0.46, "#bf5a28");
-    leather.addColorStop(0.72, "#8c351d");
-    leather.addColorStop(1, "#4e1b19");
-    context.fillStyle = leather;
-    context.fill(football);
-    context.save();
-    context.clip(football);
-    context.fillStyle = "rgba(255,225,173,.22)";
-    for (let dot = 0; dot < 88; dot += 1) {
-      const x = (seeded(dot, 31) - 0.5) * scale * 2.85;
-      const y = (seeded(dot, 32) - 0.5) * scale * 1.1;
-      context.beginPath();
-      context.arc(x, y, Math.max(0.55, scale * 0.006), 0, Math.PI * 2);
-      context.fill();
-    }
-    context.strokeStyle = "#f4e7c7";
-    context.lineWidth = Math.max(3, scale * 0.045);
-    [-0.92, 0.92].forEach((offset) => {
-      context.beginPath();
-      context.moveTo(scale * offset, -scale * 0.42);
-      context.lineTo(scale * offset, scale * 0.42);
-      context.stroke();
-    });
-    context.lineWidth = Math.max(2, scale * 0.026);
-    context.beginPath();
-    context.moveTo(-scale * 0.48, 0);
-    context.lineTo(scale * 0.48, 0);
-    context.stroke();
-    for (let lace = -3; lace <= 3; lace += 1) {
-      context.beginPath();
-      context.moveTo(scale * lace * 0.12, -scale * 0.13);
-      context.lineTo(scale * lace * 0.12, scale * 0.13);
-      context.stroke();
-    }
-    context.restore();
-    context.strokeStyle = "rgba(255,245,218,.48)";
-    context.lineWidth = Math.max(1, scale * 0.012);
-    context.stroke(football);
-  } else if (kind === 1) {
-    const radius = scale;
-    const ball = new Path2D();
-    ball.arc(0, 0, radius, 0, Math.PI * 2);
-    const rubber = context.createRadialGradient(
-      -radius * 0.35,
-      -radius * 0.4,
-      radius * 0.08,
-      0,
-      0,
-      radius,
-    );
-    rubber.addColorStop(0, "#ffb24a");
-    rubber.addColorStop(0.55, "#e87522");
-    rubber.addColorStop(1, "#8d2f18");
-    context.fillStyle = rubber;
-    context.fill(ball);
-    context.save();
-    context.clip(ball);
-    context.fillStyle = "rgba(70,25,15,.34)";
-    for (let dot = 0; dot < 110; dot += 1) {
-      const angle = seeded(dot, 35) * Math.PI * 2;
-      const radial = Math.sqrt(seeded(dot, 36)) * radius * 0.95;
-      context.beginPath();
-      context.arc(
-        Math.cos(angle) * radial,
-        Math.sin(angle) * radial,
-        Math.max(0.5, scale * 0.006),
-        0,
-        Math.PI * 2,
-      );
-      context.fill();
-    }
-    context.strokeStyle = "#32170f";
-    context.lineWidth = Math.max(3, scale * 0.04);
-    context.beginPath();
-    context.moveTo(-radius, 0);
-    context.lineTo(radius, 0);
-    context.moveTo(0, -radius);
-    context.bezierCurveTo(-radius * 0.32, -radius * 0.28, -radius * 0.32, radius * 0.28, 0, radius);
-    context.moveTo(0, -radius);
-    context.bezierCurveTo(radius * 0.32, -radius * 0.28, radius * 0.32, radius * 0.28, 0, radius);
-    context.moveTo(-radius * 0.72, -radius * 0.72);
-    context.bezierCurveTo(-radius * 0.22, -radius * 0.2, radius * 0.22, radius * 0.2, radius * 0.72, radius * 0.72);
-    context.stroke();
-    context.restore();
-  } else if (kind === 2) {
-    const radius = scale;
-    const ball = new Path2D();
-    ball.arc(0, 0, radius, 0, Math.PI * 2);
-    const shell = context.createRadialGradient(
-      -radius * 0.34,
-      -radius * 0.42,
-      radius * 0.04,
-      0,
-      0,
-      radius,
-    );
-    shell.addColorStop(0, "#ffffff");
-    shell.addColorStop(0.62, "#ecebdc");
-    shell.addColorStop(1, "#979e9a");
-    context.fillStyle = shell;
-    context.fill(ball);
-    context.save();
-    context.clip(ball);
-    const patches = [
-      [0, 0, 0],
-      [-0.57, -0.38, -0.18],
-      [0.59, -0.35, 0.2],
-      [-0.48, 0.52, 0.18],
-      [0.52, 0.5, -0.2],
-    ];
-    patches.forEach(([x, y, rotation]) => {
-      context.save();
-      context.translate(x * radius, y * radius);
-      context.rotate(rotation);
-      context.beginPath();
-      for (let edge = 0; edge < 5; edge += 1) {
-        const angle = -Math.PI / 2 + (edge / 5) * Math.PI * 2;
-        const px = Math.cos(angle) * radius * 0.19;
-        const py = Math.sin(angle) * radius * 0.19;
-        if (edge === 0) context.moveTo(px, py);
-        else context.lineTo(px, py);
-      }
-      context.closePath();
-      context.fillStyle = "#1b2324";
-      context.fill();
-      context.strokeStyle = "rgba(27,35,36,.42)";
-      context.lineWidth = Math.max(1, scale * 0.012);
-      for (let edge = 0; edge < 5; edge += 1) {
-        const angle = -Math.PI / 2 + (edge / 5) * Math.PI * 2;
-        context.beginPath();
-        context.moveTo(Math.cos(angle) * radius * 0.19, Math.sin(angle) * radius * 0.19);
-        context.lineTo(Math.cos(angle) * radius * 0.43, Math.sin(angle) * radius * 0.43);
-        context.stroke();
-      }
-      context.restore();
-    });
-    context.restore();
-  } else if (kind === 3) {
-    const radius = scale;
-    const ball = new Path2D();
-    ball.arc(0, 0, radius, 0, Math.PI * 2);
-    const hide = context.createRadialGradient(
-      -radius * 0.35,
-      -radius * 0.4,
-      radius * 0.04,
-      0,
-      0,
-      radius,
-    );
-    hide.addColorStop(0, "#fffdf0");
-    hide.addColorStop(0.7, "#f0ead8");
-    hide.addColorStop(1, "#b9ab94");
-    context.fillStyle = hide;
-    context.fill(ball);
-    context.save();
-    context.clip(ball);
-    context.strokeStyle = "#d8493d";
-    context.lineWidth = Math.max(2, scale * 0.026);
-    [-1, 1].forEach((side) => {
-      context.beginPath();
-      context.moveTo(-radius * 0.78, side * radius * 0.17);
-      context.bezierCurveTo(
-        -radius * 0.28,
-        side * radius * 0.78,
-        radius * 0.28,
-        -side * radius * 0.78,
-        radius * 0.78,
-        -side * radius * 0.17,
-      );
-      context.stroke();
-      for (let stitch = 0; stitch < 10; stitch += 1) {
-        const t = stitch / 9;
-        const x = -radius * 0.72 + t * radius * 1.44;
-        const y =
-          side *
-          radius *
-          (0.2 * Math.cos(t * Math.PI * 2) + 0.19 * Math.sin(t * Math.PI));
-        context.beginPath();
-        context.moveTo(x - scale * 0.035, y - scale * 0.05);
-        context.lineTo(x + scale * 0.035, y + scale * 0.05);
-        context.stroke();
-      }
-    });
-    context.restore();
-  } else if (kind === 4) {
-    const radius = scale;
-    const ball = new Path2D();
-    ball.arc(0, 0, radius, 0, Math.PI * 2);
-    const felt = context.createRadialGradient(
-      -radius * 0.32,
-      -radius * 0.42,
-      radius * 0.03,
-      0,
-      0,
-      radius,
-    );
-    felt.addColorStop(0, "#f1ff75");
-    felt.addColorStop(0.58, "#c6ee2d");
-    felt.addColorStop(1, "#6d9a21");
-    context.fillStyle = felt;
-    context.fill(ball);
-    context.save();
-    context.clip(ball);
-    context.strokeStyle = "#f6ffe2";
-    context.lineWidth = Math.max(4, scale * 0.055);
-    context.beginPath();
-    context.moveTo(-radius * 0.88, -radius * 0.46);
-    context.bezierCurveTo(
-      -radius * 0.15,
-      -radius * 0.2,
-      -radius * 0.15,
-      radius * 0.2,
-      -radius * 0.88,
-      radius * 0.46,
-    );
-    context.moveTo(radius * 0.88, -radius * 0.46);
-    context.bezierCurveTo(
-      radius * 0.15,
-      -radius * 0.2,
-      radius * 0.15,
-      radius * 0.2,
-      radius * 0.88,
-      radius * 0.46,
-    );
-    context.stroke();
-    context.fillStyle = "rgba(255,255,255,.2)";
-    for (let fuzz = 0; fuzz < 68; fuzz += 1) {
-      const angle = seeded(fuzz, 39) * Math.PI * 2;
-      const radial = Math.sqrt(seeded(fuzz, 40)) * radius * 0.98;
-      context.fillRect(
-        Math.cos(angle) * radial,
-        Math.sin(angle) * radial,
-        1,
-        1,
-      );
-    }
-    context.restore();
-  } else {
-    const shoe = new Path2D();
-    shoe.moveTo(-scale * 1.3, scale * 0.32);
-    shoe.lineTo(-scale * 1.34, -scale * 0.38);
-    shoe.quadraticCurveTo(-scale * 1.28, -scale * 0.7, -scale * 0.94, -scale * 0.76);
-    shoe.lineTo(-scale * 0.62, -scale * 0.5);
-    shoe.quadraticCurveTo(-scale * 0.18, -scale * 0.44, scale * 0.2, -scale * 0.25);
-    shoe.quadraticCurveTo(scale * 0.72, scale * 0.02, scale * 1.24, scale * 0.08);
-    shoe.quadraticCurveTo(scale * 1.4, scale * 0.12, scale * 1.3, scale * 0.34);
-    shoe.lineTo(scale * 1.15, scale * 0.43);
-    shoe.lineTo(-scale * 1.16, scale * 0.43);
-    shoe.closePath();
-    const mesh = context.createLinearGradient(
-      -scale * 1.2,
-      -scale * 0.7,
-      scale * 1.25,
-      scale * 0.35,
-    );
-    mesh.addColorStop(0, "#143f69");
-    mesh.addColorStop(0.4, "#1e87a6");
-    mesh.addColorStop(0.72, "#62d6d2");
-    mesh.addColorStop(1, "#dfff45");
-    context.fillStyle = mesh;
-    context.fill(shoe);
-    context.save();
-    context.clip(shoe);
-    context.strokeStyle = "rgba(255,255,255,.18)";
-    context.lineWidth = 1;
-    for (let line = -8; line <= 8; line += 1) {
-      context.beginPath();
-      context.moveTo(-scale * 1.4, line * scale * 0.1);
-      context.lineTo(scale * 1.4, (line - 5) * scale * 0.1);
-      context.stroke();
-    }
-    context.fillStyle = "rgba(12,39,66,.5)";
-    context.beginPath();
-    context.moveTo(-scale * 1.28, -scale * 0.38);
-    context.lineTo(-scale * 0.93, -scale * 0.62);
-    context.lineTo(-scale * 0.68, scale * 0.27);
-    context.lineTo(-scale * 1.24, scale * 0.31);
-    context.closePath();
-    context.fill();
-    context.fillStyle = "rgba(255,213,106,.88)";
-    context.beginPath();
-    context.moveTo(-scale * 0.62, scale * 0.04);
-    context.quadraticCurveTo(-scale * 0.05, -scale * 0.12, scale * 0.68, scale * 0.16);
-    context.quadraticCurveTo(scale * 0.04, scale * 0.09, -scale * 0.58, scale * 0.19);
-    context.closePath();
-    context.fill();
-    context.restore();
-    context.fillStyle = "#f2f1de";
-    context.fillRect(-scale * 1.25, scale * 0.29, scale * 2.5, scale * 0.16);
-    context.strokeStyle = "#f7f7ee";
-    context.lineWidth = Math.max(2, scale * 0.03);
-    for (let lace = 0; lace < 6; lace += 1) {
-      const x = -scale * 0.62 + lace * scale * 0.17;
-      context.beginPath();
-      context.moveTo(x - scale * 0.12, -scale * 0.4 + lace * scale * 0.055);
-      context.lineTo(x + scale * 0.12, -scale * 0.31 + lace * scale * 0.055);
-      context.stroke();
-    }
-    context.strokeStyle = "rgba(255,255,255,.5)";
-    context.lineWidth = Math.max(1, scale * 0.012);
-    context.stroke(shoe);
-  }
-
-  context.restore();
-}
-
 function HeroFieldCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -944,6 +595,9 @@ function HeroFieldCanvas() {
 
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const supportsFinePointer = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
     ).matches;
     const pointer = {
       x: 0,
@@ -966,6 +620,7 @@ function HeroFieldCanvas() {
     let releasePulseStart = -1;
     let woundStrength = 0;
     let transitionTimer = 0;
+    let touchInteractionTimer = 0;
     const transitionDuration = 880;
     let particles: Array<{
       x: number;
@@ -1321,21 +976,45 @@ function HeroFieldCanvas() {
       pointer.active = true;
       if (prefersReducedMotion) render(performance.now());
     };
+    const endTouchInteraction = () => {
+      touchInteractionTimer = window.setTimeout(() => {
+        pointer.active = false;
+        pointer.x = 0;
+        pointer.y = 0;
+        touchInteractionTimer = 0;
+        if (prefersReducedMotion) render(performance.now());
+      }, 850);
+    };
     const onPointerLeave = () => {
       if (pointer.down) return;
+      if (!supportsFinePointer && touchInteractionTimer) return;
       pointer.active = false;
       pointer.x = 0;
       pointer.y = 0;
       if (prefersReducedMotion) render(performance.now());
     };
     const onPointerDown = (event: PointerEvent) => {
-      event.preventDefault();
       onPointerMove(event);
+      if (!supportsFinePointer) {
+        if (touchInteractionTimer) {
+          window.clearTimeout(touchInteractionTimer);
+        }
+        endTouchInteraction();
+        return;
+      }
+      event.preventDefault();
       pointer.down = true;
       canvas.setPointerCapture?.(event.pointerId);
       if (prefersReducedMotion) render(performance.now());
     };
     const onPointerUp = (event: PointerEvent) => {
+      if (!supportsFinePointer) {
+        if (touchInteractionTimer) {
+          window.clearTimeout(touchInteractionTimer);
+        }
+        endTouchInteraction();
+        return;
+      }
       if (!pointer.down) return;
       pointer.down = false;
       releasePulseStart = performance.now();
@@ -1346,6 +1025,10 @@ function HeroFieldCanvas() {
       if (prefersReducedMotion) render(performance.now());
     };
     const onPointerCancel = (event: PointerEvent) => {
+      if (touchInteractionTimer) {
+        window.clearTimeout(touchInteractionTimer);
+        touchInteractionTimer = 0;
+      }
       pointer.down = false;
       pointer.active = false;
       if (canvas.hasPointerCapture?.(event.pointerId)) {
@@ -1409,6 +1092,7 @@ function HeroFieldCanvas() {
       canvas.removeEventListener("keydown", onKeyDown);
       if (sportTimer) window.clearInterval(sportTimer);
       if (transitionTimer) window.clearTimeout(transitionTimer);
+      if (touchInteractionTimer) window.clearTimeout(touchInteractionTimer);
       window.cancelAnimationFrame(frame);
     };
   }, []);
@@ -1431,6 +1115,7 @@ export default function Home() {
   const [progress, setProgress] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [openQuestion, setOpenQuestion] = useState<number | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     let loaderFrame = 0;
@@ -1478,6 +1163,28 @@ export default function Home() {
       window.removeEventListener("scroll", updateProgress);
     };
   }, []);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileMenuOpen(false);
+    };
+    const closeAboveMobile = () => {
+      if (window.innerWidth > 900) setMobileMenuOpen(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+    window.addEventListener("resize", closeAboveMobile);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+      window.removeEventListener("resize", closeAboveMobile);
+    };
+  }, [mobileMenuOpen]);
 
   return (
     <>
@@ -1546,9 +1253,60 @@ export default function Home() {
             </a>
           ))}
         </nav>
-        <a className="header-cta" href="#contact">
-          Become a sponsor <Arrow />
+        <a
+          className="header-cta"
+          href="#contact"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <span className="header-cta__full">Become a sponsor</span>
+          <span className="header-cta__short">Sponsor</span>
+          <Arrow />
         </a>
+        <button
+          aria-controls="mobile-navigation"
+          aria-expanded={mobileMenuOpen}
+          aria-label={mobileMenuOpen ? "Close navigation" : "Open navigation"}
+          className={`mobile-menu-toggle ${mobileMenuOpen ? "is-open" : ""}`}
+          onClick={() => setMobileMenuOpen((current) => !current)}
+          type="button"
+        >
+          <span />
+          <span />
+        </button>
+        {mobileMenuOpen ? (
+          <div
+            aria-label="Mobile navigation"
+            aria-modal="true"
+            className="mobile-menu"
+            id="mobile-navigation"
+            role="dialog"
+          >
+            <div className="mobile-menu__meta">
+              <span>LOCAL IMPACT NETWORK / 001</span>
+              <strong>PRE-SEASON</strong>
+            </div>
+            <nav aria-label="Mobile navigation links">
+              {navItems.map(([label, href], index) => (
+                <a
+                  href={href}
+                  key={href}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <strong>{label}</strong>
+                  <Arrow />
+                </a>
+              ))}
+            </nav>
+            <a
+              className="mobile-menu__sponsor"
+              href="#contact"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Start a sponsorship conversation <Arrow />
+            </a>
+          </div>
+        ) : null}
       </header>
 
       <main id="top">
@@ -1587,10 +1345,17 @@ export default function Home() {
 
           <div className="hero-visual">
             <HeroFieldCanvas />
+            <div className="particle-cue" aria-hidden="true">
+              <i />
+              <span className="particle-cue__desktop">Interact with me</span>
+              <span className="particle-cue__touch">Tap particles</span>
+            </div>
             <p className="sr-only" id="hero-art-instructions">
               Move over the artwork to bend its particles. Press and hold to
-              tear open a gravity seam, then release to rebuild the next sports
-              object. Press Enter or Space to advance with a keyboard.
+              tear open a gravity seam on a desktop, then release to rebuild
+              the next sports object. On a touchscreen, tap the particles to
+              bend them without changing sports. Press Enter or Space to
+              advance with a keyboard.
             </p>
           </div>
 
@@ -1821,7 +1586,7 @@ export default function Home() {
             label="Heart sticker"
           />
           <div className="partners__inner section-shell">
-            <div className="section-index section-index--light">05 / Founding partners</div>
+            <div className="section-index section-index--light">05 / Community partners</div>
             <div className="partners__copy" data-reveal>
               <span>THE FIRST TEAM IS FORMING</span>
               <h2>Local brands.<br />Lasting impact.</h2>
@@ -1840,12 +1605,21 @@ export default function Home() {
                 <strong>Valencia High School</strong>
                 <small>Student and athletics partner</small>
               </div>
-              <div><span>FOUNDING SPONSOR</span><strong>Your mark could start here</strong></div>
+              <div className="partner-slots__sponsor">
+                <span>FOUNDING SPONSOR</span>
+                <strong>Your mark could start here</strong>
+              </div>
               <div className="partner-slots__pantry">
                 <div className="scv-lockup">
+                  {/* The worker runtime does not provide Next's image optimizer. */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/scv-food-pantry-logo.jpg"
                     alt="Santa Clarita Valley Food Pantry logo"
+                    decoding="async"
+                    height={620}
+                    loading="lazy"
+                    width={620}
                   />
                 </div>
                 <span>COMMUNITY PARTNER</span>
@@ -1950,10 +1724,14 @@ export default function Home() {
               Interested in sponsoring a team achievement? Start with a simple
               conversation—no technical setup and no commitment required.
             </p>
+            <p className="contact__tax-note">
+              Business sponsorships are tax-deductible. Documentation is
+              available upon request.
+            </p>
             <div className="contact__links">
               <a href="mailto:sportsagainsthunger@gmail.com?subject=Sports%20Against%20Hunger%20Sponsorship">
                 <span>Email</span>
-                <strong>sportsagainsthunger@gmail.com</strong>
+                <strong>sportsagainst<wbr />hunger@gmail.com</strong>
                 <Arrow />
               </a>
             </div>
