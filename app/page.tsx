@@ -596,9 +596,9 @@ function HeroFieldCanvas() {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    const supportsFinePointer = window.matchMedia(
-      "(hover: hover) and (pointer: fine)",
-    ).matches;
+    const touchTarget = canvas.parentElement?.querySelector<HTMLButtonElement>(
+      ".particle-hold-target",
+    );
     const pointer = {
       x: 0,
       y: 0,
@@ -621,13 +621,8 @@ function HeroFieldCanvas() {
     let woundStrength = 0;
     let transitionTimer = 0;
     let touchHolding = false;
-    let touchHoldTimer = 0;
     let touchPointerId: number | null = null;
-    let touchStartX = 0;
-    let touchStartY = 0;
     const transitionDuration = 880;
-    const touchHoldDelay = 180;
-    const touchMoveTolerance = 12;
     let particles: Array<{
       x: number;
       y: number;
@@ -964,14 +959,8 @@ function HeroFieldCanvas() {
       }
     };
 
-    const usesTouchInteraction = (event: PointerEvent) =>
-      event.pointerType === "touch" ||
-      event.pointerType === "pen" ||
-      !supportsFinePointer ||
-      window.matchMedia("(max-width: 620px)").matches;
-
     const updatePointerPosition = (
-      event: PointerEvent,
+      event: Pick<PointerEvent, "clientX" | "clientY">,
       activate = true,
     ) => {
       const bounds = canvas.getBoundingClientRect();
@@ -1000,72 +989,33 @@ function HeroFieldCanvas() {
     };
 
     const stopTouchInteraction = (pointerId = touchPointerId) => {
-      if (touchHoldTimer) {
-        window.clearTimeout(touchHoldTimer);
-        touchHoldTimer = 0;
-      }
       touchHolding = false;
       touchPointerId = null;
-      canvas.classList.remove("is-touch-pending", "is-touch-active");
+      touchTarget?.classList.remove("is-touch-active");
       resetPointerInteraction();
-      if (pointerId !== null && canvas.hasPointerCapture?.(pointerId)) {
-        canvas.releasePointerCapture(pointerId);
+      if (
+        pointerId !== null &&
+        touchTarget?.hasPointerCapture?.(pointerId)
+      ) {
+        touchTarget.releasePointerCapture(pointerId);
       }
       if (prefersReducedMotion) render(performance.now());
     };
 
     const onPointerMove = (event: PointerEvent) => {
-      if (usesTouchInteraction(event)) {
-        if (event.pointerId !== touchPointerId) return;
-        if (!touchHolding) {
-          const moved = Math.hypot(
-            event.clientX - touchStartX,
-            event.clientY - touchStartY,
-          );
-          if (moved > touchMoveTolerance) stopTouchInteraction(event.pointerId);
-          return;
-        }
-      }
+      if (event.pointerType === "touch") return;
       if (pointer.down) event.preventDefault();
       updatePointerPosition(event);
     };
 
     const onPointerLeave = (event: PointerEvent) => {
-      if (pointer.down || touchHolding) return;
-      if (event.pointerId === touchPointerId) {
-        stopTouchInteraction(event.pointerId);
-        return;
-      }
+      if (event.pointerType === "touch" || pointer.down) return;
       resetPointerInteraction();
       if (prefersReducedMotion) render(performance.now());
     };
 
     const onPointerDown = (event: PointerEvent) => {
-      if (usesTouchInteraction(event)) {
-        if (event.isPrimary === false) return;
-        stopTouchInteraction();
-        touchPointerId = event.pointerId;
-        touchStartX = event.clientX;
-        touchStartY = event.clientY;
-        updatePointerPosition(event, false);
-        canvas.classList.add("is-touch-pending");
-        const nextPointerId = event.pointerId;
-        touchHoldTimer = window.setTimeout(() => {
-          if (touchPointerId !== nextPointerId) return;
-          touchHoldTimer = 0;
-          touchHolding = true;
-          pointer.active = true;
-          canvas.classList.remove("is-touch-pending");
-          canvas.classList.add("is-touch-active");
-          try {
-            canvas.setPointerCapture?.(nextPointerId);
-          } catch {
-            stopTouchInteraction(nextPointerId);
-          }
-          if (prefersReducedMotion) render(performance.now());
-        }, touchHoldDelay);
-        return;
-      }
+      if (event.pointerType === "touch") return;
       updatePointerPosition(event);
       event.preventDefault();
       pointer.down = true;
@@ -1073,10 +1023,7 @@ function HeroFieldCanvas() {
       if (prefersReducedMotion) render(performance.now());
     };
     const onPointerUp = (event: PointerEvent) => {
-      if (usesTouchInteraction(event)) {
-        stopTouchInteraction(event.pointerId);
-        return;
-      }
+      if (event.pointerType === "touch") return;
       if (!pointer.down) return;
       pointer.down = false;
       releasePulseStart = performance.now();
@@ -1087,21 +1034,57 @@ function HeroFieldCanvas() {
       if (prefersReducedMotion) render(performance.now());
     };
     const onPointerCancel = (event: PointerEvent) => {
-      if (usesTouchInteraction(event)) {
-        stopTouchInteraction(event.pointerId);
-        return;
-      }
+      if (event.pointerType === "touch") return;
       pointer.down = false;
       resetPointerInteraction();
       if (canvas.hasPointerCapture?.(event.pointerId)) {
         canvas.releasePointerCapture(event.pointerId);
       }
     };
-    const onLostPointerCapture = (event: PointerEvent) => {
+    const onTouchPointerDown = (event: PointerEvent) => {
+      if (event.isPrimary === false) return;
+      event.preventDefault();
+      stopTouchInteraction();
+      touchPointerId = event.pointerId;
+      touchHolding = true;
+      pointer.down = false;
+      updatePointerPosition(event);
+      touchTarget?.classList.add("is-touch-active");
+      try {
+        touchTarget?.setPointerCapture(event.pointerId);
+      } catch {
+        stopTouchInteraction(event.pointerId);
+      }
+      if (prefersReducedMotion) render(performance.now());
+    };
+    const onTouchPointerMove = (event: PointerEvent) => {
+      if (!touchHolding) {
+        if (event.pointerType === "mouse") updatePointerPosition(event);
+        return;
+      }
+      if (event.pointerId !== touchPointerId) return;
+      event.preventDefault();
+      updatePointerPosition(event);
+    };
+    const onTouchPointerLeave = (event: PointerEvent) => {
+      if (touchHolding || event.pointerType !== "mouse") return;
+      resetPointerInteraction();
+      if (prefersReducedMotion) render(performance.now());
+    };
+    const onTouchPointerEnd = (event: PointerEvent) => {
+      if (event.pointerId !== touchPointerId) return;
+      event.preventDefault();
+      stopTouchInteraction(event.pointerId);
+    };
+    const onTouchLostPointerCapture = (event: PointerEvent) => {
       if (event.pointerId === touchPointerId) stopTouchInteraction();
     };
+    const onTouchClick = (event: MouseEvent) => {
+      event.preventDefault();
+      if (event.detail === 0) setSport(activeSport + 1);
+    };
     const onFocus = () => {
-      if (touchPointerId !== null) return;
+      if (touchPointerId !== null || !canvas.matches(":focus-visible")) return;
       pointer.screenX = width * 0.54;
       pointer.screenY = height * 0.49;
       pointer.active = true;
@@ -1138,10 +1121,20 @@ function HeroFieldCanvas() {
     canvas.addEventListener("pointerdown", onPointerDown);
     canvas.addEventListener("pointerup", onPointerUp);
     canvas.addEventListener("pointercancel", onPointerCancel);
-    canvas.addEventListener("lostpointercapture", onLostPointerCapture);
     canvas.addEventListener("focus", onFocus);
     canvas.addEventListener("blur", onBlur);
     canvas.addEventListener("keydown", onKeyDown);
+    touchTarget?.addEventListener("pointerdown", onTouchPointerDown);
+    touchTarget?.addEventListener("pointermove", onTouchPointerMove);
+    touchTarget?.addEventListener("pointerleave", onTouchPointerLeave);
+    touchTarget?.addEventListener("pointerup", onTouchPointerEnd);
+    touchTarget?.addEventListener("pointercancel", onTouchPointerEnd);
+    touchTarget?.addEventListener(
+      "lostpointercapture",
+      onTouchLostPointerCapture,
+    );
+    touchTarget?.addEventListener("click", onTouchClick);
+    touchTarget?.addEventListener("blur", onBlur);
     document.addEventListener("visibilitychange", onVisibilityChange);
     resize();
     render();
@@ -1159,14 +1152,23 @@ function HeroFieldCanvas() {
       canvas.removeEventListener("pointerdown", onPointerDown);
       canvas.removeEventListener("pointerup", onPointerUp);
       canvas.removeEventListener("pointercancel", onPointerCancel);
-      canvas.removeEventListener("lostpointercapture", onLostPointerCapture);
       canvas.removeEventListener("focus", onFocus);
       canvas.removeEventListener("blur", onBlur);
       canvas.removeEventListener("keydown", onKeyDown);
+      touchTarget?.removeEventListener("pointerdown", onTouchPointerDown);
+      touchTarget?.removeEventListener("pointermove", onTouchPointerMove);
+      touchTarget?.removeEventListener("pointerleave", onTouchPointerLeave);
+      touchTarget?.removeEventListener("pointerup", onTouchPointerEnd);
+      touchTarget?.removeEventListener("pointercancel", onTouchPointerEnd);
+      touchTarget?.removeEventListener(
+        "lostpointercapture",
+        onTouchLostPointerCapture,
+      );
+      touchTarget?.removeEventListener("click", onTouchClick);
+      touchTarget?.removeEventListener("blur", onBlur);
       document.removeEventListener("visibilitychange", onVisibilityChange);
       if (sportTimer) window.clearInterval(sportTimer);
       if (transitionTimer) window.clearTimeout(transitionTimer);
-      if (touchHoldTimer) window.clearTimeout(touchHoldTimer);
       window.cancelAnimationFrame(frame);
     };
   }, []);
@@ -1420,10 +1422,20 @@ export default function Home() {
 
           <div className="hero-visual">
             <HeroFieldCanvas />
-            <div className="particle-cue" aria-hidden="true">
+            <button
+              className="particle-hold-target"
+              type="button"
+              aria-describedby="hero-art-instructions"
+              aria-label="Press and hold to interact with the particles"
+            >
+              <span className="particle-cue particle-cue--touch" aria-hidden="true">
+                <i />
+                <span>Hold to interact</span>
+              </span>
+            </button>
+            <div className="particle-cue particle-cue--desktop" aria-hidden="true">
               <i />
-              <span className="particle-cue__desktop">Interact with me</span>
-              <span className="particle-cue__touch">Hold to interact</span>
+              <span>Interact with me</span>
             </div>
             <p className="sr-only" id="hero-art-instructions">
               Move over the artwork to bend its particles. Press and hold to

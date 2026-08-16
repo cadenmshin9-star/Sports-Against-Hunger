@@ -6559,7 +6559,7 @@ body {
 .header-cta__short,
 .mobile-menu-toggle,
 .mobile-menu,
-.particle-cue__touch {
+.particle-hold-target {
   display: none;
 }
 
@@ -6584,16 +6584,6 @@ body {
   transform: rotate(-2deg);
   transition: opacity 0.25s ease, transform 0.3s ease;
   backdrop-filter: blur(8px);
-}
-
-.hero-visual__canvas.is-touch-pending + .particle-cue {
-  opacity: 0.9;
-  transform: translateY(-2px) rotate(0);
-}
-
-.hero-visual__canvas.is-touch-active + .particle-cue {
-  opacity: 0;
-  transform: translateY(5px) scale(0.94);
 }
 
 .particle-cue i {
@@ -6828,18 +6818,54 @@ body {
   }
 }
 
-@media (hover: none), (pointer: coarse) {
+@media (hover: none), (pointer: coarse), (max-width: 620px) {
   .hero-visual__canvas {
     cursor: default;
     touch-action: pan-y;
   }
 
-  .particle-cue__desktop {
+  .particle-cue--desktop {
     display: none;
   }
 
-  .particle-cue__touch {
-    display: inline;
+  .particle-hold-target {
+    position: absolute;
+    z-index: 8;
+    top: 49%;
+    left: 52%;
+    display: block;
+    width: min(62%, 210px);
+    aspect-ratio: 1;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    cursor: grab;
+    touch-action: none;
+    transform: translate(-50%, -50%);
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+  }
+
+  .particle-hold-target:active {
+    cursor: grabbing;
+  }
+
+  .particle-hold-target:focus-visible {
+    outline: 2px solid var(--lime);
+    outline-offset: 4px;
+  }
+
+  .particle-hold-target .particle-cue {
+    right: -4%;
+    bottom: 4%;
+  }
+
+  .particle-hold-target.is-touch-active .particle-cue {
+    opacity: 0;
+    transform: translateY(5px) scale(0.94);
   }
 
   .wall-sticker,
@@ -6912,20 +6938,9 @@ body {
     border-width: 1px;
   }
 
-  .hero-visual__canvas.is-touch-pending + .particle-cue {
-    opacity: 0.9;
-  }
-
-  .hero-visual__canvas.is-touch-active + .particle-cue {
-    opacity: 0;
-  }
-
-  .particle-cue__desktop {
-    display: none;
-  }
-
-  .particle-cue__touch {
-    display: inline;
+  .particle-hold-target .particle-cue {
+    right: -5px;
+    bottom: 3px;
   }
 
   .pillar-grid article {

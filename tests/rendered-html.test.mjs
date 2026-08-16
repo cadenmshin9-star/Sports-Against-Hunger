@@ -32,13 +32,16 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /<title>Sports Against Hunger \| Game-Day Hunger Relief<\/title>/i);
   assert.match(html, /Every play can/);
   assert.match(html, />feed a<\/span><span[^>]*>family\.<\/span>/i);
-  assert.match(html, /href="#contact">Become a sponsor/i);
+  assert.match(
+    html,
+    /<a class="header-cta" href="#contact">[\s\S]*?Become a sponsor[\s\S]*?<\/a>/i,
+  );
   assert.doesNotMatch(html, /href="tel:/i);
   assert.doesNotMatch(html, /661-593-8857|cadenmshin9@gmail\.com/i);
   assert.match(html, /href="mailto:sportsagainsthunger@gmail\.com/i);
   assert.match(html, /Valencia High School/);
   assert.match(html, /SCV Food Pantry/);
-  assert.match(html, /scv-food-pantry-logo\.jpg/);
+  assert.match(html, /aria-label="Santa Clarita Valley Food Pantry"/);
   assert.match(html, /Based in Santa Clarita, California\./);
   assert.match(html, /Hunger is local\./);
   assert.match(html, /So is the/);
