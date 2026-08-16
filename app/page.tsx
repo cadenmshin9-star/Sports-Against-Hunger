@@ -1610,17 +1610,19 @@ export default function Home() {
                 <strong>Your mark could start here</strong>
               </div>
               <div className="partner-slots__pantry">
-                <div className="scv-lockup">
-                  {/* The worker runtime does not provide Next's image optimizer. */}
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/scv-food-pantry-logo.jpg"
-                    alt="Santa Clarita Valley Food Pantry logo"
-                    decoding="async"
-                    height={620}
-                    loading="lazy"
-                    width={620}
-                  />
+                <div
+                  className="scv-lockup"
+                  aria-label="Santa Clarita Valley Food Pantry"
+                  role="img"
+                >
+                  <span className="scv-apple" aria-hidden="true">
+                    <i />
+                    <b />
+                  </span>
+                  <span className="scv-word" aria-hidden="true">
+                    <span>SANTA CLARITA VALLEY</span>
+                    <b>FOOD PANTRY</b>
+                  </span>
                 </div>
                 <span>COMMUNITY PARTNER</span>
                 <strong>SCV Food Pantry</strong>
