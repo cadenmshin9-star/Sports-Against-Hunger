@@ -2541,6 +2541,10 @@ footer > span {
   margin-top: 24px;
 }
 
+.hero.hero-tech .hero__actions strong {
+  font-weight: 900;
+}
+
 .hero.hero-tech .hero-sponsor {
   position: relative;
   gap: 35px;
@@ -4667,6 +4671,7 @@ body {
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .hero-visual__canvas:active {
@@ -6581,6 +6586,16 @@ body {
   backdrop-filter: blur(8px);
 }
 
+.hero-visual__canvas.is-touch-pending + .particle-cue {
+  opacity: 0.9;
+  transform: translateY(-2px) rotate(0);
+}
+
+.hero-visual__canvas.is-touch-active + .particle-cue {
+  opacity: 0;
+  transform: translateY(5px) scale(0.94);
+}
+
 .particle-cue i {
   width: 8px;
   height: 8px;
@@ -6877,11 +6892,32 @@ body {
     margin: 18px -20px -12px;
   }
 
+  .hero-visual__canvas {
+    touch-action: pan-y;
+  }
+
   .particle-cue {
-    right: 20px;
-    bottom: 16px;
-    padding: 8px 10px;
-    font-size: 7px;
+    right: 12px;
+    bottom: 11px;
+    gap: 7px;
+    padding: 6px 8px;
+    background: rgba(11, 23, 31, 0.38);
+    font-size: 6px;
+    opacity: 0.72;
+  }
+
+  .particle-cue i {
+    width: 6px;
+    height: 6px;
+    border-width: 1px;
+  }
+
+  .hero-visual__canvas.is-touch-pending + .particle-cue {
+    opacity: 0.9;
+  }
+
+  .hero-visual__canvas.is-touch-active + .particle-cue {
+    opacity: 0;
   }
 
   .particle-cue__desktop {
