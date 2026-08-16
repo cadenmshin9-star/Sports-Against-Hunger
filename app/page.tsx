@@ -139,7 +139,7 @@ type SportPoint = {
 };
 
 function Arrow() {
-  return <span aria-hidden="true">↗</span>;
+  return <span className="text-arrow" aria-hidden="true">↗︎</span>;
 }
 
 function WallSticker({
@@ -620,7 +620,7 @@ function HeroFieldCanvas() {
     let releasePulseStart = -1;
     let woundStrength = 0;
     let transitionTimer = 0;
-    let touchInteractionTimer = 0;
+    let touchHolding = false;
     const transitionDuration = 880;
     let particles: Array<{
       x: number;
@@ -959,6 +959,9 @@ function HeroFieldCanvas() {
     };
 
     const onPointerMove = (event: PointerEvent) => {
+      const usesTouchInteraction =
+        event.pointerType !== "mouse" || !supportsFinePointer;
+      if (usesTouchInteraction && !touchHolding) return;
       if (pointer.down) event.preventDefault();
       const bounds = canvas.getBoundingClientRect();
       const nextX = event.clientX - bounds.left;
@@ -976,43 +979,40 @@ function HeroFieldCanvas() {
       pointer.active = true;
       if (prefersReducedMotion) render(performance.now());
     };
-    const endTouchInteraction = () => {
-      touchInteractionTimer = window.setTimeout(() => {
-        pointer.active = false;
-        pointer.x = 0;
-        pointer.y = 0;
-        touchInteractionTimer = 0;
-        if (prefersReducedMotion) render(performance.now());
-      }, 850);
-    };
     const onPointerLeave = () => {
-      if (pointer.down) return;
-      if (!supportsFinePointer && touchInteractionTimer) return;
+      if (pointer.down || touchHolding) return;
       pointer.active = false;
       pointer.x = 0;
       pointer.y = 0;
       if (prefersReducedMotion) render(performance.now());
     };
     const onPointerDown = (event: PointerEvent) => {
-      onPointerMove(event);
-      if (!supportsFinePointer) {
-        if (touchInteractionTimer) {
-          window.clearTimeout(touchInteractionTimer);
-        }
-        endTouchInteraction();
+      const usesTouchInteraction =
+        event.pointerType !== "mouse" || !supportsFinePointer;
+      if (usesTouchInteraction) {
+        touchHolding = true;
+        onPointerMove(event);
+        canvas.setPointerCapture?.(event.pointerId);
         return;
       }
+      onPointerMove(event);
       event.preventDefault();
       pointer.down = true;
       canvas.setPointerCapture?.(event.pointerId);
       if (prefersReducedMotion) render(performance.now());
     };
     const onPointerUp = (event: PointerEvent) => {
-      if (!supportsFinePointer) {
-        if (touchInteractionTimer) {
-          window.clearTimeout(touchInteractionTimer);
+      const usesTouchInteraction =
+        event.pointerType !== "mouse" || !supportsFinePointer;
+      if (usesTouchInteraction) {
+        touchHolding = false;
+        pointer.active = false;
+        pointer.x = 0;
+        pointer.y = 0;
+        if (canvas.hasPointerCapture?.(event.pointerId)) {
+          canvas.releasePointerCapture(event.pointerId);
         }
-        endTouchInteraction();
+        if (prefersReducedMotion) render(performance.now());
         return;
       }
       if (!pointer.down) return;
@@ -1025,12 +1025,11 @@ function HeroFieldCanvas() {
       if (prefersReducedMotion) render(performance.now());
     };
     const onPointerCancel = (event: PointerEvent) => {
-      if (touchInteractionTimer) {
-        window.clearTimeout(touchInteractionTimer);
-        touchInteractionTimer = 0;
-      }
+      touchHolding = false;
       pointer.down = false;
       pointer.active = false;
+      pointer.x = 0;
+      pointer.y = 0;
       if (canvas.hasPointerCapture?.(event.pointerId)) {
         canvas.releasePointerCapture(event.pointerId);
       }
@@ -1042,6 +1041,7 @@ function HeroFieldCanvas() {
       if (prefersReducedMotion) render(performance.now());
     };
     const onBlur = () => {
+      touchHolding = false;
       pointer.active = false;
       pointer.down = false;
       pointer.x = 0;
@@ -1076,7 +1076,7 @@ function HeroFieldCanvas() {
     const sportTimer = prefersReducedMotion
       ? 0
       : window.setInterval(() => {
-          if (!pointer.down) setSport(activeSport + 1);
+          if (!pointer.down && !touchHolding) setSport(activeSport + 1);
         }, 11200);
 
     return () => {
@@ -1092,7 +1092,6 @@ function HeroFieldCanvas() {
       canvas.removeEventListener("keydown", onKeyDown);
       if (sportTimer) window.clearInterval(sportTimer);
       if (transitionTimer) window.clearTimeout(transitionTimer);
-      if (touchInteractionTimer) window.clearTimeout(touchInteractionTimer);
       window.cancelAnimationFrame(frame);
     };
   }, []);
@@ -1238,7 +1237,7 @@ export default function Home() {
         aria-label="Back to top"
       >
         <span>Back to top</span>
-        <i aria-hidden="true">↑</i>
+        <i className="text-arrow" aria-hidden="true">↑︎</i>
       </a>
 
       <header className="site-header">
@@ -1338,7 +1337,7 @@ export default function Home() {
                 Sponsor a play <Arrow />
               </a>
               <a className="hero-secondary" href="#about">
-                See how it works <span aria-hidden="true">↓</span>
+                See how it works <span className="text-arrow" aria-hidden="true">↓︎</span>
               </a>
             </div>
           </div>
@@ -1348,14 +1347,14 @@ export default function Home() {
             <div className="particle-cue" aria-hidden="true">
               <i />
               <span className="particle-cue__desktop">Interact with me</span>
-              <span className="particle-cue__touch">Tap particles</span>
+              <span className="particle-cue__touch">Tap &amp; hold particles</span>
             </div>
             <p className="sr-only" id="hero-art-instructions">
               Move over the artwork to bend its particles. Press and hold to
               tear open a gravity seam on a desktop, then release to rebuild
-              the next sports object. On a touchscreen, tap the particles to
-              bend them without changing sports. Press Enter or Space to
-              advance with a keyboard.
+              the next sports object. On a touchscreen, touch and hold the
+              particles to bend them, then release to let them settle. Press
+              Enter or Space to advance with a keyboard.
             </p>
           </div>
 
@@ -1535,7 +1534,7 @@ export default function Home() {
                 <span>{item.number}</span>
                 <h3>{item.title}</h3>
                 <p>{item.body}</p>
-                <i aria-hidden="true">→</i>
+                <i className="text-arrow" aria-hidden="true">→︎</i>
               </article>
             ))}
           </div>
