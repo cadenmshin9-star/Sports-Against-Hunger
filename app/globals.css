@@ -807,11 +807,16 @@ a {
   font-style: normal;
 }
 
+.playbook-list .playbook-list__done {
+  color: var(--action);
+  font-weight: 900;
+}
+
 .example-card {
   display: grid;
-  grid-template-columns: 0.5fr 1.5fr 0.7fr;
+  grid-template-columns: 0.38fr 1fr auto 1fr;
   align-items: center;
-  gap: 40px;
+  gap: clamp(24px, 3vw, 48px);
   margin-top: 80px;
   padding: 45px;
   border-radius: 2px;
@@ -825,38 +830,46 @@ a {
   letter-spacing: 0.14em;
 }
 
-.example-card__equation {
+.example-card__scenario,
+.example-card__outcome {
   display: grid;
-  grid-template-columns: auto auto auto auto auto;
-  align-items: center;
-  gap: 18px;
+  gap: 10px;
 }
 
-.example-card__equation span {
-  font-size: clamp(54px, 6.2vw, 94px);
+.example-card__scenario span,
+.example-card__outcome span {
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 8px;
   font-weight: 900;
-  letter-spacing: -0.08em;
-  line-height: 1;
-}
-
-.example-card__equation small {
-  max-width: 75px;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
-.example-card__equation i {
-  font-size: 28px;
+.example-card__scenario strong,
+.example-card__outcome strong {
+  font-size: clamp(17px, 1.55vw, 23px);
+  letter-spacing: -0.035em;
+  line-height: 1.25;
+}
+
+.example-card__arrow {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  border-radius: 50%;
+  font-size: 22px;
   font-style: normal;
 }
 
-.example-card > p {
-  margin: 0;
+.example-card__outcome small {
   color: rgba(255, 255, 255, 0.72);
-  font-size: 10px;
-  line-height: 1.5;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1.35;
+  text-transform: uppercase;
 }
 
 .dashboard {
@@ -2022,8 +2035,8 @@ footer > span {
     grid-template-columns: 1fr;
   }
 
-  .example-card__equation {
-    justify-content: start;
+  .example-card__arrow {
+    transform: rotate(90deg);
   }
 
   .final-cta__orb {
@@ -2191,12 +2204,9 @@ footer > span {
     padding: 28px 22px;
   }
 
-  .example-card__equation {
-    grid-template-columns: auto auto auto;
-  }
-
-  .example-card__equation small:last-child {
-    grid-column: 2 / -1;
+  .example-card__arrow {
+    width: 40px;
+    height: 40px;
   }
 
   .placeholder {
@@ -2507,6 +2517,83 @@ footer > span {
   color: rgba(255, 255, 255, 0.66);
   font-size: clamp(14px, 1.2vw, 18px);
   line-height: 1.55;
+}
+
+.hero-flow {
+  width: min(100%, 700px);
+  margin-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.24);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.hero-flow__label {
+  display: block;
+  padding: 9px 0 7px;
+  color: var(--lime);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.hero-flow ol {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero-flow li {
+  position: relative;
+  display: grid;
+  min-height: 94px;
+  grid-template-columns: auto 1fr;
+  align-content: start;
+  gap: 11px;
+  padding: 14px 18px 14px 0;
+}
+
+.hero-flow li:not(:first-child) {
+  padding-left: 18px;
+}
+
+.hero-flow li:not(:last-child) {
+  border-right: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.hero-flow li:not(:last-child)::after {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  color: rgba(255, 255, 255, 0.28);
+  content: "→";
+  font-size: 12px;
+  transform: translateY(-50%);
+}
+
+.hero-flow li > span {
+  padding-top: 2px;
+  color: var(--lime);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.hero-flow li strong {
+  display: block;
+  color: white;
+  font-size: clamp(13px, 1vw, 15px);
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+
+.hero-flow li p {
+  max-width: 170px;
+  margin: 7px 0 0;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 10px;
+  line-height: 1.35;
 }
 
 .hero__location {
@@ -3755,6 +3842,14 @@ body {
 
 .hero-tech__copy > :nth-child(5) {
   animation-delay: 2.15s;
+}
+
+.hero-tech__copy > :nth-child(6) {
+  animation-delay: 2.2s;
+}
+
+.hero-tech__copy > :nth-child(7) {
+  animation-delay: 2.25s;
 }
 
 .hero-visual {
@@ -7023,5 +7118,38 @@ body {
     padding: 9px 11px;
     font-size: 8px;
     text-align: left;
+  }
+
+  .hero-flow ol {
+    grid-template-columns: 1fr;
+  }
+
+  .hero.hero-tech h1 {
+    font-size: clamp(46px, 14vw, 58px);
+  }
+
+  .hero-flow li {
+    min-height: 0;
+    grid-template-columns: 28px 1fr;
+    gap: 8px;
+    padding: 12px 0;
+  }
+
+  .hero-flow li:not(:last-child)::after {
+    display: none;
+  }
+
+  .hero-flow li:not(:first-child) {
+    padding-left: 0;
+  }
+
+  .hero-flow li:not(:last-child) {
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .hero-flow li p {
+    max-width: none;
+    margin-top: 5px;
   }
 }

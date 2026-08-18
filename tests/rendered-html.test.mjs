@@ -30,8 +30,13 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
 
   const html = await response.text();
   assert.match(html, /<title>Sports Against Hunger \| Game-Day Hunger Relief<\/title>/i);
-  assert.match(html, /Every play can/);
-  assert.match(html, />feed a<\/span><span[^>]*>family\.<\/span>/i);
+  assert.match(
+    html,
+    />Every play<\/span><span[^>]*>can feed a<\/span><span[^>]*>family\.<\/span>/i,
+  );
+  assert.match(html, /Athletic achievement/);
+  assert.match(html, /Direct to the Pantry/);
+  assert.match(html, /direct contributions to local food partners/i);
   assert.match(
     html,
     /<a class="header-cta" href="#contact">[\s\S]*?Become a sponsor[\s\S]*?<\/a>/i,
@@ -75,7 +80,9 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /value: "0", label: "founding sponsors"/);
   assert.match(page, /Partner reveal coming soon/);
   assert.match(page, /Goal announced after pantry approval/);
-  assert.match(page, /Illustrative only\./);
+  assert.match(page, /Pledge details appear only after they are confirmed\./);
+  assert.match(page, /Athletic achievement/);
+  assert.doesNotMatch(page, /\$\d+\s+per\s+(touchdown|goal|hit)/i);
   assert.match(page, /Sports<\/strong>\s*<strong>Against<\/strong>\s*<strong>Hunger/);
   assert.match(page, /className="hero-visual__canvas"/);
   assert.match(page, /label: "FOOTBALL"/);

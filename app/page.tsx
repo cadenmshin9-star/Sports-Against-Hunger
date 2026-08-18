@@ -5,10 +5,28 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 const navItems = [
   ["About", "#about"],
   ["Impact", "#impact"],
-  ["Playbook", "#playbook"],
+  ["How it works", "#playbook"],
   ["Partners", "#partners"],
   ["Q & A", "#faq"],
   ["Contact", "#contact"],
+];
+
+const systemFlow = [
+  {
+    number: "01",
+    title: "Business pledges",
+    body: "A local business chooses an amount per achievement and sets a clear maximum.",
+  },
+  {
+    number: "02",
+    title: "Athletic achievement",
+    body: "An official touchdown, goal, hit, or milestone determines the resulting pledge.",
+  },
+  {
+    number: "03",
+    title: "Direct to the Pantry",
+    body: "The business contributes directly; the food partner confirms receipt and impact.",
+  },
 ];
 
 const impactStats = [
@@ -38,41 +56,41 @@ const pillars = [
 const incentives = [
   {
     label: "School",
-    title: "Stronger game days",
-    body: "More school spirit, student ownership, and positive local-business relationships.",
+    title: "Approves the setting",
+    body: "Hosts the game-day activity and confirms how the campaign may be recognized.",
   },
   {
     label: "Students & teams",
-    title: "Real leadership reps",
-    body: "Meaningful roles in events, storytelling, outreach, and impact reporting.",
+    title: "Create & coordinate",
+    body: "Athletes create the official achievement; student leaders organize outreach and reporting.",
   },
   {
     label: "Sponsors",
-    title: "Visible local purpose",
-    body: "Game-day recognition, community goodwill, and a clear report of verified impact.",
+    title: "Commit & contribute",
+    body: "Set a capped pledge, then send the resulting contribution directly to the food partner.",
   },
   {
     label: "Food partner",
-    title: "Support that fits",
-    body: "Direct, pantry-led contributions based on what families actually need.",
+    title: "Receive & verify",
+    body: "Receives the contribution, confirms it, and sets the official impact calculation.",
   },
 ];
 
 const playbook = [
   {
     number: "01",
-    title: "A business commits",
-    body: "A local sponsor chooses a clear, capped commitment tied to a team achievement.",
+    title: "A business sets the pledge",
+    body: "Before the game, a local business chooses an amount tied to an athletic achievement and sets a clear maximum.",
   },
   {
     number: "02",
-    title: "The team delivers",
-    body: "An official touchdown, goal, hit, or milestone unlocks part of that commitment.",
+    title: "The achievement is verified",
+    body: "An official touchdown, goal, hit, or milestone determines the resulting contribution after the game.",
   },
   {
     number: "03",
-    title: "The pantry confirms",
-    body: "Funds move directly to the approved food partner, which verifies the real impact.",
+    title: "The Pantry receives it directly",
+    body: "The business sends the contribution to the food partner, which confirms receipt and reports the verified impact.",
   },
 ];
 
@@ -1399,21 +1417,34 @@ export default function Home() {
             </div>
             <span className="hero-tech__kicker">LOCAL IMPACT NETWORK / 001</span>
             <h1 id="hero-title">
-              <span>Every</span>
-              <span>play can</span>
-              <span>feed a</span>
+              <span>Every play</span>
+              <span>can feed a</span>
               <span className="hero-tech__accent">family.</span>
             </h1>
             <p className="hero__intro">
-              High school athletics, local businesses, and food partners—moving
-              together to turn verified achievements into dependable support.
+              Local businesses turn verified high school sports achievements
+              into direct contributions to local food partners.
             </p>
+            <div className="hero-flow" aria-label="How Sports Against Hunger works">
+              <span className="hero-flow__label">How it moves</span>
+              <ol>
+                {systemFlow.map((step) => (
+                  <li key={step.number}>
+                    <span>{step.number}</span>
+                    <div>
+                      <strong>{step.title}</strong>
+                      <p>{step.body}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
             <p className="hero__location">Based in Santa Clarita, California.</p>
             <div className="hero__actions">
               <a className="hero-sponsor" href="#contact">
                 <strong>Sponsor a Play</strong> <Arrow />
               </a>
-              <a className="hero-secondary" href="#about">
+              <a className="hero-secondary" href="#playbook">
                 <strong>See how it works</strong>{" "}
                 <span className="text-arrow" aria-hidden="true">↓︎</span>
               </a>
@@ -1532,8 +1563,8 @@ export default function Home() {
 
           <div className="incentives" data-reveal>
             <div className="incentives__heading">
-              <span>EVERY PARTY HAS A REASON TO PLAY</span>
-              <h3>Aligned incentives.<br />Shared accountability.</h3>
+              <span>EVERYONE KNOWS THEIR ROLE</span>
+              <h3>Four roles.<br />One clean handoff.</h3>
             </div>
             <div className="incentive-grid">
               {incentives.map((item) => (
@@ -1607,39 +1638,48 @@ export default function Home() {
             kind="pantry"
             label="Grocery bag and produce sticker"
           />
-          <div className="section-index">03 / The playbook</div>
+          <div className="section-index">03 / How it works</div>
           <div className="playbook__heading" data-reveal="swoosh-left">
-            <h2>Simple enough to explain.<br />Strong enough to trust.</h2>
+            <h2>From the field<br />to the food partner.</h2>
             <p>
-              A repeatable three-part model keeps the campaign exciting without
-              making community support depend entirely on winning.
+              One direct chain connects a business commitment to a verified
+              contribution. Each participant has one clear job.
             </p>
           </div>
 
           <div className="playbook-list" data-reveal="swoosh-right">
-            {playbook.map((item) => (
+            {playbook.map((item, index) => (
               <article key={item.number}>
                 <span>{item.number}</span>
                 <h3>{item.title}</h3>
                 <p>{item.body}</p>
-                <i className="text-arrow" aria-hidden="true">→︎</i>
+                {index < playbook.length - 1 ? (
+                  <i className="text-arrow" aria-hidden="true">→︎</i>
+                ) : (
+                  <i className="playbook-list__done" aria-hidden="true">✓</i>
+                )}
               </article>
             ))}
           </div>
 
           <div className="example-card" data-reveal>
-            <div className="example-card__label">A SAMPLE PLAY</div>
-            <div className="example-card__equation">
-              <span>1</span>
-              <small>verified achievement</small>
-              <i>×</i>
-              <span className="example-card__variable">—</span>
-              <small>approved sponsor rate</small>
+            <div className="example-card__label">A SAMPLE HANDOFF</div>
+            <div className="example-card__scenario">
+              <span>Before the game</span>
+              <strong>
+                A local business chooses a pledge amount for each verified
+                touchdown and sets a clear maximum before kickoff.
+              </strong>
             </div>
-            <p>
-              Illustrative only. The food partner sets the official meal
-              calculation, and each sponsor sets a maximum commitment.
-            </p>
+            <i className="example-card__arrow" aria-hidden="true">→</i>
+            <div className="example-card__outcome">
+              <span>After the game</span>
+              <strong>
+                The business sends the resulting contribution directly to the
+                food partner.
+              </strong>
+              <small>Pledge details appear only after they are confirmed.</small>
+            </div>
           </div>
         </section>
 
