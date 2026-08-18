@@ -30,6 +30,12 @@ export async function generateMetadata(): Promise<Metadata> {
       "Valencia High School",
     ],
     alternates: { canonical: siteUrl },
+    manifest: "/manifest.webmanifest",
+    appleWebApp: {
+      capable: true,
+      title: "Sports Against Hunger",
+      statusBarStyle: "black-translucent",
+    },
     robots: { index: true, follow: true },
     openGraph: {
       title: "Sports Against Hunger | Game-Day Hunger Relief",

@@ -1212,6 +1212,18 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    if (!window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
+      return;
+    }
+
+    const orientation = window.screen.orientation as ScreenOrientation & {
+      lock?: (orientation: "portrait") => Promise<void>;
+    };
+
+    void orientation.lock?.("portrait").catch(() => undefined);
+  }, []);
+
+  useEffect(() => {
     let loaderFrame = 0;
     const loaderStart = performance.now();
     const loaderDuration = 1700;
