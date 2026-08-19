@@ -923,11 +923,6 @@ a {
   line-height: 1.55;
 }
 
-.upcoming-game time {
-  color: var(--ink);
-  font-weight: 850;
-}
-
 .placeholder__lines {
   position: absolute;
   top: 135px;
@@ -955,6 +950,348 @@ a {
   right: 45px;
   bottom: 40px;
   color: var(--action);
+}
+
+.matchup-card {
+  --chaminade-navy: #002b5c;
+  --chaminade-orange: #f58220;
+  --valencia-gold: #ffc72c;
+  --valencia-purple: #552583;
+  position: relative;
+  min-height: clamp(580px, 62vw, 760px);
+  margin-top: 45px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  background:
+    linear-gradient(
+      135deg,
+      var(--valencia-purple) 0%,
+      #6d349a 43%,
+      var(--valencia-gold) 47%,
+      #fff7d2 49.4%,
+      #ffffff 50%,
+      #ffe3c5 50.6%,
+      var(--chaminade-orange) 53%,
+      var(--chaminade-navy) 57%,
+      #001936 100%
+    );
+  box-shadow: 0 30px 80px rgba(16, 24, 20, 0.2);
+  color: white;
+  cursor: pointer;
+  isolation: isolate;
+  outline: 0;
+  transform: translateZ(0);
+  transition:
+    box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.matchup-card::before,
+.matchup-card::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+}
+
+.matchup-card::before {
+  z-index: -1;
+  inset: 0;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(255, 199, 44, 0.42), transparent 19%),
+    radial-gradient(circle at 85% 82%, rgba(245, 130, 32, 0.42), transparent 22%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.065) 0 1px,
+      transparent 1px 74px
+    );
+  background-position: 0 0, 0 0, 0 0;
+  animation: matchupFieldDrift 13s linear infinite;
+}
+
+.matchup-card::after {
+  z-index: 0;
+  top: -22%;
+  left: 50%;
+  width: 7%;
+  height: 145%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.74),
+    transparent
+  );
+  filter: blur(10px);
+  opacity: 0.34;
+  transform: translateX(-50%) rotate(-45deg);
+  transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+}
+
+.matchup-card:hover,
+.matchup-card:focus-visible {
+  box-shadow: 0 38px 100px rgba(16, 24, 20, 0.3);
+  transform: translateY(-7px);
+}
+
+.matchup-card:active {
+  transform: translateY(-2px) scale(0.992);
+}
+
+.matchup-card:hover::after,
+.matchup-card:focus-visible::after,
+.matchup-card:active::after {
+  width: 18%;
+  opacity: 0.62;
+}
+
+.matchup-card:focus-visible {
+  outline: 3px solid var(--lime);
+  outline-offset: 5px;
+}
+
+.matchup-card__team {
+  position: absolute;
+  z-index: 2;
+  width: min(52%, 670px);
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.matchup-card__team > span,
+.matchup-card__team > p,
+.matchup-card__game span,
+.matchup-card__prompt,
+.matchup-card__flag {
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.matchup-card__flag {
+  position: absolute;
+  z-index: 6;
+  top: 18px;
+  left: 50%;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  background: rgba(10, 24, 31, 0.56);
+  color: white;
+  transform: translateX(-50%);
+  backdrop-filter: blur(8px);
+}
+
+.matchup-card__team > span {
+  display: block;
+  margin-bottom: 18px;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.matchup-card__team > p {
+  margin: 18px 0 0;
+}
+
+.matchup-card__team--valencia {
+  top: 8%;
+  left: 6%;
+}
+
+.matchup-card__team--valencia > p {
+  color: var(--valencia-gold);
+}
+
+.matchup-card__team--chaminade {
+  right: 6%;
+  bottom: 9%;
+  text-align: right;
+}
+
+.matchup-card__team--chaminade > p {
+  color: var(--chaminade-orange);
+}
+
+.matchup-card__identity {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2vw, 30px);
+}
+
+.matchup-card__team--chaminade .matchup-card__identity {
+  justify-content: flex-end;
+}
+
+.matchup-card__identity > i {
+  display: grid;
+  width: clamp(70px, 8.5vw, 116px);
+  flex: 0 0 auto;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 4px solid currentColor;
+  border-radius: 50%;
+  box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.09);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(35px, 5vw, 66px);
+  font-style: italic;
+  font-weight: 950;
+  line-height: 1;
+  transition:
+    background 0.4s ease,
+    color 0.4s ease,
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.matchup-card__team--valencia .matchup-card__identity > i {
+  border-color: var(--valencia-gold);
+  color: var(--valencia-gold);
+}
+
+.matchup-card__team--chaminade .matchup-card__identity > i {
+  border-color: var(--chaminade-orange);
+  color: white;
+}
+
+.matchup-card__identity h2 {
+  max-width: none;
+  margin: 0;
+  color: white;
+  font-size: inherit;
+  letter-spacing: normal;
+  line-height: 1;
+}
+
+.matchup-card__identity h2 small,
+.matchup-card__identity h2 strong {
+  display: block;
+  text-transform: uppercase;
+}
+
+.matchup-card__identity h2 small {
+  margin-bottom: 4px;
+  font-size: clamp(28px, 4.3vw, 64px);
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: -0.07em;
+  line-height: 0.85;
+}
+
+.matchup-card__identity h2 strong {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: clamp(11px, 1.2vw, 17px);
+  letter-spacing: 0.2em;
+}
+
+.matchup-card__clash {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.matchup-card__clash span {
+  display: grid;
+  width: clamp(62px, 7vw, 92px);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  background: rgba(10, 24, 31, 0.84);
+  box-shadow:
+    0 0 0 8px rgba(255, 255, 255, 0.12),
+    0 0 40px rgba(255, 255, 255, 0.36);
+  font-size: clamp(18px, 2vw, 27px);
+  font-style: italic;
+  font-weight: 950;
+  letter-spacing: -0.05em;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.matchup-card__clash i {
+  width: clamp(26px, 5vw, 76px);
+  height: 2px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.44);
+}
+
+.matchup-card__game {
+  position: absolute;
+  z-index: 5;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  width: min(72%, 860px);
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 4vw, 58px);
+  padding: 13px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(10, 24, 31, 0.73);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.25);
+  color: white;
+  transform: translate(-50%, -50%) translateY(88px);
+  backdrop-filter: blur(11px);
+}
+
+.matchup-card__game strong {
+  flex: 0 0 auto;
+  color: var(--lime);
+  font-size: clamp(20px, 2.5vw, 34px);
+  letter-spacing: -0.04em;
+}
+
+.matchup-card__game span:last-child {
+  text-align: right;
+}
+
+.matchup-card__prompt {
+  position: absolute;
+  z-index: 5;
+  right: 20px;
+  bottom: 18px;
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.matchup-card:hover .matchup-card__team--valencia,
+.matchup-card:focus-visible .matchup-card__team--valencia {
+  transform: translate(-8px, -6px);
+}
+
+.matchup-card:hover .matchup-card__team--chaminade,
+.matchup-card:focus-visible .matchup-card__team--chaminade {
+  transform: translate(8px, 6px);
+}
+
+.matchup-card:hover .matchup-card__identity > i,
+.matchup-card:focus-visible .matchup-card__identity > i,
+.matchup-card:active .matchup-card__identity > i {
+  transform: rotate(8deg) scale(1.07);
+}
+
+.matchup-card:hover .matchup-card__team--valencia .matchup-card__identity > i,
+.matchup-card:focus-visible .matchup-card__team--valencia .matchup-card__identity > i,
+.matchup-card:active .matchup-card__team--valencia .matchup-card__identity > i {
+  background: var(--valencia-gold);
+  color: var(--valencia-purple);
+}
+
+.matchup-card:hover .matchup-card__team--chaminade .matchup-card__identity > i,
+.matchup-card:focus-visible .matchup-card__team--chaminade .matchup-card__identity > i,
+.matchup-card:active .matchup-card__team--chaminade .matchup-card__identity > i {
+  background: var(--chaminade-orange);
+  color: var(--chaminade-navy);
+}
+
+.matchup-card:hover .matchup-card__clash span,
+.matchup-card:focus-visible .matchup-card__clash span,
+.matchup-card:active .matchup-card__clash span {
+  transform: rotate(90deg) scale(1.08);
+}
+
+@keyframes matchupFieldDrift {
+  to {
+    background-position: 0 0, 0 0, 74px 0;
+  }
 }
 
 .partners {
@@ -7157,24 +7494,30 @@ body {
   }
 }
 
-/* Mobile landscape keeps the desktop split while retaining touch particles. */
-@media (orientation: landscape) and (max-width: 1000px) and (max-height: 600px) and (pointer: coarse) {
+/* Phone landscape uses a true grid so particle art never enters the copy column. */
+@media (orientation: landscape) and (max-width: 1000px) and (max-height: 650px) {
   .hero.hero-tech {
-    display: block;
-    min-height: max(540px, 100svh);
-    padding: 86px 18px 30px;
+    display: grid;
+    min-height: max(430px, 100svh);
+    grid-template-columns: minmax(0, 54%) minmax(0, 46%);
+    align-items: stretch;
+    gap: 0;
+    padding: 78px 16px 24px;
   }
 
   .hero-tech__frame {
-    inset: 72px 10px 14px;
+    inset: 68px 8px 10px;
   }
 
   .hero-tech__copy {
     position: relative;
     z-index: 4;
-    width: 52%;
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
     max-width: 520px;
-    padding: 0 0 0 4px;
+    align-self: center;
+    padding: 0 16px 0 2px;
   }
 
   .hero-tech .hero__eyebrow {
@@ -7190,7 +7533,7 @@ body {
   }
 
   .hero.hero-tech h1 {
-    font-size: clamp(40px, 6.3vw, 58px);
+    font-size: clamp(38px, 6vw, 56px);
     line-height: 0.76;
   }
 
@@ -7215,10 +7558,10 @@ body {
   }
 
   .hero-flow li {
-    min-height: 64px;
+    min-height: 48px;
     grid-template-columns: auto 1fr;
     gap: 6px;
-    padding: 8px 10px 8px 0;
+    padding: 7px 10px 7px 0;
   }
 
   .hero-flow li:not(:first-child) {
@@ -7245,10 +7588,7 @@ body {
   }
 
   .hero-flow li p {
-    max-width: 120px;
-    margin-top: 4px;
-    font-size: 7px;
-    line-height: 1.25;
+    display: none;
   }
 
   .hero__location {
@@ -7275,14 +7615,18 @@ body {
   }
 
   .hero-visual {
-    position: absolute;
+    position: relative;
     z-index: 2;
-    top: 74px;
-    right: 0;
-    bottom: 12px;
+    top: auto;
+    right: auto;
+    bottom: auto;
     left: auto;
-    width: 46%;
-    min-height: 0;
+    grid-column: 2;
+    grid-row: 1;
+    width: 100%;
+    min-height: 310px;
+    height: 100%;
+    align-self: stretch;
     margin: 0;
     opacity: 1;
   }
@@ -7295,5 +7639,71 @@ body {
 
   .hero-transition {
     height: 90px;
+  }
+}
+
+@media (max-width: 700px) {
+  .matchup-card {
+    min-height: 590px;
+  }
+
+  .matchup-card__team {
+    width: 78%;
+  }
+
+  .matchup-card__team--valencia {
+    top: 7%;
+    left: 7%;
+  }
+
+  .matchup-card__team--chaminade {
+    right: 7%;
+    bottom: 8%;
+  }
+
+  .matchup-card__identity h2 small {
+    font-size: clamp(35px, 11vw, 52px);
+  }
+
+  .matchup-card__clash {
+    gap: 4px;
+  }
+
+  .matchup-card__clash i {
+    width: 22px;
+  }
+
+  .matchup-card__game {
+    width: calc(100% - 28px);
+    gap: 12px;
+    justify-content: space-between;
+    padding: 11px 12px;
+    transform: translate(-50%, -50%) translateY(82px);
+  }
+
+  .matchup-card__game span {
+    max-width: 105px;
+    font-size: 7px;
+    line-height: 1.4;
+  }
+
+  .matchup-card__prompt {
+    right: 12px;
+    bottom: 10px;
+    font-size: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .matchup-card::before {
+    animation: none;
+  }
+
+  .matchup-card,
+  .matchup-card::after,
+  .matchup-card__team,
+  .matchup-card__identity > i,
+  .matchup-card__clash span {
+    transition: none;
   }
 }

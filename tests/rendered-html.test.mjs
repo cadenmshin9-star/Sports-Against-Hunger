@@ -57,8 +57,9 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, />Unite</);
   assert.match(html, />Give Back</);
   assert.match(html, /UPCOMING HOME GAME/);
-  assert.match(html, /Valencia High School hosts Chaminade High School/);
-  assert.match(html, /Friday, August 28, 2026 at 7:00 p\.m\./);
+  assert.match(html, /Valencia High School versus Chaminade High School/);
+  assert.match(html, /matchup-card__team--valencia/);
+  assert.match(html, /matchup-card__team--chaminade/);
   assert.match(html, /1 meal = \$2\.28/);
   assert.match(html, /Preemptive Q&amp;A/);
   assert.match(html, /Does Sports Against Hunger handle money\?/);
@@ -114,8 +115,12 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(css, /min-height:\s*clamp\(340px, 96vw, 430px\)/);
   assert.match(
     css,
-    /orientation:\s*landscape[\s\S]*?max-height:\s*600px[\s\S]*?\.hero-tech__copy[\s\S]*?width:\s*52%[\s\S]*?\.hero-visual[\s\S]*?width:\s*46%/,
+    /orientation:\s*landscape[\s\S]*?max-height:\s*650px[\s\S]*?grid-template-columns:\s*minmax\(0, 54%\) minmax\(0, 46%\)[\s\S]*?\.hero-visual[\s\S]*?grid-column:\s*2/,
   );
+  assert.match(css, /--valencia-purple:\s*#552583/);
+  assert.match(css, /--valencia-gold:\s*#ffc72c/);
+  assert.match(css, /--chaminade-navy:\s*#002b5c/);
+  assert.match(css, /--chaminade-orange:\s*#f58220/);
   assert.doesNotMatch(page, /orientation\.lock/);
   assert.doesNotMatch(css, /\.playbook-list article:hover\s*\{[^}]*padding-/);
   assert.doesNotMatch(page, /sports-sprite\.png/);
@@ -181,6 +186,8 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(css, /\.back-to-top/);
   assert.match(css, /--paper:\s*#e4e9e0/);
   assert.match(layout, /images: \[\{ url: socialImage, width: 1200, height: 630 \}\]/);
+  assert.match(layout, /@vercel\/analytics\/next/);
+  assert.match(layout, /<Analytics\s*\/>/);
 
   await access(new URL("../public/og.png", import.meta.url));
 });
