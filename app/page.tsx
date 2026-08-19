@@ -1693,20 +1693,56 @@ export default function Home() {
             label="Game schedule calendar sticker"
           />
           <div className="section-index">04 / Games & achievements</div>
-          <div className="placeholder upcoming-game" data-reveal>
-            <span className="placeholder__tag">UPCOMING HOME GAME</span>
-            <h2>Valencia vs.<br />Chaminade.</h2>
-            <p>
-              Valencia High School hosts Chaminade High School on{" "}
-              <time dateTime="2026-08-28T19:00:00-07:00">
-                Friday, August 28, 2026 at 7:00 p.m.
-              </time>
-            </p>
-            <div className="placeholder__lines" aria-hidden="true">
-              <i /><i /><i />
+          <article
+            aria-label="Upcoming home football game: Valencia High School versus Chaminade High School, August 28 at 7 p.m."
+            className="matchup-card"
+            data-reveal
+            tabIndex={0}
+          >
+            <span className="matchup-card__flag">UPCOMING HOME GAME</span>
+
+            <div className="matchup-card__team matchup-card__team--valencia">
+              <span>Home team / Santa Clarita</span>
+              <div className="matchup-card__identity">
+                <i aria-hidden="true">V</i>
+                <h2>
+                  <small>Valencia</small>
+                  <strong>Vikings</strong>
+                </h2>
+              </div>
+              <p>Purple / Gold</p>
             </div>
-            <span className="placeholder__corner">HOME · 08/28 · 7:00 PM</span>
-          </div>
+
+            <div className="matchup-card__clash" aria-hidden="true">
+              <i />
+              <span>VS</span>
+              <i />
+            </div>
+
+            <div className="matchup-card__team matchup-card__team--chaminade">
+              <span>Visiting team / West Hills</span>
+              <div className="matchup-card__identity">
+                <h2>
+                  <small>Chaminade</small>
+                  <strong>Eagles</strong>
+                </h2>
+                <i aria-hidden="true">C</i>
+              </div>
+              <p>Navy / Orange / White</p>
+            </div>
+
+            <div className="matchup-card__game">
+              <span>Friday / August 28</span>
+              <strong>
+                <time dateTime="2026-08-28T19:00:00-07:00">7:00 PM</time>
+              </strong>
+              <span>Valencia High School / Home</span>
+            </div>
+
+            <span className="matchup-card__prompt" aria-hidden="true">
+              Hover or tap to charge the matchup
+            </span>
+          </article>
         </section>
 
         <section className="partners" id="partners">
