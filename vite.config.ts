@@ -47,6 +47,9 @@ export default defineConfig(async () => {
     server: isCodexSeatbeltSandbox
       ? { watch: { useFsEvents: false, usePolling: true } }
       : undefined,
+    ssr: {
+      noExternal: ["@vercel/analytics"],
+    },
     plugins: [
       vinext(),
       sites(),
