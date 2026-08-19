@@ -30,7 +30,7 @@ const systemFlow = [
 ];
 
 const impactStats = [
-  { value: "0", label: "verified meals", note: "Tracker activates with the pilot" },
+  { value: "0", label: "verified meals", note: "1 meal = $2.28" },
   { value: "0", label: "games tracked", note: "Official results only" },
   { value: "0", label: "founding sponsors", note: "Partner reveal coming soon" },
 ];
@@ -134,7 +134,7 @@ const questions = [
     kind: "text",
     question: "How are meals calculated?",
     answer:
-      "The approved food partner sets the official dollar-to-meal calculation. Sports Against Hunger publishes that method with the verified results once the pilot is active.",
+      "The pilot uses the approved food partner’s conversion of $2.28 per meal. Sports Against Hunger applies that method only to verified partner contributions and results.",
   },
 ];
 
@@ -1212,18 +1212,6 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    if (!window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
-      return;
-    }
-
-    const orientation = window.screen.orientation as ScreenOrientation & {
-      lock?: (orientation: "portrait") => Promise<void>;
-    };
-
-    void orientation.lock?.("portrait").catch(() => undefined);
-  }, []);
-
-  useEffect(() => {
     let loaderFrame = 0;
     const loaderStart = performance.now();
     const loaderDuration = 1700;
@@ -1705,17 +1693,19 @@ export default function Home() {
             label="Game schedule calendar sticker"
           />
           <div className="section-index">04 / Games & achievements</div>
-          <div className="placeholder" data-reveal>
-            <span className="placeholder__tag">SCHEDULE LOCKER</span>
-            <h2>The next play<br />starts here.</h2>
+          <div className="placeholder upcoming-game" data-reveal>
+            <span className="placeholder__tag">UPCOMING HOME GAME</span>
+            <h2>Valencia vs.<br />Chaminade.</h2>
             <p>
-              Game schedules and verified achievements will appear once the
-              pilot receives approval.
+              Valencia High School hosts Chaminade High School on{" "}
+              <time dateTime="2026-08-28T19:00:00-07:00">
+                Friday, August 28, 2026 at 7:00 p.m.
+              </time>
             </p>
             <div className="placeholder__lines" aria-hidden="true">
               <i /><i /><i />
             </div>
-            <span className="placeholder__corner">COMING SOON · 2026</span>
+            <span className="placeholder__corner">HOME · 08/28 · 7:00 PM</span>
           </div>
         </section>
 

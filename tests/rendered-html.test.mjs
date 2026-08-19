@@ -56,6 +56,10 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, />Compete</);
   assert.match(html, />Unite</);
   assert.match(html, />Give Back</);
+  assert.match(html, /UPCOMING HOME GAME/);
+  assert.match(html, /Valencia High School hosts Chaminade High School/);
+  assert.match(html, /Friday, August 28, 2026 at 7:00 p\.m\./);
+  assert.match(html, /1 meal = \$2\.28/);
   assert.match(html, /Preemptive Q&amp;A/);
   assert.match(html, /Does Sports Against Hunger handle money\?/);
   assert.match(html, /How are meals calculated\?/);
@@ -76,6 +80,7 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   ]);
 
   assert.match(page, /value: "0", label: "verified meals"/);
+  assert.match(page, /note: "1 meal = \$2\.28"/);
   assert.match(page, /value: "0", label: "games tracked"/);
   assert.match(page, /value: "0", label: "founding sponsors"/);
   assert.match(page, /Partner reveal coming soon/);
@@ -107,6 +112,12 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /const perspectiveDistance = compactViewport \? 4\.6 : 3\.9/);
   assert.match(css, /touch-action:\s*none/);
   assert.match(css, /min-height:\s*clamp\(340px, 96vw, 430px\)/);
+  assert.match(
+    css,
+    /orientation:\s*landscape[\s\S]*?max-height:\s*600px[\s\S]*?\.hero-tech__copy[\s\S]*?width:\s*52%[\s\S]*?\.hero-visual[\s\S]*?width:\s*46%/,
+  );
+  assert.doesNotMatch(page, /orientation\.lock/);
+  assert.doesNotMatch(css, /\.playbook-list article:hover\s*\{[^}]*padding-/);
   assert.doesNotMatch(page, /sports-sprite\.png/);
   assert.doesNotMatch(page, /publicSportModels/);
   assert.doesNotMatch(page, /sketchfab\.com\/models/);
