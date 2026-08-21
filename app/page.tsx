@@ -1242,7 +1242,7 @@ export default function Home() {
   useEffect(() => {
     let loaderFrame = 0;
     const loaderStart = performance.now();
-    const loaderDuration = 1700;
+    const loaderDuration = 650;
     const animateLoader = (time: number) => {
       const nextProgress = Math.min(
         100,
@@ -1254,7 +1254,7 @@ export default function Home() {
       }
     };
     loaderFrame = window.requestAnimationFrame(animateLoader);
-    const timer = window.setTimeout(() => setLoading(false), 1825);
+    const timer = window.setTimeout(() => setLoading(false), 760);
     const updateProgress = () => {
       const scrollable =
         document.documentElement.scrollHeight - window.innerHeight;
@@ -1454,7 +1454,7 @@ export default function Home() {
               into direct contributions to local food partners.
             </p>
             <a className="hero-game-callout" href="#upcoming-game">
-              <span className="hero-game-callout__pulse" aria-hidden="true" />
+              <BrandMark className="brand-mark--callout" />
               <span>
                 <small>Next VHS home game · Aug 28 · 7 PM</small>
                 <strong>Valencia vs. Chaminade</strong>
@@ -1476,7 +1476,7 @@ export default function Home() {
                 ))}
               </ol>
             </div>
-            <p className="hero__location">Based in Santa Clarita, California.</p>
+            <p className="hero__location">Built by students. Backed by community.</p>
             <div className="hero__actions">
               <a className="hero-sponsor" href="#contact">
                 <strong>Sponsor a Play</strong> <Arrow />
@@ -1750,7 +1750,7 @@ export default function Home() {
             <span className="matchup-card__flag">UPCOMING HOME GAME</span>
 
             <div className="matchup-card__team matchup-card__team--valencia">
-              <span>Home team / Santa Clarita</span>
+              <span>Home / VHS</span>
               <div className="matchup-card__identity">
                 <i aria-hidden="true">V</i>
                 <h2>
@@ -1768,7 +1768,7 @@ export default function Home() {
             </div>
 
             <div className="matchup-card__team matchup-card__team--chaminade">
-              <span>Visiting team / West Hills</span>
+              <span>Visitor</span>
               <div className="matchup-card__identity">
                 <h2>
                   <small>Chaminade</small>
@@ -1967,6 +1967,7 @@ export default function Home() {
               Business sponsorships are tax-deductible. Documentation is
               available upon request.
             </p>
+            <BrandMark className="brand-mark--contact" />
             <div className="contact__links">
               <a href="mailto:sportsagainsthunger@gmail.com?subject=Sports%20Against%20Hunger%20Sponsorship">
                 <span>Email</span>

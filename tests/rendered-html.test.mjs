@@ -50,7 +50,7 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /Game sponsored by Copper Hill BBQ/i);
   assert.match(html, /@sportsagainsthunger\.vhs/);
   assert.match(html, /aria-label="Santa Clarita Valley Food Pantry"/);
-  assert.match(html, /Based in Santa Clarita, California\./);
+  assert.match(html, /Built by students\. Backed by community\./);
   assert.match(html, /Hunger is local\./);
   assert.match(html, /So is the/);
   assert.match(html, /Sports Against Hunger is a student-led network designed to make/);
@@ -74,6 +74,7 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.doesNotMatch(html, /Why would businesses be interested\?/);
   assert.doesNotMatch(html, /How does money get divided/i);
   assert.doesNotMatch(html, /Valencia, California/);
+  assert.doesNotMatch(html, /West Hills|Home team \/ Santa Clarita/i);
 });
 
 test("keeps unconfirmed impact data explicit and accessible", async () => {
