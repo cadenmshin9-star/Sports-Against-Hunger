@@ -46,6 +46,9 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /href="mailto:sportsagainsthunger@gmail\.com/i);
   assert.match(html, /Valencia High School/);
   assert.match(html, /SCV Food Pantry/);
+  assert.match(html, /Copper Hill BBQ/);
+  assert.match(html, /Game sponsored by Copper Hill BBQ/i);
+  assert.match(html, /@sportsagainsthunger\.vhs/);
   assert.match(html, /aria-label="Santa Clarita Valley Food Pantry"/);
   assert.match(html, /Based in Santa Clarita, California\./);
   assert.match(html, /Hunger is local\./);
@@ -83,9 +86,9 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /value: "0", label: "verified meals"/);
   assert.match(page, /note: "1 meal = \$2\.28"/);
   assert.match(page, /value: "0", label: "games tracked"/);
-  assert.match(page, /value: "0", label: "founding sponsors"/);
-  assert.match(page, /Partner reveal coming soon/);
-  assert.match(page, /Goal announced after pantry approval/);
+  assert.match(page, /value: "1", label: "founding sponsor"/);
+  assert.match(page, /note: "Copper Hill BBQ"/);
+  assert.match(page, /Home opener · August 28/);
   assert.match(page, /Pledge details appear only after they are confirmed\./);
   assert.match(page, /Athletic achievement/);
   assert.doesNotMatch(page, /\$\d+\s+per\s+(touchdown|goal|hit)/i);
@@ -122,6 +125,10 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(css, /--chaminade-navy:\s*#002b5c/);
   assert.match(css, /--chaminade-orange:\s*#f58220/);
   assert.doesNotMatch(page, /orientation\.lock/);
+  assert.doesNotMatch(page, /\bpilot\b/i);
+  assert.match(page, /sports-against-hunger-emblem\.png/);
+  assert.match(page, /sportsagainsthunger\.vhs/);
+  assert.match(page, /copperhillbbq\.com/);
   assert.doesNotMatch(css, /\.playbook-list article:hover\s*\{[^}]*padding-/);
   assert.doesNotMatch(page, /sports-sprite\.png/);
   assert.doesNotMatch(page, /publicSportModels/);
@@ -190,4 +197,5 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(layout, /<Analytics\s*\/>/);
 
   await access(new URL("../public/og.png", import.meta.url));
+  await access(new URL("../public/sports-against-hunger-emblem.png", import.meta.url));
 });

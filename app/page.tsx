@@ -2,6 +2,13 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
+const sportsAgainstHungerInstagram =
+  "https://www.instagram.com/sportsagainsthunger.vhs?utm_source=ig_web_button_share_sheet&igsi=ZDNlZDc0MzIxNw==";
+const copperHillWebsite = "https://copperhillbbq.com/";
+const copperHillInstagram =
+  "https://www.instagram.com/copperhillbbq?utm_source=ig_web_button_share_sheet&igsi=ZDNlZDc0MzIxNw==";
+const scvFoodPantryWebsite = "https://www.scvfoodpantry.org/";
+
 const navItems = [
   ["About", "#about"],
   ["Impact", "#impact"],
@@ -32,7 +39,7 @@ const systemFlow = [
 const impactStats = [
   { value: "0", label: "verified meals", note: "1 meal = $2.28" },
   { value: "0", label: "games tracked", note: "Official results only" },
-  { value: "0", label: "founding sponsors", note: "Partner reveal coming soon" },
+  { value: "1", label: "founding sponsor", note: "Copper Hill BBQ" },
 ];
 
 const pillars = [
@@ -134,7 +141,7 @@ const questions = [
     kind: "text",
     question: "How are meals calculated?",
     answer:
-      "The pilot uses the approved food partner’s conversion of $2.28 per meal. Sports Against Hunger applies that method only to verified partner contributions and results.",
+      "The program uses the approved food partner’s conversion of $2.28 per meal. Sports Against Hunger applies that method only to verified partner contributions and results.",
   },
 ];
 
@@ -180,11 +187,16 @@ function WallSticker({
   );
 }
 
-function Playmark() {
+function BrandMark({ className = "" }: { className?: string }) {
   return (
-    <span className="playmark" aria-hidden="true">
-      <span>SAH</span>
-      <i />
+    <span className={`brand-mark ${className}`} aria-hidden="true">
+      <img
+        alt=""
+        decoding="async"
+        height="61"
+        src="/sports-against-hunger-emblem.png"
+        width="65"
+      />
     </span>
   );
 }
@@ -684,7 +696,7 @@ function HeroFieldCanvas() {
 
     const createParticles = () => {
       const count =
-        width < 540 ? 520 : Math.min(980, Math.floor(width * 1.3));
+        width < 540 ? 380 : Math.min(780, Math.floor(width * 1.05));
       const targets = makeSportShape(activeSport, count);
       particles = targets.map((target, index) => ({
         x: target.x + (seeded(index, 12) - 0.5) * 2.4,
@@ -699,7 +711,10 @@ function HeroFieldCanvas() {
 
     const resize = () => {
       const bounds = canvas.getBoundingClientRect();
-      const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
+      const ratio = Math.min(
+        window.devicePixelRatio || 1,
+        bounds.width < 620 ? 1.25 : 1.5,
+      );
       width = bounds.width;
       height = bounds.height;
       canvas.width = Math.floor(width * ratio);
@@ -710,7 +725,7 @@ function HeroFieldCanvas() {
 
     const render = (time = 0) => {
       if (!canvasVisible || document.hidden) {
-        frame = window.requestAnimationFrame(render);
+        frame = 0;
         return;
       }
       context.clearRect(0, 0, width, height);
@@ -1114,10 +1129,17 @@ function HeroFieldCanvas() {
       resetPointerInteraction();
     };
     const onVisibilityChange = () => {
-      if (!document.hidden) return;
-      stopTouchInteraction();
-      pointer.down = false;
-      resetPointerInteraction();
+      if (document.hidden) {
+        if (frame) window.cancelAnimationFrame(frame);
+        frame = 0;
+        stopTouchInteraction();
+        pointer.down = false;
+        resetPointerInteraction();
+        return;
+      }
+      if (!prefersReducedMotion && canvasVisible && !frame) {
+        frame = window.requestAnimationFrame(render);
+      }
     };
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Enter" && event.key !== " ") return;
@@ -1129,6 +1151,12 @@ function HeroFieldCanvas() {
     const visibilityObserver = new IntersectionObserver(
       ([entry]) => {
         canvasVisible = entry?.isIntersecting ?? true;
+        if (!canvasVisible && frame) {
+          window.cancelAnimationFrame(frame);
+          frame = 0;
+        } else if (!prefersReducedMotion && !document.hidden && !frame) {
+          frame = window.requestAnimationFrame(render);
+        }
       },
       { rootMargin: "120px" },
     );
@@ -1337,7 +1365,7 @@ export default function Home() {
 
       <header className="site-header">
         <a className="wordmark" href="#top" aria-label="Sports Against Hunger home">
-          <Playmark />
+          <BrandMark />
           <span>Sports Against Hunger</span>
         </a>
         <nav aria-label="Main navigation">
@@ -1377,7 +1405,7 @@ export default function Home() {
           >
             <div className="mobile-menu__meta">
               <span>LOCAL IMPACT NETWORK / 001</span>
-              <strong>PRE-SEASON</strong>
+              <strong>START DATE · AUG 28</strong>
             </div>
             <nav aria-label="Mobile navigation links">
               {navItems.map(([label, href], index) => (
@@ -1425,6 +1453,15 @@ export default function Home() {
               Local businesses turn verified high school sports achievements
               into direct contributions to local food partners.
             </p>
+            <a className="hero-game-callout" href="#upcoming-game">
+              <span className="hero-game-callout__pulse" aria-hidden="true" />
+              <span>
+                <small>Next VHS home game · Aug 28 · 7 PM</small>
+                <strong>Valencia vs. Chaminade</strong>
+                <em>Game sponsored by Copper Hill BBQ</em>
+              </span>
+              <span className="hero-game-callout__arrow" aria-hidden="true">↓</span>
+            </a>
             <div className="hero-flow" aria-label="How Sports Against Hunger works">
               <span className="hero-flow__label">How it moves</span>
               <ol>
@@ -1447,6 +1484,17 @@ export default function Home() {
               <a className="hero-secondary" href="#playbook">
                 <strong>See how it works</strong>{" "}
                 <span className="text-arrow" aria-hidden="true">↓︎</span>
+              </a>
+              <a
+                aria-label="Follow Sports Against Hunger on Instagram"
+                className="instagram-link instagram-link--hero"
+                href={sportsAgainstHungerInstagram}
+                rel="noreferrer"
+                target="_blank"
+              >
+                <span aria-hidden="true">IG</span>
+                <strong>Follow us</strong>
+                <Arrow />
               </a>
             </div>
           </div>
@@ -1478,8 +1526,8 @@ export default function Home() {
           </div>
 
           <div className="hero-tech__status" aria-hidden="true">
-            <span>PILOT STATUS</span>
-            <strong>PRE-SEASON</strong>
+            <span>START DATE</span>
+            <strong>AUGUST 28</strong>
             <i />
             <span>SCROLL TO EXPLORE</span>
           </div>
@@ -1586,11 +1634,11 @@ export default function Home() {
           <div className="impact__top section-shell" data-reveal>
             <div className="section-index section-index--light">02 / Live impact</div>
             <div>
-              <span className="impact__live"><i /> Pilot tracker</span>
+              <span className="impact__live"><i /> Season tracker</span>
               <h2 id="impact-title">The scoreboard that matters.</h2>
               <p>
                 Only confirmed achievements and verified partner contributions
-                appear here. The first numbers arrive when the pilot begins.
+                appear here. The first results arrive when the season begins.
               </p>
             </div>
           </div>
@@ -1617,14 +1665,14 @@ export default function Home() {
             <div className="season-card__head">
               <div>
                 <span>SEASON 01</span>
-                <strong>Pilot season</strong>
+                <strong>Opening season</strong>
               </div>
-              <span className="season-card__status">PRE-SEASON</span>
+              <span className="season-card__status">START DATE · AUG 28</span>
             </div>
             <div className="season-card__bar"><span /></div>
             <div className="season-card__foot">
               <span>0 verified meals</span>
-              <span>Goal announced after pantry approval</span>
+              <span>Home opener · August 28</span>
             </div>
           </div>
         </section>
@@ -1683,7 +1731,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="dashboard section-shell" id="dashboard">
+        <section className="dashboard section-shell" id="upcoming-game">
           <WallSticker
             kind="bolt"
             label="Running shoe sticker"
@@ -1694,7 +1742,7 @@ export default function Home() {
           />
           <div className="section-index">04 / Games & achievements</div>
           <article
-            aria-label="Upcoming home football game: Valencia High School versus Chaminade High School, August 28 at 7 p.m."
+            aria-label="Upcoming home football game sponsored by Copper Hill BBQ: Valencia High School versus Chaminade High School, August 28 at 7 p.m."
             className="matchup-card"
             data-reveal
             tabIndex={0}
@@ -1739,6 +1787,10 @@ export default function Home() {
               <span>Valencia High School / Home</span>
             </div>
 
+            <span className="matchup-card__presented">
+              Game sponsored by <strong>Copper Hill BBQ</strong>
+            </span>
+
             <span className="matchup-card__prompt" aria-hidden="true">
               Hover or tap to charge the matchup
             </span>
@@ -1753,11 +1805,11 @@ export default function Home() {
           <div className="partners__inner section-shell">
             <div className="section-index section-index--light">05 / Community partners</div>
             <div className="partners__copy" data-reveal>
-              <span>THE FIRST TEAM IS FORMING</span>
+              <span>THE FIRST TEAM IS HERE</span>
               <h2>Local brands.<br />Lasting impact.</h2>
               <p>
-                Founding sponsor recognition will live here after every
-                partnership is approved and its commitment is confirmed.
+                Valencia athletics, Copper Hill BBQ, and the SCV Food Pantry
+                connect school spirit to clear, local action.
               </p>
             </div>
             <div className="partner-slots" aria-label="Partner spaces" data-reveal>
@@ -1771,8 +1823,24 @@ export default function Home() {
                 <small>Student and athletics partner</small>
               </div>
               <div className="partner-slots__sponsor">
+                <div className="copper-hill-lockup" aria-label="Copper Hill BBQ" role="img">
+                  <span className="copper-hill-monogram" aria-hidden="true">CH</span>
+                  <span className="copper-hill-word" aria-hidden="true">
+                    <b>COPPER HILL</b>
+                    <i>SMOKED MEATS &amp; FRESH EATS</i>
+                  </span>
+                </div>
                 <span>FOUNDING SPONSOR</span>
-                <strong>Your mark could start here</strong>
+                <strong>Copper Hill BBQ</strong>
+                <small>Valencia barbecue and community partner</small>
+                <div className="partner-links" aria-label="Copper Hill BBQ links">
+                  <a href={copperHillWebsite} rel="noreferrer" target="_blank">
+                    Website <Arrow />
+                  </a>
+                  <a href={copperHillInstagram} rel="noreferrer" target="_blank">
+                    Instagram <Arrow />
+                  </a>
+                </div>
               </div>
               <div className="partner-slots__pantry">
                 <div
@@ -1792,6 +1860,11 @@ export default function Home() {
                 <span>COMMUNITY PARTNER</span>
                 <strong>SCV Food Pantry</strong>
                 <small>Food access and impact partner</small>
+                <div className="partner-links partner-links--pantry">
+                  <a href={scvFoodPantryWebsite} rel="noreferrer" target="_blank">
+                    Visit pantry <Arrow />
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -1806,7 +1879,7 @@ export default function Home() {
           <div className="faq__heading" data-reveal>
             <span>THE QUESTIONS WORTH ASKING EARLY</span>
             <h2>Preemptive Q&amp;A.</h2>
-            <p>Clear answers now. Verified details as the pilot takes shape.</p>
+            <p>Clear answers now. Verified details as the season takes shape.</p>
           </div>
           <div className="faq-list" data-reveal>
             {questions.map((item, index) => {
@@ -1857,7 +1930,7 @@ export default function Home() {
                             ))}
                           </div>
                           <div className="ethics-answer__ledger">
-                            <span>WHEN THE PILOT GOES LIVE</span>
+                            <span>WHEN THE SEASON GOES LIVE</span>
                             <p>Verified results</p>
                             <p>Partner receipts</p>
                             <p>Impact reports</p>
@@ -1881,8 +1954,7 @@ export default function Home() {
             label="Soccer ball at sunset sticker"
           />
           <div className="final-cta__orb" aria-hidden="true">
-            <span>SAH</span>
-            <i />
+            <BrandMark className="brand-mark--cta" />
           </div>
           <div className="final-cta__content" data-reveal>
             <span>BUSINESS SPONSORSHIPS</span>
@@ -1901,6 +1973,15 @@ export default function Home() {
                 <strong>sportsagainst<wbr />hunger@gmail.com</strong>
                 <Arrow />
               </a>
+              <a
+                href={sportsAgainstHungerInstagram}
+                rel="noreferrer"
+                target="_blank"
+              >
+                <span>Instagram</span>
+                <strong>@sportsagainsthunger.vhs</strong>
+                <Arrow />
+              </a>
             </div>
             <a className="contact__back" href="#top">Back to the start <Arrow /></a>
           </div>
@@ -1909,7 +1990,7 @@ export default function Home() {
 
       <footer>
         <a className="wordmark wordmark--footer" href="#top">
-          <Playmark />
+          <BrandMark />
           <span>Sports Against Hunger</span>
         </a>
         <p>Student-led · Community-guided · Built for measurable impact</p>

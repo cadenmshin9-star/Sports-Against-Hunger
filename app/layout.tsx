@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Sports Against Hunger | Game-Day Hunger Relief",
     description:
-      "A student-led pilot connecting high school athletics, local business sponsors, and food partners to turn verified game-day achievements into support for local families.",
+      "A student-led program connecting high school athletics, local business sponsors, and food partners to turn verified game-day achievements into support for local families.",
     keywords: [
       "Sports Against Hunger",
       "student-led community service",
