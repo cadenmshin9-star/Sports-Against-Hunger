@@ -8407,6 +8407,9 @@ body {
   width: 54px;
   min-height: 54px;
   height: 54px;
+  grid-template-columns: 1fr;
+  gap: 0;
+  align-content: center;
   place-items: center;
   justify-self: center;
   margin-top: 2px;
@@ -8417,9 +8420,14 @@ body {
   box-shadow: 0 12px 28px rgba(190, 43, 109, 0.26);
 }
 
-.contact__instagram-icon .instagram-glyph {
+.final-cta .contact__links a.contact__instagram-icon > .instagram-glyph {
   width: 24px;
   height: 24px;
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  justify-self: center;
+  font-size: inherit;
 }
 
 @keyframes gameNoticeFlash {
@@ -8535,7 +8543,7 @@ body {
     border-radius: 12px;
   }
 
-  .contact__instagram-icon .instagram-glyph {
+  .final-cta .contact__links a.contact__instagram-icon > .instagram-glyph {
     width: 21px;
     height: 21px;
   }
