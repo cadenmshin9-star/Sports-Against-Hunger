@@ -117,6 +117,10 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /desynchronized: true/);
   assert.match(page, /scheduleResize/);
   assert.match(page, /scrollProgressRef/);
+  assert.match(page, /gameGlideCancelRef/);
+  assert.match(page, /const getDestinationY = \(\) =>/);
+  assert.match(page, /const liveDistance = getDestinationY\(\) - startingY/);
+  assert.match(page, /pinToDestination\(\);\s*scrollFrame = window\.requestAnimationFrame/);
   assert.match(page, /pointer\.down/);
   assert.match(page, /quadraticCurveTo/);
   assert.match(page, /patchCount = 12/);

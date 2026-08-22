@@ -1268,6 +1268,7 @@ export default function Home() {
   const loaderBarRef = useRef<HTMLElement>(null);
   const loaderTextRef = useRef<HTMLElement>(null);
   const scrollProgressRef = useRef<HTMLSpanElement>(null);
+  const gameGlideCancelRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     let loaderFrame = 0;
@@ -1371,6 +1372,13 @@ export default function Home() {
     };
   }, [logoExpanded]);
 
+  useEffect(
+    () => () => {
+      gameGlideCancelRef.current?.();
+    },
+    [],
+  );
+
   const handleGameCalloutClick = (
     event: ReactMouseEvent<HTMLAnchorElement>,
   ) => {
@@ -1389,9 +1397,11 @@ export default function Home() {
     if (!destination) return;
 
     event.preventDefault();
+    gameGlideCancelRef.current?.();
 
-    const destinationY =
+    const getDestinationY = () =>
       destination.getBoundingClientRect().top + window.scrollY;
+    const destinationY = getDestinationY();
     const startingY = window.scrollY;
     const distance = destinationY - startingY;
     const prefersReducedMotion = window.matchMedia(
@@ -1406,7 +1416,10 @@ export default function Home() {
 
     if (prefersReducedMotion || Math.abs(distance) < 2) {
       window.scrollTo({ top: destinationY, behavior: "auto" });
-      updateHash();
+      window.requestAnimationFrame(() => {
+        window.scrollTo({ top: getDestinationY(), behavior: "auto" });
+        updateHash();
+      });
       return;
     }
 
@@ -1419,21 +1432,35 @@ export default function Home() {
 
     document.documentElement.style.scrollBehavior = "auto";
 
-    const stopForUserInput = () => {
+    const cleanup = () => {
+      document.documentElement.style.scrollBehavior = previousScrollBehavior;
+      window.removeEventListener("wheel", cancelGlide);
+      window.removeEventListener("touchstart", cancelGlide);
+      window.removeEventListener("keydown", cancelGlide);
+      if (gameGlideCancelRef.current === cancelGlide) {
+        gameGlideCancelRef.current = null;
+      }
+    };
+
+    const cancelGlide = () => {
+      if (cancelled) return;
       cancelled = true;
       window.cancelAnimationFrame(scrollFrame);
-      document.documentElement.style.scrollBehavior = previousScrollBehavior;
-      window.removeEventListener("wheel", stopForUserInput);
-      window.removeEventListener("touchstart", stopForUserInput);
-      window.removeEventListener("keydown", stopForUserInput);
+      cleanup();
+    };
+
+    const pinToDestination = () => {
+      window.scrollTo(0, getDestinationY());
     };
 
     const finish = () => {
-      document.documentElement.style.scrollBehavior = previousScrollBehavior;
-      window.removeEventListener("wheel", stopForUserInput);
-      window.removeEventListener("touchstart", stopForUserInput);
-      window.removeEventListener("keydown", stopForUserInput);
-      updateHash();
+      pinToDestination();
+      scrollFrame = window.requestAnimationFrame(() => {
+        if (cancelled) return;
+        pinToDestination();
+        cleanup();
+        updateHash();
+      });
     };
 
     const glideToGame = (now: number) => {
@@ -1444,8 +1471,9 @@ export default function Home() {
         progress < 0.5
           ? 4 * progress * progress * progress
           : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+      const liveDistance = getDestinationY() - startingY;
 
-      window.scrollTo(0, startingY + distance * eased);
+      window.scrollTo(0, startingY + liveDistance * eased);
 
       if (progress < 1) {
         scrollFrame = window.requestAnimationFrame(glideToGame);
@@ -1454,9 +1482,10 @@ export default function Home() {
       }
     };
 
-    window.addEventListener("wheel", stopForUserInput, { passive: true });
-    window.addEventListener("touchstart", stopForUserInput, { passive: true });
-    window.addEventListener("keydown", stopForUserInput);
+    gameGlideCancelRef.current = cancelGlide;
+    window.addEventListener("wheel", cancelGlide, { passive: true });
+    window.addEventListener("touchstart", cancelGlide, { passive: true });
+    window.addEventListener("keydown", cancelGlide);
     scrollFrame = window.requestAnimationFrame(glideToGame);
   };
 
