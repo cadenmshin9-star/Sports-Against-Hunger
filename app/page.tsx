@@ -67,9 +67,9 @@ const incentives = [
     body: "Hosts the game-day activity and confirms how the campaign may be recognized.",
   },
   {
-    label: "Students & teams",
-    title: "Create & coordinate",
-    body: "Athletes create the official achievement; student leaders organize outreach and reporting.",
+    label: "Sports Against Hunger",
+    title: "Creates & coordinates",
+    body: "Sports Against Hunger coordinates outreach, reporting, and school-wide participation. Athletes supply the verified game achievement, but everyone can help lead the effort.",
   },
   {
     label: "Sponsors",
@@ -628,7 +628,10 @@ function HeroFieldCanvas() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const context = canvas.getContext("2d");
+    const context = canvas.getContext("2d", {
+      alpha: true,
+      desynchronized: true,
+    });
     if (!context) return;
 
     const prefersReducedMotion = window.matchMedia(
@@ -650,7 +653,7 @@ function HeroFieldCanvas() {
     let width = 0;
     let height = 0;
     let frame = 0;
-    let lastPaint = 0;
+    let resizeFrame = 0;
     let canvasVisible = true;
     let activeSport = 0;
     let lastMorph = performance.now();
@@ -705,7 +708,7 @@ function HeroFieldCanvas() {
 
     const createParticles = () => {
       const count =
-        width < 540 ? 280 : Math.min(560, Math.floor(width * 0.82));
+        width < 540 ? 380 : Math.min(780, Math.floor(width * 1.05));
       const targets = makeSportShape(activeSport, count);
       particles = targets.map((target, index) => ({
         x: target.x + (seeded(index, 12) - 0.5) * 2.4,
@@ -718,12 +721,16 @@ function HeroFieldCanvas() {
       setSport(activeSport, true);
     };
 
-    const resize = () => {
+    const applyResize = () => {
       const bounds = canvas.getBoundingClientRect();
       const ratio = Math.min(
         window.devicePixelRatio || 1,
-        bounds.width < 620 ? 1 : 1.25,
+        bounds.width < 620 ? 1.25 : 1.5,
       );
+      if (
+        Math.abs(bounds.width - width) < 1 &&
+        Math.abs(bounds.height - height) < 1
+      ) return;
       width = bounds.width;
       height = bounds.height;
       canvas.width = Math.floor(width * ratio);
@@ -732,17 +739,16 @@ function HeroFieldCanvas() {
       createParticles();
     };
 
+    const scheduleResize = () => {
+      window.cancelAnimationFrame(resizeFrame);
+      resizeFrame = window.requestAnimationFrame(applyResize);
+    };
+
     const render = (time = 0) => {
       if (!canvasVisible || document.hidden) {
         frame = 0;
         return;
       }
-      const frameInterval = width < 620 ? 1000 / 30 : 1000 / 45;
-      if (time && time - lastPaint < frameInterval) {
-        frame = window.requestAnimationFrame(render);
-        return;
-      }
-      lastPaint = time;
       context.clearRect(0, 0, width, height);
       const compactViewport = width <= 620;
       const centerX = width * (compactViewport ? 0.5 : 0.52);
@@ -1162,7 +1168,7 @@ function HeroFieldCanvas() {
       setSport(activeSport + 1);
     };
 
-    const observer = new ResizeObserver(resize);
+    const observer = new ResizeObserver(scheduleResize);
     const visibilityObserver = new IntersectionObserver(
       ([entry]) => {
         canvasVisible = entry?.isIntersecting ?? true;
@@ -1197,7 +1203,7 @@ function HeroFieldCanvas() {
     touchTarget?.addEventListener("click", onTouchClick);
     touchTarget?.addEventListener("blur", onBlur);
     document.addEventListener("visibilitychange", onVisibilityChange);
-    resize();
+    applyResize();
     render();
     const sportTimer = prefersReducedMotion
       ? 0
@@ -1230,6 +1236,7 @@ function HeroFieldCanvas() {
       document.removeEventListener("visibilitychange", onVisibilityChange);
       if (sportTimer) window.clearInterval(sportTimer);
       if (transitionTimer) window.clearTimeout(transitionTimer);
+      window.cancelAnimationFrame(resizeFrame);
       window.cancelAnimationFrame(frame);
     };
   }, []);
@@ -1248,11 +1255,13 @@ function HeroFieldCanvas() {
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
-  const [loaderProgress, setLoaderProgress] = useState(0);
-  const [progress, setProgress] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [openQuestion, setOpenQuestion] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [logoExpanded, setLogoExpanded] = useState(false);
+  const loaderBarRef = useRef<HTMLElement>(null);
+  const loaderTextRef = useRef<HTMLElement>(null);
+  const scrollProgressRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     let loaderFrame = 0;
@@ -1263,18 +1272,33 @@ export default function Home() {
         100,
         Math.round(((time - loaderStart) / loaderDuration) * 100),
       );
-      setLoaderProgress(nextProgress);
+      if (loaderBarRef.current) {
+        loaderBarRef.current.style.width = `${nextProgress}%`;
+      }
+      if (loaderTextRef.current) {
+        loaderTextRef.current.textContent = `${String(nextProgress).padStart(3, "0")}%`;
+      }
       if (nextProgress < 100) {
         loaderFrame = window.requestAnimationFrame(animateLoader);
       }
     };
     loaderFrame = window.requestAnimationFrame(animateLoader);
     const timer = window.setTimeout(() => setLoading(false), 760);
-    const updateProgress = () => {
+    let scrollFrame = 0;
+    const paintScrollProgress = () => {
+      scrollFrame = 0;
       const scrollable =
         document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0);
+      const nextProgress = scrollable > 0 ? window.scrollY / scrollable : 0;
+      if (scrollProgressRef.current) {
+        scrollProgressRef.current.style.transform = `scaleX(${nextProgress})`;
+      }
       setShowBackToTop(window.scrollY > window.innerHeight * 0.85);
+    };
+    const updateProgress = () => {
+      if (!scrollFrame) {
+        scrollFrame = window.requestAnimationFrame(paintScrollProgress);
+      }
     };
     const revealObserver = new IntersectionObserver(
       (entries) => {
@@ -1289,13 +1313,14 @@ export default function Home() {
     );
     const revealElements = document.querySelectorAll("[data-reveal]");
 
-    updateProgress();
+    paintScrollProgress();
     revealElements.forEach((element) => revealObserver.observe(element));
     window.addEventListener("scroll", updateProgress, { passive: true });
 
     return () => {
       window.clearTimeout(timer);
       window.cancelAnimationFrame(loaderFrame);
+      window.cancelAnimationFrame(scrollFrame);
       revealObserver.disconnect();
       window.removeEventListener("scroll", updateProgress);
     };
@@ -1322,6 +1347,23 @@ export default function Home() {
       window.removeEventListener("resize", closeAboveMobile);
     };
   }, [mobileMenuOpen]);
+
+  useEffect(() => {
+    if (!logoExpanded) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setLogoExpanded(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [logoExpanded]);
 
   return (
     <>
@@ -1360,13 +1402,13 @@ export default function Home() {
         </div>
         <div className="loader__progress">
           <span>WARMING UP THE FIELD</span>
-          <div><i style={{ width: `${loaderProgress}%` }} /></div>
-          <strong>{String(loaderProgress).padStart(3, "0")}%</strong>
+          <div><i ref={loaderBarRef} /></div>
+          <strong ref={loaderTextRef}>000%</strong>
         </div>
       </div>
 
       <div className="scroll-progress" aria-hidden="true">
-        <span style={{ width: `${progress}%` }} />
+        <span ref={scrollProgressRef} />
       </div>
 
       <a
@@ -1379,7 +1421,16 @@ export default function Home() {
       </a>
 
       <header className="site-header">
-        <a className="wordmark" href="#top" aria-label="Sports Against Hunger home">
+        <a
+          aria-haspopup="dialog"
+          aria-label="Enlarge the Sports Against Hunger logo"
+          className="wordmark wordmark--logo-trigger"
+          href="#top"
+          onClick={(event) => {
+            event.preventDefault();
+            setLogoExpanded(true);
+          }}
+        >
           <BrandMark />
           <span>Sports Against Hunger</span>
         </a>
@@ -1445,6 +1496,27 @@ export default function Home() {
           </div>
         ) : null}
       </header>
+
+      {logoExpanded ? (
+        <div
+          aria-label="Sports Against Hunger logo preview"
+          aria-modal="true"
+          className="brand-lightbox"
+          onClick={() => setLogoExpanded(false)}
+          role="dialog"
+        >
+          <button
+            aria-label="Close enlarged logo"
+            className="brand-lightbox__close"
+            onClick={() => setLogoExpanded(false)}
+            type="button"
+          >
+            Close
+          </button>
+          <BrandMark className="brand-mark--fullscreen" />
+          <span>Tap anywhere to close</span>
+        </div>
+      ) : null}
 
       <main id="top">
         <section className="hero hero-tech" aria-labelledby="hero-title">
@@ -1943,13 +2015,6 @@ export default function Home() {
                                 <p>{principle.body}</p>
                               </article>
                             ))}
-                          </div>
-                          <div className="ethics-answer__ledger">
-                            <span>WHEN THE SEASON GOES LIVE</span>
-                            <p>Verified results</p>
-                            <p>Partner receipts</p>
-                            <p>Impact reports</p>
-                            <strong>COMING SOON</strong>
                           </div>
                         </div>
                       ) : (

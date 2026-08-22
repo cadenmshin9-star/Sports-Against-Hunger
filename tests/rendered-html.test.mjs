@@ -49,6 +49,10 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /Copper Hill BBQ/);
   assert.match(html, /Game sponsored by Copper Hill BBQ/i);
   assert.match(html, /Sports Against Hunger on Instagram/);
+  assert.match(html, /href="https:\/\/copperhillbbq\.com\/"/);
+  assert.match(html, /href="https:\/\/www\.instagram\.com\/copperhillbbq\?/);
+  assert.match(html, /href="https:\/\/www\.instagram\.com\/sportsagainsthunger\.vhs\?/);
+  assert.match(html, /href="https:\/\/www\.scvfoodpantry\.org\/"/);
   assert.match(html, /aria-label="Santa Clarita Valley Food Pantry"/);
   assert.match(html, /Built by students\. Backed by community\./);
   assert.match(html, /Hunger is local\./);
@@ -56,6 +60,10 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /Sports Against Hunger is a student-led network designed to make/);
   assert.match(html, /Schools bring the energy\. Businesses make capped commitments\./);
   assert.match(html, /Three pillars\./);
+  assert.match(html, /Sports Against Hunger/);
+  assert.match(html, /everyone can help lead the effort/i);
+  assert.doesNotMatch(html, /Students &amp; teams/);
+  assert.doesNotMatch(html, /WHEN THE SEASON GOES LIVE/i);
   assert.match(html, />Compete</);
   assert.match(html, />Unite</);
   assert.match(html, />Give Back</);
@@ -105,6 +113,10 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /fizzleStart/);
   assert.match(page, /woundStrength/);
   assert.match(page, /releasePulseStart/);
+  assert.match(page, /width < 540 \? 380 : Math\.min\(780/);
+  assert.match(page, /desynchronized: true/);
+  assert.match(page, /scheduleResize/);
+  assert.match(page, /scrollProgressRef/);
   assert.match(page, /pointer\.down/);
   assert.match(page, /quadraticCurveTo/);
   assert.match(page, /patchCount = 12/);
@@ -141,6 +153,8 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /role="button"/);
   assert.doesNotMatch(page, /lensRadius/);
   assert.match(page, /className="hero-transition"/);
+  assert.match(page, /className="brand-lightbox"/);
+  assert.match(page, /className="contact__instagram-icon"/);
   assert.match(page, /wall-sticker--\$\{kind\}/);
   assert.match(page, /kind="feed"/);
   assert.match(page, /kind="pantry"/);
@@ -163,9 +177,12 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.doesNotMatch(page, /meal-sticker--plate/);
   assert.doesNotMatch(page, /className="meal-flow"/);
   assert.match(page, /className="loader__tiles"/);
-  assert.match(page, /setLoaderProgress/);
+  assert.doesNotMatch(page, /setLoaderProgress/);
+  assert.match(page, /loaderBarRef/);
+  assert.match(page, /loaderTextRef/);
   assert.match(page, /className="ethics-answer__grid"/);
   assert.match(page, /className="faq-answer-shell"/);
+  assert.doesNotMatch(page, /ethics-answer__ledger/);
   assert.match(page, /Dignity first/);
   assert.match(page, /Pantry-led impact/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
@@ -191,6 +208,8 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(css, /\.wall-sticker--trophy/);
   assert.match(css, /\.wall-sticker:hover::after/);
   assert.match(css, /\.hero-transition/);
+  assert.match(css, /\.dashboard \.wall-sticker--calendar\s*\{\s*display:\s*none/);
+  assert.match(css, /\.brand-lightbox/);
   assert.match(css, /data-reveal="swoosh-left"/);
   assert.match(css, /\.loader__tiles/);
   assert.match(css, /\.back-to-top/);

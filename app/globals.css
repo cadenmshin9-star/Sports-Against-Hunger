@@ -4541,35 +4541,35 @@ body {
 }
 
 .hero-tech__copy > * {
-  animation: heroCopyIn 0.9s 1.88s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: heroCopyIn 0.68s 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .hero-tech__copy > :nth-child(2) {
-  animation-delay: 1.94s;
+  animation-delay: 0.52s;
 }
 
 .hero-tech__copy > :nth-child(3) {
-  animation-delay: 2s;
+  animation-delay: 0.56s;
 }
 
 .hero-tech__copy > :nth-child(4) {
-  animation-delay: 2.08s;
+  animation-delay: 0.6s;
 }
 
 .hero-tech__copy > :nth-child(5) {
-  animation-delay: 2.15s;
+  animation-delay: 0.64s;
 }
 
 .hero-tech__copy > :nth-child(6) {
-  animation-delay: 2.2s;
+  animation-delay: 0.68s;
 }
 
 .hero-tech__copy > :nth-child(7) {
-  animation-delay: 2.25s;
+  animation-delay: 0.72s;
 }
 
 .hero-visual {
-  animation: heroVisualIn 1.05s 1.96s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: heroVisualIn 0.82s 0.54s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .back-to-top {
@@ -4926,37 +4926,6 @@ body {
   line-height: 1.5;
 }
 
-.ethics-answer__ledger {
-  display: grid;
-  grid-template-columns: 1.2fr repeat(3, 1fr) auto;
-  align-items: center;
-  gap: 15px;
-  margin-top: 12px;
-  padding: 14px 16px;
-  border: 1px solid var(--line);
-  color: #505c54;
-  font-size: 9px;
-}
-
-.ethics-answer__ledger > span {
-  color: var(--muted);
-  font-weight: 900;
-  letter-spacing: 0.1em;
-}
-
-.ethics-answer__ledger p {
-  margin: 0;
-}
-
-.ethics-answer__ledger strong {
-  padding: 7px 9px;
-  border-radius: 999px;
-  background: var(--lime);
-  color: var(--ink);
-  font-size: 7px;
-  letter-spacing: 0.08em;
-}
-
 @keyframes loaderScan {
   from { top: 12%; opacity: 0; }
   18% { opacity: 1; }
@@ -5033,15 +5002,6 @@ body {
     max-width: 520px;
   }
 
-  .ethics-answer__ledger {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .ethics-answer__ledger > span,
-  .ethics-answer__ledger > strong {
-    grid-column: 1 / -1;
-    width: fit-content;
-  }
 }
 
 @media (max-width: 620px) {
@@ -5133,14 +5093,6 @@ body {
     min-height: 180px;
   }
 
-  .ethics-answer__ledger {
-    grid-template-columns: 1fr;
-  }
-
-  .ethics-answer__ledger > span,
-  .ethics-answer__ledger > strong {
-    grid-column: auto;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -8429,11 +8381,11 @@ body {
 .brand-mark--sticker-partners {
   position: absolute;
   z-index: 4;
-  top: 62px;
+  top: 42px;
   right: clamp(20px, 4vw, 72px);
-  width: 92px;
-  height: 87px;
-  padding: 6px;
+  width: 128px;
+  height: 121px;
+  padding: 8px;
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 50%;
   background: rgba(10, 26, 46, 0.2);
@@ -8442,8 +8394,12 @@ body {
 }
 
 .contact__links {
-  grid-template-columns: minmax(0, 1fr) 54px;
-  align-items: end;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+}
+
+.final-cta .contact__links > a:not(.contact__instagram-icon) {
+  width: 100%;
 }
 
 .final-cta .contact__links a.contact__instagram-icon {
@@ -8452,7 +8408,8 @@ body {
   min-height: 54px;
   height: 54px;
   place-items: center;
-  align-self: end;
+  justify-self: center;
+  margin-top: 2px;
   padding: 0;
   border: 0;
   border-radius: 13px;
@@ -8556,10 +8513,10 @@ body {
   }
 
   .brand-mark--sticker-partners {
-    top: 70px;
+    top: 52px;
     right: 16px;
-    width: 70px;
-    height: 66px;
+    width: 96px;
+    height: 91px;
   }
 
   .copper-hill-logo {
@@ -8568,7 +8525,7 @@ body {
   }
 
   .contact__links {
-    grid-template-columns: minmax(0, 1fr) 48px;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .final-cta .contact__links a.contact__instagram-icon {
@@ -8635,6 +8592,119 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .hero-game-callout__flash {
+    animation: none;
+  }
+}
+
+/* Keep decorative game stickers away from matchup and sponsor information. */
+.dashboard .wall-sticker--calendar {
+  display: none;
+}
+
+.dashboard .wall-sticker--bolt {
+  z-index: 0;
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+.dashboard .matchup-card {
+  z-index: 2;
+}
+
+/* Transform-only scroll progress avoids repainting the full React page. */
+.scroll-progress > span {
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.wordmark--logo-trigger {
+  cursor: zoom-in;
+}
+
+.brand-lightbox {
+  position: fixed;
+  z-index: 1200;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: clamp(26px, 5vw, 72px);
+  background:
+    radial-gradient(circle at 50% 45%, rgba(85, 37, 131, 0.38), transparent 44%),
+    rgba(4, 9, 15, 0.96);
+  cursor: zoom-out;
+  animation: brandLightboxIn 220ms ease both;
+}
+
+.brand-lightbox::before {
+  position: absolute;
+  inset: 18px;
+  border: 1px solid rgba(255, 199, 44, 0.32);
+  content: "";
+  pointer-events: none;
+}
+
+.brand-lightbox > .brand-mark--fullscreen {
+  width: min(86vw, 880px);
+  height: min(82vh, 830px);
+  filter: drop-shadow(0 38px 70px rgba(0, 0, 0, 0.55));
+}
+
+.brand-lightbox > span:last-child {
+  position: absolute;
+  bottom: 28px;
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.brand-lightbox__close {
+  position: absolute;
+  z-index: 2;
+  top: 28px;
+  right: 28px;
+  padding: 10px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.07);
+  color: white;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+@keyframes brandLightboxIn {
+  from { opacity: 0; transform: scale(0.985); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 620px) {
+  .brand-lightbox {
+    padding: 18px;
+  }
+
+  .brand-lightbox::before {
+    inset: 9px;
+  }
+
+  .brand-lightbox > .brand-mark--fullscreen {
+    width: 94vw;
+    height: 84svh;
+  }
+
+  .brand-lightbox__close {
+    top: 18px;
+    right: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-lightbox {
     animation: none;
   }
 }
