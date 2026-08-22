@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MouseEvent,
+} from "react";
 
 const sportsAgainstHungerInstagram =
   "https://www.instagram.com/sportsagainsthunger.vhs?utm_source=ig_web_button_share_sheet&igsi=ZDNlZDc0MzIxNw==";
@@ -1365,6 +1371,93 @@ export default function Home() {
     };
   }, [logoExpanded]);
 
+  const handleGameCalloutClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.altKey ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.shiftKey
+    ) {
+      return;
+    }
+
+    const destination = document.getElementById("upcoming-game");
+    if (!destination) return;
+
+    event.preventDefault();
+
+    const destinationY =
+      destination.getBoundingClientRect().top + window.scrollY;
+    const startingY = window.scrollY;
+    const distance = destinationY - startingY;
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    const updateHash = () => {
+      if (window.location.hash !== "#upcoming-game") {
+        window.history.pushState(null, "", "#upcoming-game");
+      }
+    };
+
+    if (prefersReducedMotion || Math.abs(distance) < 2) {
+      window.scrollTo({ top: destinationY, behavior: "auto" });
+      updateHash();
+      return;
+    }
+
+    const duration = Math.min(1400, Math.max(850, Math.abs(distance) * 0.22));
+    const startedAt = performance.now();
+    const previousScrollBehavior =
+      document.documentElement.style.scrollBehavior;
+    let scrollFrame = 0;
+    let cancelled = false;
+
+    document.documentElement.style.scrollBehavior = "auto";
+
+    const stopForUserInput = () => {
+      cancelled = true;
+      window.cancelAnimationFrame(scrollFrame);
+      document.documentElement.style.scrollBehavior = previousScrollBehavior;
+      window.removeEventListener("wheel", stopForUserInput);
+      window.removeEventListener("touchstart", stopForUserInput);
+      window.removeEventListener("keydown", stopForUserInput);
+    };
+
+    const finish = () => {
+      document.documentElement.style.scrollBehavior = previousScrollBehavior;
+      window.removeEventListener("wheel", stopForUserInput);
+      window.removeEventListener("touchstart", stopForUserInput);
+      window.removeEventListener("keydown", stopForUserInput);
+      updateHash();
+    };
+
+    const glideToGame = (now: number) => {
+      if (cancelled) return;
+
+      const progress = Math.min(1, (now - startedAt) / duration);
+      const eased =
+        progress < 0.5
+          ? 4 * progress * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+      window.scrollTo(0, startingY + distance * eased);
+
+      if (progress < 1) {
+        scrollFrame = window.requestAnimationFrame(glideToGame);
+      } else {
+        finish();
+      }
+    };
+
+    window.addEventListener("wheel", stopForUserInput, { passive: true });
+    window.addEventListener("touchstart", stopForUserInput, { passive: true });
+    window.addEventListener("keydown", stopForUserInput);
+    scrollFrame = window.requestAnimationFrame(glideToGame);
+  };
+
   return (
     <>
       <div
@@ -1525,13 +1618,19 @@ export default function Home() {
             <i /><i /><i /><i />
           </div>
 
-          <a className="hero-game-callout" href="#upcoming-game">
+          <a
+            className="hero-game-callout"
+            href="#upcoming-game"
+            onClick={handleGameCalloutClick}
+          >
             <span className="hero-game-callout__flash">NEXT HOME GAME</span>
             <span className="hero-game-callout__match">
               <small>AUG 28 · 7 PM</small>
               <strong>Valencia vs. Chaminade</strong>
             </span>
-            <em>Presented by Copper Hill BBQ</em>
+            <em>
+              Presented by <span className="copper-highlight">Copper Hill BBQ</span>
+            </em>
             <span className="hero-game-callout__arrow" aria-hidden="true">↓</span>
           </a>
 
@@ -1581,7 +1680,7 @@ export default function Home() {
                 target="_blank"
               >
                 <InstagramIcon />
-                <strong>Follow us</strong>
+                <strong>Follow us on Instagram</strong>
                 <Arrow />
               </a>
             </div>
