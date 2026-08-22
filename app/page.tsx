@@ -5,7 +5,7 @@ import {
   useRef,
   useState,
   type CSSProperties,
-  type MouseEvent,
+  type MouseEvent as ReactMouseEvent,
 } from "react";
 
 const sportsAgainstHungerInstagram =
@@ -1371,7 +1371,9 @@ export default function Home() {
     };
   }, [logoExpanded]);
 
-  const handleGameCalloutClick = (event: MouseEvent<HTMLAnchorElement>) => {
+  const handleGameCalloutClick = (
+    event: ReactMouseEvent<HTMLAnchorElement>,
+  ) => {
     if (
       event.defaultPrevented ||
       event.button !== 0 ||
