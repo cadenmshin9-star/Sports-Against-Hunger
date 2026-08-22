@@ -167,6 +167,14 @@ function Arrow() {
   return <span className="text-arrow" aria-hidden="true">↗︎</span>;
 }
 
+function InstagramIcon() {
+  return (
+    <span className="instagram-glyph" aria-hidden="true">
+      <img alt="" decoding="async" height="24" src="/instagram.svg" width="24" />
+    </span>
+  );
+}
+
 function WallSticker({
   kind,
   label,
@@ -194,7 +202,7 @@ function BrandMark({ className = "" }: { className?: string }) {
         alt=""
         decoding="async"
         height="61"
-        src="/sports-against-hunger-emblem.png"
+        src="/sports-against-hunger-emblem.webp"
         width="65"
       />
     </span>
@@ -642,6 +650,7 @@ function HeroFieldCanvas() {
     let width = 0;
     let height = 0;
     let frame = 0;
+    let lastPaint = 0;
     let canvasVisible = true;
     let activeSport = 0;
     let lastMorph = performance.now();
@@ -696,7 +705,7 @@ function HeroFieldCanvas() {
 
     const createParticles = () => {
       const count =
-        width < 540 ? 380 : Math.min(780, Math.floor(width * 1.05));
+        width < 540 ? 280 : Math.min(560, Math.floor(width * 0.82));
       const targets = makeSportShape(activeSport, count);
       particles = targets.map((target, index) => ({
         x: target.x + (seeded(index, 12) - 0.5) * 2.4,
@@ -713,7 +722,7 @@ function HeroFieldCanvas() {
       const bounds = canvas.getBoundingClientRect();
       const ratio = Math.min(
         window.devicePixelRatio || 1,
-        bounds.width < 620 ? 1.25 : 1.5,
+        bounds.width < 620 ? 1 : 1.25,
       );
       width = bounds.width;
       height = bounds.height;
@@ -728,6 +737,12 @@ function HeroFieldCanvas() {
         frame = 0;
         return;
       }
+      const frameInterval = width < 620 ? 1000 / 30 : 1000 / 45;
+      if (time && time - lastPaint < frameInterval) {
+        frame = window.requestAnimationFrame(render);
+        return;
+      }
+      lastPaint = time;
       context.clearRect(0, 0, width, height);
       const compactViewport = width <= 620;
       const centerX = width * (compactViewport ? 0.5 : 0.52);
@@ -1438,6 +1453,16 @@ export default function Home() {
             <i /><i /><i /><i />
           </div>
 
+          <a className="hero-game-callout" href="#upcoming-game">
+            <span className="hero-game-callout__flash">NEXT HOME GAME</span>
+            <span className="hero-game-callout__match">
+              <small>AUG 28 · 7 PM</small>
+              <strong>Valencia vs. Chaminade</strong>
+            </span>
+            <em>Presented by Copper Hill BBQ</em>
+            <span className="hero-game-callout__arrow" aria-hidden="true">↓</span>
+          </a>
+
           <div className="hero-tech__copy">
             <div className="hero__eyebrow">
               <span className="status-dot" />
@@ -1453,15 +1478,6 @@ export default function Home() {
               Local businesses turn verified high school sports achievements
               into direct contributions to local food partners.
             </p>
-            <a className="hero-game-callout" href="#upcoming-game">
-              <BrandMark className="brand-mark--callout" />
-              <span>
-                <small>Next VHS home game · Aug 28 · 7 PM</small>
-                <strong>Valencia vs. Chaminade</strong>
-                <em>Game sponsored by Copper Hill BBQ</em>
-              </span>
-              <span className="hero-game-callout__arrow" aria-hidden="true">↓</span>
-            </a>
             <div className="hero-flow" aria-label="How Sports Against Hunger works">
               <span className="hero-flow__label">How it moves</span>
               <ol>
@@ -1492,7 +1508,7 @@ export default function Home() {
                 rel="noreferrer"
                 target="_blank"
               >
-                <span aria-hidden="true">IG</span>
+                <InstagramIcon />
                 <strong>Follow us</strong>
                 <Arrow />
               </a>
@@ -1798,10 +1814,7 @@ export default function Home() {
         </section>
 
         <section className="partners" id="partners">
-          <WallSticker
-            kind="heart"
-            label="Heart sticker"
-          />
+          <BrandMark className="brand-mark--sticker brand-mark--sticker-partners" />
           <div className="partners__inner section-shell">
             <div className="section-index section-index--light">05 / Community partners</div>
             <div className="partners__copy" data-reveal>
@@ -1823,13 +1836,15 @@ export default function Home() {
                 <small>Student and athletics partner</small>
               </div>
               <div className="partner-slots__sponsor">
-                <div className="copper-hill-lockup" aria-label="Copper Hill BBQ" role="img">
-                  <span className="copper-hill-monogram" aria-hidden="true">CH</span>
-                  <span className="copper-hill-word" aria-hidden="true">
-                    <b>COPPER HILL</b>
-                    <i>SMOKED MEATS &amp; FRESH EATS</i>
-                  </span>
-                </div>
+                <img
+                  alt="Copper Hill BBQ — Smoked Meats & Fresh Eats"
+                  className="copper-hill-logo"
+                  decoding="async"
+                  height="429"
+                  loading="lazy"
+                  src="/copper-hill-bbq-logo.webp"
+                  width="1600"
+                />
                 <span>FOUNDING SPONSOR</span>
                 <strong>Copper Hill BBQ</strong>
                 <small>Valencia barbecue and community partner</small>
@@ -1953,9 +1968,7 @@ export default function Home() {
             kind="sunset"
             label="Soccer ball at sunset sticker"
           />
-          <div className="final-cta__orb" aria-hidden="true">
-            <BrandMark className="brand-mark--cta" />
-          </div>
+          <div className="final-cta__orb" aria-hidden="true" />
           <div className="final-cta__content" data-reveal>
             <span>BUSINESS SPONSORSHIPS</span>
             <h2 id="contact-title">Put purpose<br />on the scoreboard.</h2>
@@ -1967,7 +1980,6 @@ export default function Home() {
               Business sponsorships are tax-deductible. Documentation is
               available upon request.
             </p>
-            <BrandMark className="brand-mark--contact" />
             <div className="contact__links">
               <a href="mailto:sportsagainsthunger@gmail.com?subject=Sports%20Against%20Hunger%20Sponsorship">
                 <span>Email</span>
@@ -1975,13 +1987,13 @@ export default function Home() {
                 <Arrow />
               </a>
               <a
+                aria-label="Sports Against Hunger on Instagram"
+                className="contact__instagram-icon"
                 href={sportsAgainstHungerInstagram}
                 rel="noreferrer"
                 target="_blank"
               >
-                <span>Instagram</span>
-                <strong>@sportsagainsthunger.vhs</strong>
-                <Arrow />
+                <InstagramIcon />
               </a>
             </div>
             <a className="contact__back" href="#top">Back to the start <Arrow /></a>

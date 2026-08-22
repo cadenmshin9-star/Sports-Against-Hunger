@@ -48,7 +48,7 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /SCV Food Pantry/);
   assert.match(html, /Copper Hill BBQ/);
   assert.match(html, /Game sponsored by Copper Hill BBQ/i);
-  assert.match(html, /@sportsagainsthunger\.vhs/);
+  assert.match(html, /Sports Against Hunger on Instagram/);
   assert.match(html, /aria-label="Santa Clarita Valley Food Pantry"/);
   assert.match(html, /Built by students\. Backed by community\./);
   assert.match(html, /Hunger is local\./);
@@ -127,7 +127,9 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(css, /--chaminade-orange:\s*#f58220/);
   assert.doesNotMatch(page, /orientation\.lock/);
   assert.doesNotMatch(page, /\bpilot\b/i);
-  assert.match(page, /sports-against-hunger-emblem\.png/);
+  assert.match(page, /sports-against-hunger-emblem\.webp/);
+  assert.match(page, /copper-hill-bbq-logo\.webp/);
+  assert.match(page, /\/instagram\.svg/);
   assert.match(page, /sportsagainsthunger\.vhs/);
   assert.match(page, /copperhillbbq\.com/);
   assert.doesNotMatch(css, /\.playbook-list article:hover\s*\{[^}]*padding-/);
@@ -198,5 +200,7 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(layout, /<Analytics\s*\/>/);
 
   await access(new URL("../public/og.png", import.meta.url));
-  await access(new URL("../public/sports-against-hunger-emblem.png", import.meta.url));
+  await access(new URL("../public/sports-against-hunger-emblem.webp", import.meta.url));
+  await access(new URL("../public/copper-hill-bbq-logo.webp", import.meta.url));
+  await access(new URL("../public/instagram.svg", import.meta.url));
 });
