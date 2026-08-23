@@ -1723,11 +1723,11 @@ export default function Home() {
               className="particle-hold-target"
               type="button"
               aria-describedby="hero-art-instructions"
-              aria-label="Press and hold to interact with the particles"
+              aria-label="Hold and drag to interact with the particles"
             >
               <span className="particle-cue particle-cue--touch" aria-hidden="true">
                 <i />
-                <span>Hold to interact</span>
+                <span>Hold and drag to interact</span>
               </span>
             </button>
             <div className="particle-cue particle-cue--desktop" aria-hidden="true">
@@ -1738,7 +1738,7 @@ export default function Home() {
               Move over the artwork to bend its particles. Press and hold to
               tear open a gravity seam on a desktop, then release to rebuild
               the next sports object. On a touchscreen, touch and hold the
-              particles to bend them, then release to let them settle. Press
+              particles and drag to bend them, then release to let them settle. Press
               Enter or Space to advance with a keyboard.
             </p>
           </div>

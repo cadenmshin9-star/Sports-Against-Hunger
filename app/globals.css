@@ -8347,6 +8347,17 @@ body {
   overflow: hidden;
 }
 
+@media (min-width: 1001px) {
+  .hero-visual {
+    right: 0;
+    width: min(48vw, 930px);
+  }
+
+  .particle-cue--desktop {
+    right: clamp(24px, 4vw, 64px);
+  }
+}
+
 .instagram-glyph {
   display: grid;
   width: 20px;
