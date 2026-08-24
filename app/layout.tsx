@@ -3,6 +3,38 @@ import { headers } from "next/headers";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
+const canonicalUrl = "https://www.sportsagainsthunger.org";
+const organizationLogo = `${canonicalUrl}/sports-against-hunger-icon-512.png`;
+const organizationStructuredData = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${canonicalUrl}/#organization`,
+    name: "Sports Against Hunger",
+    alternateName: "Sports Against Hunger - VHS",
+    url: canonicalUrl,
+    logo: {
+      "@type": "ImageObject",
+      url: organizationLogo,
+      contentUrl: organizationLogo,
+      width: 512,
+      height: 512,
+    },
+    email: "sportsagainsthunger@gmail.com",
+    foundingDate: "2026",
+    sameAs: ["https://www.instagram.com/sportsagainsthunger.vhs/"],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${canonicalUrl}/#website`,
+    url: canonicalUrl,
+    name: "Sports Against Hunger",
+    alternateName: "Sports Against Hunger - VHS",
+    publisher: { "@id": `${canonicalUrl}/#organization` },
+  },
+];
+
 export async function generateMetadata(): Promise<Metadata> {
   const requestHeaders = await headers();
   const host =
@@ -32,6 +64,33 @@ export async function generateMetadata(): Promise<Metadata> {
     ],
     alternates: { canonical: siteUrl },
     manifest: "/manifest.webmanifest",
+    icons: {
+      icon: [
+        {
+          url: "/sports-against-hunger-icon-48.png",
+          sizes: "48x48",
+          type: "image/png",
+        },
+        {
+          url: "/sports-against-hunger-icon-192.png",
+          sizes: "192x192",
+          type: "image/png",
+        },
+        {
+          url: "/sports-against-hunger-icon-512.png",
+          sizes: "512x512",
+          type: "image/png",
+        },
+      ],
+      shortcut: "/sports-against-hunger-icon-48.png",
+      apple: [
+        {
+          url: "/apple-touch-icon.png",
+          sizes: "180x180",
+          type: "image/png",
+        },
+      ],
+    },
     appleWebApp: {
       capable: true,
       title: "Sports Against Hunger",
@@ -64,6 +123,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationStructuredData).replace(
+              /</g,
+              "\\u003c",
+            ),
+          }}
+          type="application/ld+json"
+        />
+      </head>
       <body>
         {children}
         <Analytics />

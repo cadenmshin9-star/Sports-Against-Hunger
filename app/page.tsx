@@ -1326,7 +1326,7 @@ export default function Home() {
   const loaderBarRef = useRef<HTMLElement>(null);
   const loaderTextRef = useRef<HTMLElement>(null);
   const scrollProgressRef = useRef<HTMLSpanElement>(null);
-  const gameGlideCancelRef = useRef<(() => void) | null>(null);
+  const sectionGlideCancelRef = useRef<(() => void) | null>(null);
   const sponsorGuideTriggerRef = useRef<HTMLButtonElement>(null);
   const sponsorGuideCloseRef = useRef<HTMLButtonElement>(null);
 
@@ -1490,13 +1490,14 @@ export default function Home() {
 
   useEffect(
     () => () => {
-      gameGlideCancelRef.current?.();
+      sectionGlideCancelRef.current?.();
     },
     [],
   );
 
-  const handleGameCalloutClick = (
+  const handleSectionLinkClick = (
     event: ReactMouseEvent<HTMLAnchorElement>,
+    href: string,
   ) => {
     if (
       event.defaultPrevented ||
@@ -1509,14 +1510,24 @@ export default function Home() {
       return;
     }
 
-    const destination = document.getElementById("upcoming-game");
+    if (!href.startsWith("#")) return;
+
+    const destination = document.getElementById(href.slice(1));
     if (!destination) return;
 
     event.preventDefault();
-    gameGlideCancelRef.current?.();
+    sectionGlideCancelRef.current?.();
 
-    const getDestinationY = () =>
-      destination.getBoundingClientRect().top + window.scrollY;
+    const getDestinationY = () => {
+      if (href === "#top") return 0;
+
+      const headerHeight =
+        document.querySelector<HTMLElement>(".site-header")?.offsetHeight ?? 0;
+      return Math.max(
+        0,
+        destination.getBoundingClientRect().top + window.scrollY - headerHeight - 12,
+      );
+    };
     const destinationY = getDestinationY();
     const startingY = window.scrollY;
     const distance = destinationY - startingY;
@@ -1525,8 +1536,8 @@ export default function Home() {
     ).matches;
 
     const updateHash = () => {
-      if (window.location.hash !== "#upcoming-game") {
-        window.history.pushState(null, "", "#upcoming-game");
+      if (window.location.hash !== href) {
+        window.history.pushState(null, "", href);
       }
     };
 
@@ -1553,8 +1564,8 @@ export default function Home() {
       window.removeEventListener("wheel", cancelGlide);
       window.removeEventListener("touchstart", cancelGlide);
       window.removeEventListener("keydown", cancelGlide);
-      if (gameGlideCancelRef.current === cancelGlide) {
-        gameGlideCancelRef.current = null;
+      if (sectionGlideCancelRef.current === cancelGlide) {
+        sectionGlideCancelRef.current = null;
       }
     };
 
@@ -1579,7 +1590,7 @@ export default function Home() {
       });
     };
 
-    const glideToGame = (now: number) => {
+    const glideToSection = (now: number) => {
       if (cancelled) return;
 
       const progress = Math.min(1, (now - startedAt) / duration);
@@ -1592,17 +1603,17 @@ export default function Home() {
       window.scrollTo(0, startingY + liveDistance * eased);
 
       if (progress < 1) {
-        scrollFrame = window.requestAnimationFrame(glideToGame);
+        scrollFrame = window.requestAnimationFrame(glideToSection);
       } else {
         finish();
       }
     };
 
-    gameGlideCancelRef.current = cancelGlide;
+    sectionGlideCancelRef.current = cancelGlide;
     window.addEventListener("wheel", cancelGlide, { passive: true });
     window.addEventListener("touchstart", cancelGlide, { passive: true });
     window.addEventListener("keydown", cancelGlide);
-    scrollFrame = window.requestAnimationFrame(glideToGame);
+    scrollFrame = window.requestAnimationFrame(glideToSection);
   };
 
   return (
@@ -1655,6 +1666,7 @@ export default function Home() {
         className={`back-to-top ${showBackToTop ? "back-to-top--visible" : ""}`}
         href="#top"
         aria-label="Back to top"
+        onClick={(event) => handleSectionLinkClick(event, "#top")}
       >
         <span>Back to top</span>
         <i className="text-arrow" aria-hidden="true">↑︎</i>
@@ -1676,7 +1688,11 @@ export default function Home() {
         </a>
         <nav aria-label="Main navigation">
           {navItems.map(([label, href]) => (
-            <a key={href} href={href}>
+            <a
+              key={href}
+              href={href}
+              onClick={(event) => handleSectionLinkClick(event, href)}
+            >
               {label}
             </a>
           ))}
@@ -1684,7 +1700,10 @@ export default function Home() {
         <a
           className="header-cta"
           href="#contact"
-          onClick={() => setMobileMenuOpen(false)}
+          onClick={(event) => {
+            setMobileMenuOpen(false);
+            handleSectionLinkClick(event, "#contact");
+          }}
         >
           <span className="header-cta__full">Become a sponsor</span>
           <span className="header-cta__short">Sponsor</span>
@@ -1718,7 +1737,10 @@ export default function Home() {
                 <a
                   href={href}
                   key={href}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={(event) => {
+                    setMobileMenuOpen(false);
+                    handleSectionLinkClick(event, href);
+                  }}
                 >
                   <span>{String(index + 1).padStart(2, "0")}</span>
                   <strong>{label}</strong>
@@ -1729,7 +1751,10 @@ export default function Home() {
             <a
               className="mobile-menu__sponsor"
               href="#contact"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={(event) => {
+                setMobileMenuOpen(false);
+                handleSectionLinkClick(event, "#contact");
+              }}
             >
               Start a sponsorship conversation <Arrow />
             </a>
@@ -1768,7 +1793,7 @@ export default function Home() {
           <a
             className="hero-game-callout"
             href="#upcoming-game"
-            onClick={handleGameCalloutClick}
+            onClick={(event) => handleSectionLinkClick(event, "#upcoming-game")}
           >
             <span className="hero-game-callout__flash">NEXT HOME GAME</span>
             <span className="hero-game-callout__match">
@@ -1814,10 +1839,18 @@ export default function Home() {
             </div>
             <p className="hero__location">Built by students. Backed by community.</p>
             <div className="hero__actions">
-              <a className="hero-sponsor" href="#contact">
+              <a
+                className="hero-sponsor"
+                href="#contact"
+                onClick={(event) => handleSectionLinkClick(event, "#contact")}
+              >
                 <strong>Sponsor a Play</strong> <Arrow />
               </a>
-              <a className="hero-secondary" href="#playbook">
+              <a
+                className="hero-secondary"
+                href="#playbook"
+                onClick={(event) => handleSectionLinkClick(event, "#playbook")}
+              >
                 <strong>See how it works</strong>{" "}
                 <span className="text-arrow" aria-hidden="true">↓︎</span>
               </a>
@@ -2489,13 +2522,23 @@ export default function Home() {
               </div>,
               document.body,
             ) : null}
-            <a className="contact__back" href="#top">Back to the start <Arrow /></a>
+            <a
+              className="contact__back"
+              href="#top"
+              onClick={(event) => handleSectionLinkClick(event, "#top")}
+            >
+              Back to the start <Arrow />
+            </a>
           </div>
         </section>
       </main>
 
       <footer>
-        <a className="wordmark wordmark--footer" href="#top">
+        <a
+          className="wordmark wordmark--footer"
+          href="#top"
+          onClick={(event) => handleSectionLinkClick(event, "#top")}
+        >
           <BrandMark />
           <span className="wordmark__name">Sports Against Hunger</span>
         </a>

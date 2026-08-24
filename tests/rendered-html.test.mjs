@@ -107,6 +107,12 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /class="hero-sponsor" href="#contact"/);
   assert.match(html, /class="hero-secondary" href="#playbook"/);
   assert.match(html, /class="hero-game-callout" href="#upcoming-game"/);
+  assert.match(html, /sports-against-hunger-icon-48\.png/);
+  assert.match(html, /sports-against-hunger-icon-512\.png/);
+  assert.match(html, /apple-touch-icon\.png/);
+  assert.match(html, /application\/ld\+json/);
+  assert.match(html, /https:\/\/schema\.org/);
+  assert.match(html, /#organization/);
   assert.doesNotMatch(html, /THE FIRST TEAM IS HERE/);
   assert.doesNotMatch(html, /Business sponsorships are tax-deductible/);
   assert.doesNotMatch(html, /id="ethics"/);
@@ -117,10 +123,11 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
 });
 
 test("keeps unconfirmed impact data explicit and accessible", async () => {
-  const [page, css, layout] = await Promise.all([
+  const [page, css, layout, manifest] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/manifest.ts", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /value: "0",\s*label: "verified meals"/);
@@ -166,7 +173,12 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /desynchronized: true/);
   assert.match(page, /scheduleResize/);
   assert.match(page, /scrollProgressRef/);
-  assert.match(page, /gameGlideCancelRef/);
+  assert.match(page, /sectionGlideCancelRef/);
+  assert.match(page, /const handleSectionLinkClick =/);
+  assert.match(page, /handleSectionLinkClick\(event, "#top"\)/);
+  assert.match(page, /handleSectionLinkClick\(event, "#contact"\)/);
+  assert.match(page, /handleSectionLinkClick\(event, "#playbook"\)/);
+  assert.match(page, /handleSectionLinkClick\(event, "#upcoming-game"\)/);
   assert.match(page, /const getDestinationY = \(\) =>/);
   assert.match(page, /const liveDistance = getDestinationY\(\) - startingY/);
   assert.match(page, /pinToDestination\(\);\s*scrollFrame = window\.requestAnimationFrame/);
@@ -278,11 +290,21 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(css, /\.back-to-top/);
   assert.match(css, /--paper:\s*#e4e9e0/);
   assert.match(layout, /images: \[\{ url: socialImage, width: 1200, height: 630 \}\]/);
+  assert.match(layout, /"@type": "Organization"/);
+  assert.match(layout, /sports-against-hunger-icon-512\.png/);
+  assert.match(layout, /sports-against-hunger-icon-48\.png/);
+  assert.match(layout, /apple-touch-icon\.png/);
   assert.match(layout, /@vercel\/analytics\/next/);
   assert.match(layout, /<Analytics\s*\/>/);
+  assert.match(manifest, /sports-against-hunger-icon-192\.png/);
+  assert.match(manifest, /sports-against-hunger-icon-512\.png/);
 
   await access(new URL("../public/og.png", import.meta.url));
   await access(new URL("../public/sports-against-hunger-emblem.webp", import.meta.url));
   await access(new URL("../public/copper-hill-bbq-logo.webp", import.meta.url));
   await access(new URL("../public/instagram.svg", import.meta.url));
+  await access(new URL("../public/sports-against-hunger-icon-48.png", import.meta.url));
+  await access(new URL("../public/sports-against-hunger-icon-192.png", import.meta.url));
+  await access(new URL("../public/sports-against-hunger-icon-512.png", import.meta.url));
+  await access(new URL("../public/apple-touch-icon.png", import.meta.url));
 });
