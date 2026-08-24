@@ -7,6 +7,7 @@ import {
   type CSSProperties,
   type MouseEvent as ReactMouseEvent,
 } from "react";
+import { createPortal } from "react-dom";
 
 const sportsAgainstHungerInstagram =
   "https://www.instagram.com/sportsagainsthunger.vhs?utm_source=ig_web_button_share_sheet&igsi=ZDNlZDc0MzIxNw==";
@@ -43,7 +44,11 @@ const systemFlow = [
 ];
 
 const impactStats = [
-  { value: "0", label: "verified meals", note: "1 meal = $2.28" },
+  {
+    value: "0",
+    label: "verified meals",
+    note: "SCV Food Pantry-verified · 1 meal equivalent = $2.28",
+  },
   { value: "0", label: "games tracked", note: "Official results only" },
   { value: "1", label: "founding sponsor", note: "Copper Hill BBQ" },
 ];
@@ -145,10 +150,62 @@ const questions = [
   },
   {
     kind: "text",
-    question: "How are meals calculated?",
+    question: "How are meal equivalents calculated?",
     answer:
-      "The program uses the approved food partner’s conversion of $2.28 per meal. Sports Against Hunger applies that method only to verified partner contributions and results.",
+      "The program uses the approved food partner’s conversion of $2.28 per verified meal equivalent. Sports Against Hunger applies that method only to officially verified results and food-partner-confirmed contributions.",
   },
+];
+
+const sponsorBenefits = [
+  "Tax-deductible donation documentation is available through the receiving charitable organization, as confirmed by the Valencia ASB director working with Sports Against Hunger.",
+  "Recognition on game-day posters created in coordination with Valencia ASB.",
+  "Highlights through school-related social media and sponsor announcements during the game.",
+  "A post-game impact report showing official athletic results, verified meal equivalents funded, and available audience or exposure metrics.",
+  "A permanent business-logo feature on the Sports Against Hunger website.",
+  "Visible support for families in the Santa Clarita Valley, connected directly to Valencia athletics.",
+];
+
+const sponsorEthics = [
+  {
+    title: "Dignity",
+    body: "Never use identifiable families experiencing food insecurity as marketing.",
+  },
+  {
+    title: "Food-bank leadership",
+    body: "The pantry decides what it needs, often cash or other targeted support.",
+  },
+  {
+    title: "Fair participation",
+    body: "Include teams and activities beyond football and other high-attendance programs.",
+  },
+  {
+    title: "Sponsor screening",
+    body: "Exclude harmful, predatory, or otherwise unsuitable sponsors.",
+  },
+  {
+    title: "Honest reporting",
+    body: "Publish sponsor commitments, official results, food-partner confirmation, participation, and verified impact.",
+  },
+  {
+    title: "Fair labor and protections",
+    body: "Student leadership is meaningful without exploiting unpaid labor. Athletes receive no personal pay; sponsor unlocks use team achievements across sports, with safety and recipient privacy protections.",
+  },
+  {
+    title: "Clear beneficiary",
+    body: "Sponsor contributions go directly to the approved food partner. The school benefits through leadership, engagement, and community relationships—not campaign funds.",
+  },
+];
+
+const fallSports = [
+  "Football",
+  "Girls Volleyball",
+  "Girls Flag Football",
+  "Girls Tennis",
+  "Girls Golf",
+  "Boys/Girls Cross Country",
+  "Sideline Cheer",
+  "Competition Cheer",
+  "Dance",
 ];
 
 const loaderTiles = Array.from({ length: 96 });
@@ -1265,10 +1322,13 @@ export default function Home() {
   const [openQuestion, setOpenQuestion] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [logoExpanded, setLogoExpanded] = useState(false);
+  const [sponsorGuideOpen, setSponsorGuideOpen] = useState(false);
   const loaderBarRef = useRef<HTMLElement>(null);
   const loaderTextRef = useRef<HTMLElement>(null);
   const scrollProgressRef = useRef<HTMLSpanElement>(null);
   const gameGlideCancelRef = useRef<(() => void) | null>(null);
+  const sponsorGuideTriggerRef = useRef<HTMLButtonElement>(null);
+  const sponsorGuideCloseRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     let loaderFrame = 0;
@@ -1334,6 +1394,36 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const navigation = window.performance.getEntriesByType(
+      "navigation",
+    )[0] as PerformanceNavigationTiming | undefined;
+
+    if (navigation?.type !== "reload") return;
+
+    const previousScrollRestoration = window.history.scrollRestoration;
+    const returnToHero = () => window.scrollTo({ left: 0, top: 0, behavior: "auto" });
+
+    window.history.scrollRestoration = "manual";
+    if (window.location.hash) {
+      window.history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}${window.location.search}`,
+      );
+    }
+
+    returnToHero();
+    const firstFrame = window.requestAnimationFrame(returnToHero);
+    const settledFrame = window.setTimeout(returnToHero, 800);
+
+    return () => {
+      window.cancelAnimationFrame(firstFrame);
+      window.clearTimeout(settledFrame);
+      window.history.scrollRestoration = previousScrollRestoration;
+    };
+  }, []);
+
+  useEffect(() => {
     if (!mobileMenuOpen) return;
 
     const previousOverflow = document.body.style.overflow;
@@ -1371,6 +1461,32 @@ export default function Home() {
       window.removeEventListener("keydown", closeOnEscape);
     };
   }, [logoExpanded]);
+
+  useEffect(() => {
+    if (!sponsorGuideOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const previousRootOverflow = document.documentElement.style.overflow;
+    const sponsorGuideTrigger = sponsorGuideTriggerRef.current;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSponsorGuideOpen(false);
+    };
+    const focusFrame = window.requestAnimationFrame(() => {
+      sponsorGuideCloseRef.current?.focus();
+    });
+
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.documentElement.style.overflow = previousRootOverflow;
+      window.cancelAnimationFrame(focusFrame);
+      window.removeEventListener("keydown", closeOnEscape);
+      window.requestAnimationFrame(() => sponsorGuideTrigger?.focus());
+    };
+  }, [sponsorGuideOpen]);
 
   useEffect(
     () => () => {
@@ -1556,7 +1672,7 @@ export default function Home() {
           }}
         >
           <BrandMark />
-          <span>Sports Against Hunger</span>
+          <span className="wordmark__name">Sports Against Hunger</span>
         </a>
         <nav aria-label="Main navigation">
           {navItems.map(([label, href]) => (
@@ -1594,7 +1710,7 @@ export default function Home() {
             role="dialog"
           >
             <div className="mobile-menu__meta">
-              <span>LOCAL IMPACT NETWORK / 001</span>
+              <span>SPORTS AGAINST HUNGER</span>
               <strong>START DATE · AUG 28</strong>
             </div>
             <nav aria-label="Mobile navigation links">
@@ -1666,11 +1782,12 @@ export default function Home() {
           </a>
 
           <div className="hero-tech__copy">
+            <span className="hero-tech__kicker">SPORTS AGAINST HUNGER</span>
             <div className="hero__eyebrow">
               <span className="status-dot" />
-              Student-led / school-powered / community-backed
+              Student-led <span aria-hidden="true">•</span> School-powered{" "}
+              <span aria-hidden="true">•</span> Community-backed
             </div>
-            <span className="hero-tech__kicker">LOCAL IMPACT NETWORK / 001</span>
             <h1 id="hero-title">
               <span>Every play</span>
               <span>can feed a</span>
@@ -1678,7 +1795,8 @@ export default function Home() {
             </h1>
             <p className="hero__intro">
               Local businesses turn verified high school sports achievements
-              into direct contributions to local food partners.
+              into direct contributions to local food partners.{" "}
+              <span className="hero__established">Established 2026.</span>
             </p>
             <div className="hero-flow" aria-label="How Sports Against Hunger works">
               <span className="hero-flow__label">How it moves</span>
@@ -1769,12 +1887,16 @@ export default function Home() {
 
         <div className="marquee" aria-hidden="true">
           <div className="marquee__track">
-            <span>PLAY WITH PURPOSE</span><i>✦</i>
-            <span>LOCAL ACTION</span><i>✦</i>
-            <span>VERIFIED IMPACT</span><i>✦</i>
-            <span>PLAY WITH PURPOSE</span><i>✦</i>
-            <span>LOCAL ACTION</span><i>✦</i>
-            <span>VERIFIED IMPACT</span><i>✦</i>
+            <div className="marquee__group">
+              <span>PLAY WITH PURPOSE</span><i>✦</i>
+              <span>LOCAL ACTION</span><i>✦</i>
+              <span>VERIFIED IMPACT</span><i>✦</i>
+            </div>
+            <div className="marquee__group">
+              <span>PLAY WITH PURPOSE</span><i>✦</i>
+              <span>LOCAL ACTION</span><i>✦</i>
+              <span>VERIFIED IMPACT</span><i>✦</i>
+            </div>
           </div>
         </div>
 
@@ -1789,7 +1911,7 @@ export default function Home() {
             label="Hands holding wheat sticker"
           />
           <div className="mission__statement" data-reveal="swoosh-left">
-            <p>Our north star</p>
+            <p>WHY SPORTS AGAINST HUNGER EXISTS</p>
             <h2>
               Hunger is local.
               <br />
@@ -1798,7 +1920,8 @@ export default function Home() {
           </div>
           <div className="mission__story" data-reveal="swoosh-right">
             <p className="mission__lead">
-              Sports Against Hunger is a student-led network designed to make
+              <strong className="mission__brand-name">Sports Against Hunger</strong>,
+              established in 2026, is a student-led network designed to make
               generosity visible, measurable, and part of the game-day ritual.
             </p>
             <p>
@@ -1852,11 +1975,16 @@ export default function Home() {
           <div className="impact__top section-shell" data-reveal>
             <div className="section-index section-index--light">02 / Live impact</div>
             <div>
-              <span className="impact__live"><i /> Season tracker</span>
+              <div className="impact__identifiers">
+                <span className="impact__live"><i /> Founding season tracker · Est. 2026</span>
+              </div>
               <h2 id="impact-title">The scoreboard that matters.</h2>
               <p>
-                Only confirmed achievements and verified partner contributions
-                appear here. The first results arrive when the season begins.
+                Newly established in 2026, Sports Against Hunger is entering
+                its first season. This scoreboard begins at zero by design;
+                only official achievements, confirmed contributions, and
+                pantry-verified meal equivalents will appear here after the
+                opening game.
               </p>
             </div>
           </div>
@@ -1882,15 +2010,15 @@ export default function Home() {
           <div className="season-card section-shell">
             <div className="season-card__head">
               <div>
-                <span>SEASON 01</span>
-                <strong>Opening season</strong>
+                <span>SEASON 01 · EST. 2026</span>
+                <strong>Founding season</strong>
               </div>
-              <span className="season-card__status">START DATE · AUG 28</span>
+              <span className="season-card__status">NEW PROGRAM · STARTS AUG 28</span>
             </div>
             <div className="season-card__bar"><span /></div>
             <div className="season-card__foot">
               <span>0 verified meals</span>
-              <span>Home opener · August 28</span>
+              <span>No prior results · Home opener August 28</span>
             </div>
           </div>
         </section>
@@ -1960,7 +2088,7 @@ export default function Home() {
           />
           <div className="section-index">04 / Games & achievements</div>
           <article
-            aria-label="Upcoming home football game sponsored by Copper Hill BBQ: Valencia High School versus Chaminade High School, August 28 at 7 p.m."
+            aria-label="Upcoming home football game: Valencia High School versus Chaminade High School, August 28 at 7 p.m."
             className="matchup-card"
             data-reveal
             tabIndex={0}
@@ -2005,14 +2133,20 @@ export default function Home() {
               <span>Valencia High School / Home</span>
             </div>
 
-            <span className="matchup-card__presented">
-              Game sponsored by <strong>Copper Hill BBQ</strong>
-            </span>
-
             <span className="matchup-card__prompt" aria-hidden="true">
               Hover or tap to charge the matchup
             </span>
           </article>
+          <div className="matchup-impact-note" data-reveal>
+            <p>
+              <strong>1 Valencia touchdown</strong>
+              <span aria-hidden="true">=</span>
+              <strong>20 meals</strong>
+            </p>
+            <p>
+              Game sponsored by <strong>Copper Hill BBQ</strong>
+            </p>
+          </div>
         </section>
 
         <section className="partners" id="partners">
@@ -2020,7 +2154,6 @@ export default function Home() {
           <div className="partners__inner section-shell">
             <div className="section-index section-index--light">05 / Community partners</div>
             <div className="partners__copy" data-reveal>
-              <span>THE FIRST TEAM IS HERE</span>
               <h2>Local brands.<br />Lasting impact.</h2>
               <p>
                 Valencia athletics, Copper Hill BBQ, and the SCV Food Pantry
@@ -2165,6 +2298,10 @@ export default function Home() {
           />
           <div className="final-cta__orb" aria-hidden="true" />
           <div className="final-cta__content" data-reveal>
+            <div className="final-cta__brand" aria-label="Sports Against Hunger">
+              <BrandMark className="brand-mark--cta-lockup" />
+              <strong>SPORTS AGAINST HUNGER</strong>
+            </div>
             <span>BUSINESS SPONSORSHIPS</span>
             <h2 id="contact-title">Put purpose<br />on the scoreboard.</h2>
             <p>
@@ -2172,8 +2309,8 @@ export default function Home() {
               conversation—no technical setup and no commitment required.
             </p>
             <p className="contact__tax-note">
-              Business sponsorships are tax-deductible. Documentation is
-              available upon request.
+              Donation documentation is provided through the receiving
+              charitable organization.
             </p>
             <div className="contact__links">
               <a href="mailto:sportsagainsthunger@gmail.com?subject=Sports%20Against%20Hunger%20Sponsorship">
@@ -2191,6 +2328,167 @@ export default function Home() {
                 <InstagramIcon />
               </a>
             </div>
+            <button
+              aria-controls="sponsor-guide-dialog"
+              aria-haspopup="dialog"
+              className="sponsor-brief-trigger"
+              onClick={() => setSponsorGuideOpen(true)}
+              ref={sponsorGuideTriggerRef}
+              type="button"
+            >
+              <span>
+                <small>Plain-language sponsorship guide</small>
+                <strong>Explore a Valencia sponsorship</strong>
+              </span>
+              <i aria-hidden="true">Open</i>
+            </button>
+
+            {sponsorGuideOpen && typeof document !== "undefined" ? createPortal(
+              <div
+                aria-labelledby="sponsor-guide-title"
+                aria-modal="true"
+                className="sponsor-guide-overlay"
+                id="sponsor-guide-dialog"
+                onClick={() => setSponsorGuideOpen(false)}
+                role="dialog"
+              >
+                <article
+                  className="sponsor-brief sponsor-guide__panel"
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  <header className="sponsor-guide__header">
+                    <div className="sponsor-guide__title">
+                      <BrandMark className="brand-mark--sponsor-guide" />
+                      <span>
+                        <small>SPORTS AGAINST HUNGER</small>
+                        <h2 id="sponsor-guide-title">Valencia sponsorship guide</h2>
+                      </span>
+                    </div>
+                    <button
+                      aria-label="Close sponsorship guide"
+                      className="sponsor-guide__close"
+                      onClick={() => setSponsorGuideOpen(false)}
+                      ref={sponsorGuideCloseRef}
+                      type="button"
+                    >
+                      Close <span aria-hidden="true">×</span>
+                    </button>
+                  </header>
+                  <div className="sponsor-guide__scroll">
+                    <div className="sponsor-brief__body">
+                      <div className="sponsor-brief__identity">
+                        <div>
+                          <span>FOUNDING SEASON · ESTABLISHED 2026</span>
+                          <strong>A clear, capped commitment with verified reporting</strong>
+                          <small>
+                            Faculty adviser and Valencia ASB Director ·{" "}
+                            <a href="mailto:jbenham@hartdistrict.org">
+                              jbenham@hartdistrict.org
+                            </a>
+                          </small>
+                        </div>
+                      </div>
+
+                <div className="sponsor-brief__facts">
+                  <article>
+                    <span>Cost structure</span>
+                    <strong>No sponsorship fee</strong>
+                    <p>
+                      The only cost is the resulting donation sent directly to
+                      SCV Food Pantry.
+                    </p>
+                  </article>
+                  <article>
+                    <span>Sponsor-controlled cap</span>
+                    <strong>A maximum is agreed first</strong>
+                    <p>
+                      Every commitment has a clear maximum established before
+                      the game or campaign begins.
+                    </p>
+                  </article>
+                  <article>
+                    <span>Easy exit</span>
+                    <strong>One agreed campaign</strong>
+                    <p>
+                      Commitments apply only to the agreed campaign unless
+                      renewed. There is no automatic recurring obligation.
+                    </p>
+                  </article>
+                </div>
+
+                <section className="sponsor-brief__section sponsor-brief__section--steps">
+                  <span>WHAT HAPPENS NEXT</span>
+                  <p>
+                    Email us, discuss the sport and achievement, agree on a
+                    maximum contribution, approve recognition materials, and
+                    receive a post-game report.
+                  </p>
+                  <div>
+                    <p>
+                      <strong>Negotiation factors</strong>
+                      Sport, achievement frequency, number of games, campaign
+                      length, and sponsor budget.
+                    </p>
+                    <p>
+                      <strong>Verification</strong>
+                      Official scorecards verify athletic results. SCV Food
+                      Pantry confirms the contribution and verified meal-equivalent
+                      impact.
+                    </p>
+                  </div>
+                </section>
+
+                <section className="sponsor-brief__section">
+                  <span>WHAT YOUR BUSINESS RECEIVES</span>
+                  <ul>
+                    {sponsorBenefits.map((benefit) => (
+                      <li key={benefit}>{benefit}</li>
+                    ))}
+                  </ul>
+                  <p className="sponsor-brief__boundary">
+                    <strong>Recognition boundaries:</strong> Social exposure and
+                    audience metrics are reported when available but are not
+                    guaranteed. By participating, the sponsor authorizes
+                    reasonable use of its logo for approved campaign recognition.
+                  </p>
+                </section>
+
+                <details className="sponsor-brief__subdetails">
+                  <summary>Valencia fall sports and activities</summary>
+                  <div>
+                    <ul className="sponsor-brief__sports">
+                      {fallSports.map((sport) => (
+                        <li key={sport}>{sport}</li>
+                      ))}
+                    </ul>
+                    <p>
+                      Sideline Cheer, Competition Cheer, and Dance are included
+                      in the program’s fair-participation scope, but they are not
+                      currently tied to meal-triggering athletic achievements
+                      because they do not have a comparable official scoring
+                      event. Any alternative verified milestone would require
+                      school approval.
+                    </p>
+                  </div>
+                </details>
+
+                <details className="sponsor-brief__subdetails">
+                  <summary>Program ethics and safeguards</summary>
+                  <div className="sponsor-brief__ethics">
+                    {sponsorEthics.map((item) => (
+                      <article key={item.title}>
+                        <strong>{item.title}</strong>
+                        <p>{item.body}</p>
+                      </article>
+                    ))}
+                  </div>
+                </details>
+                    </div>
+                  </div>
+                </article>
+              </div>,
+              document.body,
+            ) : null}
             <a className="contact__back" href="#top">Back to the start <Arrow /></a>
           </div>
         </section>
@@ -2199,9 +2497,9 @@ export default function Home() {
       <footer>
         <a className="wordmark wordmark--footer" href="#top">
           <BrandMark />
-          <span>Sports Against Hunger</span>
+          <span className="wordmark__name">Sports Against Hunger</span>
         </a>
-        <p>Student-led · Community-guided · Built for measurable impact</p>
+        <p>Established 2026 · Student-led · Community-guided · Built for measurable impact</p>
         <span>© 2026</span>
       </footer>
     </>

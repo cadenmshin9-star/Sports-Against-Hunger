@@ -32,6 +32,10 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /<title>Sports Against Hunger \| Game-Day Hunger Relief<\/title>/i);
   assert.match(
     html,
+    /hero-tech__kicker[^>]*>SPORTS AGAINST HUNGER<\/span>[\s\S]*?Student-led[\s\S]*?School-powered[\s\S]*?Community-backed[\s\S]*?<h1[^>]*id="hero-title"/i,
+  );
+  assert.match(
+    html,
     />Every play<\/span><span[^>]*>can feed a<\/span><span[^>]*>family\.<\/span>/i,
   );
   assert.match(html, /Athletic achievement/);
@@ -47,7 +51,9 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /Valencia High School/);
   assert.match(html, /SCV Food Pantry/);
   assert.match(html, /Copper Hill BBQ/);
-  assert.match(html, /Game sponsored by Copper Hill BBQ/i);
+  assert.match(html, /Game sponsored by[\s\S]*?Copper Hill BBQ/i);
+  assert.match(html, /1 Valencia touchdown/i);
+  assert.match(html, /20 meals/i);
   assert.match(html, /Sports Against Hunger on Instagram/);
   assert.match(html, /href="https:\/\/copperhillbbq\.com\/"/);
   assert.match(html, /href="https:\/\/www\.instagram\.com\/copperhillbbq\?/);
@@ -55,9 +61,12 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /href="https:\/\/www\.scvfoodpantry\.org\/"/);
   assert.match(html, /aria-label="Santa Clarita Valley Food Pantry"/);
   assert.match(html, /Built by students\. Backed by community\./);
+  assert.match(html, /Established 2026\./);
   assert.match(html, /Hunger is local\./);
+  assert.match(html, /WHY SPORTS AGAINST HUNGER EXISTS/);
   assert.match(html, /So is the/);
-  assert.match(html, /Sports Against Hunger is a student-led network designed to make/);
+  assert.match(html, /mission__brand-name[^>]*>Sports Against Hunger<\/strong>/);
+  assert.match(html, /established in 2026, is a student-led network designed to make/);
   assert.match(html, /Schools bring the energy\. Businesses make capped commitments\./);
   assert.match(html, /Three pillars\./);
   assert.match(html, /Sports Against Hunger/);
@@ -68,16 +77,38 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, />Unite</);
   assert.match(html, />Give Back</);
   assert.match(html, /UPCOMING HOME GAME/);
+  assert.doesNotMatch(html, /impact__brand/i);
+  assert.match(html, /Founding season tracker · Est\. 2026/i);
+  assert.match(html, /This scoreboard begins at zero by design/i);
   assert.match(html, /Valencia High School versus Chaminade High School/);
   assert.match(html, /matchup-card__team--valencia/);
   assert.match(html, /matchup-card__team--chaminade/);
-  assert.match(html, /1 meal = \$2\.28/);
+  assert.match(html, /SCV Food Pantry-verified · 1 meal equivalent = \$2\.28/);
   assert.match(html, /Preemptive Q&amp;A/);
   assert.match(html, /Does Sports Against Hunger handle money\?/);
-  assert.match(html, /How are meals calculated\?/);
+  assert.match(html, /How are meal equivalents calculated\?/);
   assert.match(html, /Dignity first/);
   assert.match(html, /Pantry-led impact/);
   assert.match(html, /aria-label="Back to top"/);
+  assert.match(html, /final-cta__brand[^>]*aria-label="Sports Against Hunger"/i);
+  assert.match(html, /Explore a Valencia sponsorship/);
+  assert.match(html, /aria-haspopup="dialog"/);
+
+  const documentIds = new Set(
+    [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]),
+  );
+  const internalTargets = [
+    ...html.matchAll(/href="#([^"]+)"/g),
+  ].map((match) => match[1]);
+  assert.ok(internalTargets.length > 0);
+  for (const target of internalTargets) {
+    assert.ok(documentIds.has(target), `Missing internal link target #${target}`);
+  }
+  assert.match(html, /class="hero-sponsor" href="#contact"/);
+  assert.match(html, /class="hero-secondary" href="#playbook"/);
+  assert.match(html, /class="hero-game-callout" href="#upcoming-game"/);
+  assert.doesNotMatch(html, /THE FIRST TEAM IS HERE/);
+  assert.doesNotMatch(html, /Business sponsorships are tax-deductible/);
   assert.doesNotMatch(html, /id="ethics"/);
   assert.doesNotMatch(html, /Why would businesses be interested\?/);
   assert.doesNotMatch(html, /How does money get divided/i);
@@ -92,13 +123,31 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
   ]);
 
-  assert.match(page, /value: "0", label: "verified meals"/);
-  assert.match(page, /note: "1 meal = \$2\.28"/);
+  assert.match(page, /value: "0",\s*label: "verified meals"/);
+  assert.match(page, /note: "SCV Food Pantry-verified · 1 meal equivalent = \$2\.28"/);
   assert.match(page, /value: "0", label: "games tracked"/);
   assert.match(page, /value: "1", label: "founding sponsor"/);
   assert.match(page, /note: "Copper Hill BBQ"/);
-  assert.match(page, /Home opener · August 28/);
+  assert.match(page, /No prior results · Home opener August 28/);
   assert.match(page, /Pledge details appear only after they are confirmed\./);
+  assert.match(page, /Official scorecards verify athletic results/);
+  assert.match(page, /jbenham@hartdistrict\.org/);
+  assert.match(page, /Girls Flag Football/);
+  assert.match(page, /Sideline Cheer/);
+  assert.match(page, /Recognition boundaries/);
+  assert.match(page, /there is no automatic recurring obligation/i);
+  assert.match(page, /Tax-deductible donation documentation is available/i);
+  assert.match(page, /const \[sponsorGuideOpen, setSponsorGuideOpen\] = useState\(false\)/);
+  assert.match(page, /id="sponsor-guide-dialog"/);
+  assert.match(page, /aria-label="Close sponsorship guide"/);
+  assert.match(page, /if \(event\.key === "Escape"\) setSponsorGuideOpen\(false\)/);
+  assert.match(page, /createPortal\(/);
+  assert.match(page, /navigation\?\.type !== "reload"/);
+  assert.match(page, /window\.history\.replaceState/);
+  assert.doesNotMatch(
+    page,
+    /No sponsorship fee, a sponsor-controlled cap, direct pantry/,
+  );
   assert.match(page, /Athletic achievement/);
   assert.doesNotMatch(page, /\$\d+\s+per\s+(touchdown|goal|hit)/i);
   assert.match(page, /Sports<\/strong>\s*<strong>Against<\/strong>\s*<strong>Hunger/);
@@ -132,6 +181,16 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /if \(pointer\.down\) event\.preventDefault\(\)/);
   assert.match(page, /const perspectiveDistance = compactViewport \? 4\.6 : 3\.9/);
   assert.match(css, /touch-action:\s*none/);
+  assert.match(css, /\.site-header\s*\{[\s\S]*?position:\s*fixed/);
+  assert.match(css, /\.site-header \.wordmark > span\.wordmark__name\s*\{\s*display:\s*block/);
+  assert.match(css, /font-size:\s*clamp\(15px, 4\.5vw, 17px\)/);
+  assert.match(css, /flex-wrap:\s*nowrap/);
+  assert.match(css, /\.faq \.wall-sticker--speech\s*\{[\s\S]*?top:\s*70px/);
+  assert.match(css, /\.sponsor-brief\s*\{/);
+  assert.match(css, /\.sponsor-guide-overlay\s*\{[\s\S]*?position:\s*fixed[\s\S]*?inset:\s*0/);
+  assert.match(css, /\.sponsor-guide-overlay\s*\{[\s\S]*?width:\s*100vw[\s\S]*?height:\s*100dvh/);
+  assert.match(css, /\.sponsor-guide__panel\.sponsor-brief\s*\{[\s\S]*?width:\s*100%[\s\S]*?height:\s*100%/);
+  assert.match(css, /\.sponsor-brief__section > span\s*\{[\s\S]*?background:\s*#0d5962[\s\S]*?color:\s*white/);
   assert.match(css, /min-height:\s*clamp\(340px, 96vw, 430px\)/);
   assert.match(
     css,
