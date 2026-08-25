@@ -1797,7 +1797,7 @@ export default function Home() {
           >
             <span className="hero-game-callout__flash">NEXT HOME GAME</span>
             <span className="hero-game-callout__match">
-              <small>AUG 28 · 7 PM</small>
+              <small>AUG 28 · 6:30 PM</small>
               <strong>Valencia vs. Chaminade</strong>
             </span>
             <em>
@@ -2121,7 +2121,7 @@ export default function Home() {
           />
           <div className="section-index">04 / Games & achievements</div>
           <article
-            aria-label="Upcoming home football game: Valencia High School versus Chaminade High School, August 28 at 7 p.m."
+            aria-label="Upcoming home football game: Valencia High School versus Chaminade High School, August 28 at 6:30 p.m."
             className="matchup-card"
             data-reveal
             tabIndex={0}
@@ -2161,7 +2161,7 @@ export default function Home() {
             <div className="matchup-card__game">
               <span>Friday / August 28</span>
               <strong>
-                <time dateTime="2026-08-28T19:00:00-07:00">7:00 PM</time>
+                <time dateTime="2026-08-28T18:30:00-07:00">6:30 PM</time>
               </strong>
               <span>Valencia High School / Home</span>
             </div>
