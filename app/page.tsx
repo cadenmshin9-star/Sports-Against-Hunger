@@ -2342,8 +2342,8 @@ export default function Home() {
               conversation—no technical setup and no commitment required.
             </p>
             <p className="contact__tax-note">
-              Donation documentation is provided through the receiving
-              charitable organization.
+              Business sponsorships are tax-deductible. Documentation is
+              available upon request.
             </p>
             <div className="contact__links">
               <a href="mailto:sportsagainsthunger@gmail.com?subject=Sports%20Against%20Hunger%20Sponsorship">

@@ -114,7 +114,10 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /https:\/\/schema\.org/);
   assert.match(html, /#organization/);
   assert.doesNotMatch(html, /THE FIRST TEAM IS HERE/);
-  assert.doesNotMatch(html, /Business sponsorships are tax-deductible/);
+  assert.match(
+    html,
+    /Business sponsorships are tax-deductible\. Documentation is available upon request\./,
+  );
   assert.doesNotMatch(html, /id="ethics"/);
   assert.doesNotMatch(html, /Why would businesses be interested\?/);
   assert.doesNotMatch(html, /How does money get divided/i);
