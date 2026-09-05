@@ -12,8 +12,6 @@ import { createPortal } from "react-dom";
 const sportsAgainstHungerInstagram =
   "https://www.instagram.com/sportsagainsthunger.vhs?utm_source=ig_web_button_share_sheet&igsi=ZDNlZDc0MzIxNw==";
 const copperHillWebsite = "https://copperhillbbq.com/";
-const copperHillInstagram =
-  "https://www.instagram.com/copperhillbbq?utm_source=ig_web_button_share_sheet&igsi=ZDNlZDc0MzIxNw==";
 const scvFoodPantryWebsite = "https://www.scvfoodpantry.org/";
 
 const navItems = [
@@ -28,18 +26,18 @@ const navItems = [
 const systemFlow = [
   {
     number: "01",
-    title: "Play",
-    body: "Athletic achievement is recorded in the official game result.",
+    title: "Business pledges",
+    body: "A local business chooses an amount per achievement and sets a clear maximum.",
   },
   {
     number: "02",
-    title: "Pledge",
-    body: "A local business turns that verified achievement into a capped pledge.",
+    title: "Athletic achievement",
+    body: "An official touchdown, goal, hit, or milestone determines the resulting pledge.",
   },
   {
     number: "03",
-    title: "Verified impact",
-    body: "Direct to the Pantry: the food partner confirms receipt and meal equivalents.",
+    title: "Direct to the Pantry",
+    body: "The business contributes directly; the food partner confirms receipt and impact.",
   },
 ];
 
@@ -225,8 +223,6 @@ type SportPoint = {
   z: number;
   emphasis: number;
 };
-
-type ExperienceMode = "impact" | "game";
 
 function Arrow() {
   return <span className="text-arrow" aria-hidden="true">↗︎</span>;
@@ -686,7 +682,7 @@ function makeSportShape(kind: number, count: number): SportPoint[] {
   return points.slice(0, count);
 }
 
-function HeroFieldCanvas({ energetic }: { energetic: boolean }) {
+function HeroFieldCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -841,15 +837,12 @@ function HeroFieldCanvas({ energetic }: { energetic: boolean }) {
           : Math.min(1, Math.max(0, (time - revealStart) / 1500));
       if (revealStart >= 0 && revealProgress >= 1) revealStart = -1;
       const palette = sportObjects[activeSport];
-      const motionMultiplier = energetic ? 1.7 : 1;
       const rotationY =
-        (prefersReducedMotion ? 0.08 : time * 0.00017 * motionMultiplier) +
+        (prefersReducedMotion ? 0.08 : time * 0.00017) +
         pointer.x * 0.055;
       const rotationX = -0.06 + pointer.y * 0.045;
       const rotationZ =
-        (activeSport === 5
-          ? 0
-          : Math.sin(time * 0.00022 * motionMultiplier) * 0.045) +
+        (activeSport === 5 ? 0 : Math.sin(time * 0.00022) * 0.045) +
         (pointer.down ? pointer.velocityX * 0.0007 : 0);
       const fizzleEase =
         fizzleProgress *
@@ -928,8 +921,7 @@ function HeroFieldCanvas({ energetic }: { energetic: boolean }) {
         particle.z += (particle.target.z - particle.z) * spring;
         const drift = prefersReducedMotion
           ? 0
-          : Math.sin(time * 0.0012 * motionMultiplier + particle.phase) *
-            (energetic ? 0.011 : 0.008);
+          : Math.sin(time * 0.0012 + particle.phase) * 0.008;
         const localX = particle.x + drift;
         const localY = particle.y + drift * 0.6;
         const y1 = localY * cosX - particle.z * sinX;
@@ -1278,7 +1270,7 @@ function HeroFieldCanvas({ energetic }: { energetic: boolean }) {
       ? 0
       : window.setInterval(() => {
           if (!pointer.down && !touchHolding) setSport(activeSport + 1);
-        }, energetic ? 6800 : 11200);
+        }, 11200);
 
     return () => {
       observer.disconnect();
@@ -1308,7 +1300,7 @@ function HeroFieldCanvas({ energetic }: { energetic: boolean }) {
       window.cancelAnimationFrame(resizeFrame);
       window.cancelAnimationFrame(frame);
     };
-  }, [energetic]);
+  }, []);
 
   return (
     <canvas
@@ -1323,8 +1315,6 @@ function HeroFieldCanvas({ energetic }: { energetic: boolean }) {
 }
 
 export default function Home() {
-  const [experienceMode, setExperienceMode] =
-    useState<ExperienceMode>("impact");
   const [loading, setLoading] = useState(true);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [openQuestion, setOpenQuestion] = useState<number | null>(null);
@@ -1624,18 +1614,8 @@ export default function Home() {
     scrollFrame = window.requestAnimationFrame(glideToSection);
   };
 
-  const gameMode = experienceMode === "game";
-
   return (
-    <div
-      className={`experience experience--${experienceMode}`}
-      data-mode={experienceMode}
-    >
-      <span aria-live="polite" className="sr-only">
-        {gameMode
-          ? "Game mode active. Athletic action and upcoming game details are emphasized."
-          : "Impact mode active. Verified community impact is emphasized."}
-      </span>
+    <>
       <div
         className={`loader ${loading ? "" : "loader--hidden"}`}
         aria-hidden={!loading}
@@ -1715,20 +1695,6 @@ export default function Home() {
             </a>
           ))}
         </nav>
-        <button
-          aria-label={gameMode ? "Switch to Impact Mode" : "Switch to Game Mode"}
-          aria-pressed={gameMode}
-          className="mode-toggle"
-          onClick={() =>
-            setExperienceMode((current) =>
-              current === "impact" ? "game" : "impact",
-            )
-          }
-          type="button"
-        >
-          <span aria-hidden="true"><i /></span>
-          <strong>{gameMode ? "← Impact mode" : "Game mode →"}</strong>
-        </button>
         <a
           className="header-cta"
           href="#contact"
@@ -1762,7 +1728,7 @@ export default function Home() {
           >
             <div className="mobile-menu__meta">
               <span>SPORTS AGAINST HUNGER</span>
-              <strong>START DATE · AUG 28</strong>
+              <strong>START DATE · SEP 10</strong>
             </div>
             <nav aria-label="Mobile navigation links">
               {navItems.map(([label, href], index) => (
@@ -1829,20 +1795,17 @@ export default function Home() {
           >
             <span className="hero-game-callout__flash">NEXT HOME GAME</span>
             <span className="hero-game-callout__match">
-              <small>AUG 28 · 7:30 PM</small>
-              <strong>Valencia vs. Chaminade</strong>
+              <small>SEP 10 · 7:30 PM</small>
+              <strong>Valencia vs. Paraclete</strong>
             </span>
             <em>
-              Presented by <span className="copper-highlight">Copper Hill BBQ</span>
+              Presented by <span className="presenting-sponsor-blank" aria-hidden="true" />
             </em>
             <span className="hero-game-callout__arrow" aria-hidden="true">↓</span>
           </a>
 
           <div className="hero-tech__copy">
             <span className="hero-tech__kicker">SPORTS AGAINST HUNGER</span>
-            <i className="hero-mode-label">
-              {gameMode ? "GAME MODE" : "IMPACT MODE"}
-            </i>
             <div className="hero__eyebrow">
               <span className="status-dot" />
               Student-led <span aria-hidden="true">•</span> School-powered{" "}
@@ -1858,35 +1821,8 @@ export default function Home() {
               into direct contributions to local food partners.{" "}
               <span className="hero__established">Established 2026.</span>
             </p>
-            <div
-              className="hero-scoreboard"
-              aria-label="Founding season impact scoreboard"
-            >
-              <div className="hero-scoreboard__status">
-                <span>{gameMode ? "NEXT GAME / ARMED" : "FOUNDING SEASON / LIVE"}</span>
-                <i>Verification pending</i>
-              </div>
-              <div className="hero-scoreboard__metrics">
-                <article>
-                  <strong>0</strong>
-                  <span>meals verified</span>
-                </article>
-                <article>
-                  <strong>1 TD</strong>
-                  <span>unlocks 20 meals</span>
-                </article>
-                <article>
-                  <strong>SCV</strong>
-                  <span>Pantry verifies</span>
-                </article>
-              </div>
-              <p>
-                This scoreboard starts at zero and updates only after official
-                results and partner confirmation.
-              </p>
-            </div>
             <div className="hero-flow" aria-label="How Sports Against Hunger works">
-              <span className="hero-flow__label">PLAY → PLEDGE → VERIFIED IMPACT</span>
+              <span className="hero-flow__label">How it moves</span>
               <ol>
                 {systemFlow.map((step) => (
                   <li key={step.number}>
@@ -1931,7 +1867,7 @@ export default function Home() {
           </div>
 
           <div className="hero-visual">
-            <HeroFieldCanvas energetic={gameMode} />
+            <HeroFieldCanvas />
             <button
               className="particle-hold-target"
               type="button"
@@ -1958,7 +1894,7 @@ export default function Home() {
 
           <div className="hero-tech__status" aria-hidden="true">
             <span>START DATE</span>
-            <strong>AUGUST 28</strong>
+            <strong>SEPTEMBER 10</strong>
             <i />
             <span>SCROLL TO EXPLORE</span>
           </div>
@@ -1980,62 +1916,28 @@ export default function Home() {
           />
         </div>
 
-        <section className="sponsor-roster" aria-labelledby="sponsor-roster-title">
-          <div className="sponsor-roster__intro">
-            <span>SPONSOR HISTORY</span>
-            <h2 id="sponsor-roster-title">The businesses behind the impact.</h2>
-          </div>
-
-          <div className="sponsor-roster__brands" aria-label="Past and future sponsors">
-            <article className="sponsor-history-card">
-              <a
-                className="sponsor-history-card__brand"
-                href={copperHillWebsite}
-                rel="noreferrer"
-                target="_blank"
-              >
-                <img
-                  alt="Copper Hill BBQ — Smoked Meats & Fresh Eats"
-                  decoding="async"
-                  height="429"
-                  src="/copper-hill-bbq-logo.webp"
-                  width="1600"
-                />
-                <span>
-                  <small>FOUNDING SPONSOR · 2026</small>
-                  <strong>Copper Hill BBQ</strong>
-                </span>
-              </a>
-              <div className="sponsor-history-card__links">
-                <a href={copperHillWebsite} rel="noreferrer" target="_blank">
-                  Website
-                </a>
-                <a href={copperHillInstagram} rel="noreferrer" target="_blank">
-                  Instagram
-                </a>
-              </div>
-            </article>
-
-            <div className="future-sponsor-slots" aria-label="Space reserved for future sponsors">
-              <div>
-                <span>02</span>
-                <strong>Future sponsor</strong>
-              </div>
-              <div>
-                <span>03</span>
-                <strong>Future sponsor</strong>
-              </div>
-            </div>
-          </div>
-
+        <section className="sponsor-banner" aria-label="Businesses behind the impact">
+          <span>Businesses behind the impact</span>
           <a
-            className="sponsor-recruit-card"
+            className="sponsor-banner__brand"
+            href={copperHillWebsite}
+            rel="noreferrer"
+            target="_blank"
+          >
+            <img
+              alt="Copper Hill BBQ — founding sponsor"
+              decoding="async"
+              height="429"
+              src="/copper-hill-bbq-logo.webp"
+              width="1600"
+            />
+          </a>
+          <a
+            className="sponsor-banner__cta"
             href="#contact"
             onClick={(event) => handleSectionLinkClick(event, "#contact")}
           >
-            <span>UPCOMING GAME PARTNERS</span>
-            <strong>Your business.<br />Our next big play.</strong>
-            <em>Sponsor an upcoming game <Arrow /></em>
+            Sponsor a game <Arrow />
           </a>
         </section>
 
@@ -2146,55 +2048,18 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="proof-chain section-shell" data-reveal>
-            <div className="proof-chain__heading">
-              <span>THE VERIFICATION STANDARD</span>
-              <h3>Proof, not promises.</h3>
-              <p>
-                Every public number must pass through the same three-part
-                record before it reaches the scoreboard.
-              </p>
-            </div>
-            <ol>
-              <li>
-                <span>01</span>
-                <div>
-                  <strong>Official result</strong>
-                  <p>The school or league result confirms the achievement.</p>
-                </div>
-                <i>GAME RECORD</i>
-              </li>
-              <li>
-                <span>02</span>
-                <div>
-                  <strong>Direct contribution</strong>
-                  <p>The sponsor sends the unlocked amount to the food partner.</p>
-                </div>
-                <i>PARTNER RECEIPT</i>
-              </li>
-              <li>
-                <span>03</span>
-                <div>
-                  <strong>Pantry confirmation</strong>
-                  <p>The Pantry confirms receipt and the meal-equivalent total.</p>
-                </div>
-                <i>VERIFIED ✓</i>
-              </li>
-            </ol>
-          </div>
-
           <div className="season-card section-shell">
             <div className="season-card__head">
               <div>
                 <span>SEASON 01 · EST. 2026</span>
                 <strong>Founding season</strong>
               </div>
-              <span className="season-card__status">NEW PROGRAM · STARTS AUG 28</span>
+              <span className="season-card__status">NEW PROGRAM · STARTS SEP 10</span>
             </div>
             <div className="season-card__bar"><span /></div>
             <div className="season-card__foot">
               <span>0 verified meals</span>
-              <span>No prior results · Home opener August 28</span>
+              <span>No prior results · Home opener September 10</span>
             </div>
           </div>
         </section>
@@ -2264,7 +2129,7 @@ export default function Home() {
           />
           <div className="section-index">04 / Games & achievements</div>
           <article
-            aria-label="Upcoming home football game: Valencia High School versus Chaminade High School, August 28 at 7:30 p.m."
+            aria-label="Upcoming home football game: Valencia High School versus Paraclete High School, September 10 at 7:30 p.m."
             className="matchup-card"
             data-reveal
             tabIndex={0}
@@ -2289,22 +2154,22 @@ export default function Home() {
               <i />
             </div>
 
-            <div className="matchup-card__team matchup-card__team--chaminade">
+            <div className="matchup-card__team matchup-card__team--paraclete">
               <span>Visitor</span>
               <div className="matchup-card__identity">
                 <h2>
-                  <small>Chaminade</small>
-                  <strong>Eagles</strong>
+                  <small>Paraclete</small>
+                  <strong>Spirits</strong>
                 </h2>
-                <i aria-hidden="true">C</i>
+                <i aria-hidden="true">P</i>
               </div>
-              <p>Navy / Orange / White</p>
+              <p>Scarlet / Gold</p>
             </div>
 
             <div className="matchup-card__game">
-              <span>Friday / August 28</span>
+              <span>Thursday / September 10</span>
               <strong>
-                <time dateTime="2026-08-28T19:30:00-07:00">7:30 PM</time>
+                <time dateTime="2026-09-10T19:30:00-07:00">7:30 PM</time>
               </strong>
               <span>Valencia High School / Home</span>
             </div>
@@ -2320,7 +2185,7 @@ export default function Home() {
               <strong>20 meals</strong>
             </p>
             <p>
-              Game sponsored by <strong>Copper Hill BBQ</strong>
+              Game sponsor <strong>Open</strong>
             </p>
           </div>
         </section>
@@ -2332,8 +2197,8 @@ export default function Home() {
             <div className="partners__copy" data-reveal>
               <h2>Local brands.<br />Lasting impact.</h2>
               <p>
-                Every campaign gives the school, sponsor, and food partner a
-                clear role in turning school spirit into local action.
+                Valencia athletics and the SCV Food Pantry connect school
+                spirit to clear, local action—with room for the next sponsor.
               </p>
             </div>
             <div className="partner-slots" aria-label="Partner spaces" data-reveal>
@@ -2346,19 +2211,17 @@ export default function Home() {
                 <strong>Valencia High School</strong>
                 <small>Student and athletics partner</small>
               </div>
-              <div className="partner-slots__sponsor partner-slots__sponsor--current">
-                <div className="current-sponsor-mark" aria-hidden="true">
-                  <span>OPEN</span>
-                </div>
-                <span>CURRENT CAMPAIGN SPONSOR</span>
-                <strong>Space reserved for our next partner</strong>
-                <small>Brand and pledge details appear here once confirmed.</small>
+              <div className="partner-slots__sponsor partner-slots__sponsor--open">
+                <div className="open-sponsor-mark" aria-hidden="true">YOUR LOGO</div>
+                <span>OPEN SPONSOR SPACE</span>
+                <strong>Your business here</strong>
+                <small>Current campaign sponsor</small>
                 <div className="partner-links">
                   <a
                     href="#contact"
                     onClick={(event) => handleSectionLinkClick(event, "#contact")}
                   >
-                    Sponsor this campaign <Arrow />
+                    Sponsor a game <Arrow />
                   </a>
                 </div>
               </div>
@@ -2670,24 +2533,6 @@ export default function Home() {
         </section>
       </main>
 
-      <nav className="mobile-action-bar" aria-label="Game-day actions">
-        <a href={scvFoodPantryWebsite} rel="noreferrer" target="_blank">
-          <span>Give local</span>
-          <strong>Pantry ↗</strong>
-        </a>
-        <a href={sportsAgainstHungerInstagram} rel="noreferrer" target="_blank">
-          <span>Follow</span>
-          <strong>Instagram ↗</strong>
-        </a>
-        <a
-          href="#contact"
-          onClick={(event) => handleSectionLinkClick(event, "#contact")}
-        >
-          <span>Join</span>
-          <strong>Sponsor ↓</strong>
-        </a>
-      </nav>
-
       <footer>
         <a
           className="wordmark wordmark--footer"
@@ -2700,6 +2545,6 @@ export default function Home() {
         <p>Established 2026 · Student-led · Community-guided · Built for measurable impact</p>
         <span>© 2026</span>
       </footer>
-    </div>
+    </>
   );
 }
