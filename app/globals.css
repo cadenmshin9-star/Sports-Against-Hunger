@@ -517,6 +517,7 @@ a {
   justify-content: center;
   border-right: 1px solid var(--ink);
   border-left: 1px solid var(--ink);
+  background: #f3efe3;
 }
 
 .sponsor-banner__brand img {
