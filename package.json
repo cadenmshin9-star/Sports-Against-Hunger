@@ -8,12 +8,18 @@
   "scripts": {
     "dev": "vinext dev",
     "build": "vinext build",
+    "build:vercel": "next build",
     "start": "vinext start",
-    "test": "npm run build && node --test tests/rendered-html.test.mjs",
+    "test": "npm run build && node --test tests/rendered-html.test.mjs && npm run test:unit",
+    "test:unit": "node --import tsx --test tests/donation-tracking.test.ts",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "fixture:givebutter": "node scripts/send-givebutter-fixture.mjs"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
     "@vercel/analytics": "^2.0.1",
     "drizzle-orm": "0.45.2",
     "next": "16.2.6",
@@ -33,6 +39,7 @@
     "eslint-config-next": "16.2.6",
     "react-server-dom-webpack": "19.2.6",
     "tailwindcss": "4.2.1",
+    "tsx": "^4.22.1",
     "typescript": "5.9.3",
     "vinext": "0.0.50",
     "vite": "8.0.13",

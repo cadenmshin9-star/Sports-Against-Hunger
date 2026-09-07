@@ -1,0 +1,22 @@
+{
+  "event": "transaction.succeeded",
+  "data": {
+    "id": "fixture-transaction-001",
+    "campaign_id": "fixture-pantry-campaign",
+    "campaign_code": "FIXTURE",
+    "status": "succeeded",
+    "amount": "22.80",
+    "donated": "21.70",
+    "fee": "1.10",
+    "fee_covered": "0.00",
+    "payout": "21.70",
+    "currency": "USD",
+    "transacted_at": "2026-09-05T19:30:00-07:00",
+    "utm_parameters": [
+      { "name": "utm_source", "value": "sports_against_hunger" },
+      { "name": "utm_medium", "value": "local_fixture" },
+      { "name": "utm_campaign", "value": "sports-against-hunger-individual-giving" },
+      { "name": "utm_content", "value": "automated-test" }
+    ]
+  }
+}

@@ -51,7 +51,7 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /Valencia High School/);
   assert.match(html, /SCV Food Pantry/);
   assert.match(html, /Copper Hill BBQ/);
-  assert.match(html, /Game sponsored by[\s\S]*?Copper Hill BBQ/i);
+  assert.match(html, /Businesses behind the impact[\s\S]*?Copper Hill BBQ/i);
   assert.match(html, /1 Valencia touchdown/i);
   assert.match(html, /20 meals/i);
   assert.match(html, /Sports Against Hunger on Instagram/);
@@ -79,10 +79,10 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /UPCOMING HOME GAME/);
   assert.doesNotMatch(html, /impact__brand/i);
   assert.match(html, /Founding season tracker · Est\. 2026/i);
-  assert.match(html, /This scoreboard begins at zero by design/i);
-  assert.match(html, /Valencia High School versus Chaminade High School/);
+  assert.match(html, /This scoreboard includes only official/i);
+  assert.match(html, /Valencia High School versus Paraclete High School/);
   assert.match(html, /matchup-card__team--valencia/);
-  assert.match(html, /matchup-card__team--chaminade/);
+  assert.match(html, /matchup-card__team--paraclete/);
   assert.match(html, /SCV Food Pantry-verified · 1 meal equivalent = \$2\.28/);
   assert.match(html, /Preemptive Q&amp;A/);
   assert.match(html, /Does Sports Against Hunger handle money\?/);
@@ -123,6 +123,11 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.doesNotMatch(html, /How does money get divided/i);
   assert.doesNotMatch(html, /Valencia, California/);
   assert.doesNotMatch(html, /West Hills|Home team \/ Santa Clarita/i);
+  assert.match(html, /aria-label="Switch to Game Mode"/);
+  assert.match(html, /class="hero-scoreboard"/);
+  assert.match(html, /PLAY → PLEDGE → VERIFIED IMPACT/);
+  assert.match(html, /class="proof-chain section-shell"/);
+  assert.match(html, /class="mobile-action-bar" aria-label="Game-day actions"/);
 });
 
 test("keeps unconfirmed impact data explicit and accessible", async () => {
@@ -133,12 +138,12 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
     readFile(new URL("../app/manifest.ts", import.meta.url), "utf8"),
   ]);
 
-  assert.match(page, /value: "0",\s*label: "verified meals"/);
+  assert.match(page, /value: "20",\s*label: "verified meals"/);
   assert.match(page, /note: "SCV Food Pantry-verified · 1 meal equivalent = \$2\.28"/);
   assert.match(page, /value: "0", label: "games tracked"/);
   assert.match(page, /value: "1", label: "founding sponsor"/);
   assert.match(page, /note: "Copper Hill BBQ"/);
-  assert.match(page, /No prior results · Home opener August 28/);
+  assert.match(page, /No prior results · Home opener September 10/);
   assert.match(page, /Pledge details appear only after they are confirmed\./);
   assert.match(page, /Official scorecards verify athletic results/);
   assert.match(page, /jbenham@hartdistrict\.org/);
@@ -213,8 +218,8 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   );
   assert.match(css, /--valencia-purple:\s*#552583/);
   assert.match(css, /--valencia-gold:\s*#ffc72c/);
-  assert.match(css, /--chaminade-navy:\s*#002b5c/);
-  assert.match(css, /--chaminade-orange:\s*#f58220/);
+  assert.match(css, /--paraclete-scarlet:\s*#c8102e/);
+  assert.match(css, /--paraclete-gold:\s*#f2b705/);
   assert.doesNotMatch(page, /orientation\.lock/);
   assert.doesNotMatch(page, /\bpilot\b/i);
   assert.match(page, /sports-against-hunger-emblem\.webp/);
@@ -231,6 +236,12 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /role="button"/);
   assert.doesNotMatch(page, /lensRadius/);
   assert.match(page, /className="hero-transition"/);
+  assert.match(page, /useState<ExperienceMode>\("impact"\)/);
+  assert.match(page, /HeroFieldCanvas energetic=\{gameMode\}/);
+  assert.match(page, /energetic \? 6800 : 11200/);
+  assert.match(css, /\.experience--impact\s*\{/);
+  assert.match(css, /\.experience--game\s*\{/);
+  assert.match(css, /\.mobile-action-bar\s*\{/);
   assert.match(page, /className="brand-lightbox"/);
   assert.match(page, /className="contact__instagram-icon"/);
   assert.match(page, /wall-sticker--\$\{kind\}/);

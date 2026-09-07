@@ -1,0 +1,12 @@
+{
+  "event": "refund.created",
+  "data": {
+    "id": "fixture-refund-001",
+    "transaction_id": "fixture-transaction-001",
+    "status": "created",
+    "refund_type": "partial",
+    "amount": "4.56",
+    "reason": "Fixture only; this text is intentionally not persisted.",
+    "created_at": "2026-09-06T10:00:00-07:00"
+  }
+}

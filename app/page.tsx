@@ -43,7 +43,7 @@ const systemFlow = [
 
 const impactStats = [
   {
-    value: "0",
+    value: "20",
     label: "verified meals",
     note: "SCV Food Pantry-verified · 1 meal equivalent = $2.28",
   },
@@ -2022,10 +2022,9 @@ export default function Home() {
               <h2 id="impact-title">The scoreboard that matters.</h2>
               <p>
                 Newly established in 2026, Sports Against Hunger is entering
-                its first season. This scoreboard begins at zero by design;
-                only official achievements, confirmed contributions, and
-                pantry-verified meal equivalents will appear here after the
-                opening game.
+                its first season. This scoreboard includes only official
+                achievements, confirmed contributions, and pantry-verified
+                meal equivalents.
               </p>
             </div>
           </div>
@@ -2058,7 +2057,7 @@ export default function Home() {
             </div>
             <div className="season-card__bar"><span /></div>
             <div className="season-card__foot">
-              <span>0 verified meals</span>
+              <span>20 verified meals</span>
               <span>No prior results · Home opener September 10</span>
             </div>
           </div>

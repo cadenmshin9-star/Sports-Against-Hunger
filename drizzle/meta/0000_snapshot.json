@@ -1,0 +1,497 @@
+{
+  "id": "d6cc1e2f-ad46-469e-b48f-67e21116eff0",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.community_challenges": {
+      "name": "community_challenges",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(240)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "opponent_event_name": {
+          "name": "opponent_event_name",
+          "type": "varchar(240)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sport_event_type": {
+          "name": "sport_event_type",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cta_language": {
+          "name": "cta_language",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_at": {
+          "name": "start_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "deadline_at": {
+          "name": "deadline_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "timezone": {
+          "name": "timezone",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "meal_value_cents": {
+          "name": "meal_value_cents",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 228
+        },
+        "meal_goal": {
+          "name": "meal_goal",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "challenge_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'draft'"
+        },
+        "givebutter_destination_url": {
+          "name": "givebutter_destination_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "attribution_identifier": {
+          "name": "attribution_identifier",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "community_challenges_slug_unique": {
+          "name": "community_challenges_slug_unique",
+          "columns": [
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "community_challenges_attribution_unique": {
+          "name": "community_challenges_attribution_unique",
+          "columns": [
+            {
+              "expression": "attribution_identifier",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "community_challenges_status_deadline_idx": {
+          "name": "community_challenges_status_deadline_idx",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "deadline_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "community_challenges_meal_value_positive": {
+          "name": "community_challenges_meal_value_positive",
+          "value": "\"community_challenges\".\"meal_value_cents\" > 0"
+        },
+        "community_challenges_meal_goal_positive": {
+          "name": "community_challenges_meal_goal_positive",
+          "value": "\"community_challenges\".\"meal_goal\" is null or \"community_challenges\".\"meal_goal\" > 0"
+        },
+        "community_challenges_deadline_after_start": {
+          "name": "community_challenges_deadline_after_start",
+          "value": "\"community_challenges\".\"deadline_at\" is null or \"community_challenges\".\"deadline_at\" > \"community_challenges\".\"start_at\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.donation_refunds": {
+      "name": "donation_refunds",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "external_refund_id": {
+          "name": "external_refund_id",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "external_transaction_id": {
+          "name": "external_transaction_id",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "refund_type": {
+          "name": "refund_type",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "refund_amount_cents": {
+          "name": "refund_amount_cents",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "refunded_at": {
+          "name": "refunded_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "donation_refunds_external_id_unique": {
+          "name": "donation_refunds_external_id_unique",
+          "columns": [
+            {
+              "expression": "external_refund_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "donation_refunds_transaction_idx": {
+          "name": "donation_refunds_transaction_idx",
+          "columns": [
+            {
+              "expression": "external_transaction_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "donation_refunds_amount_positive": {
+          "name": "donation_refunds_amount_positive",
+          "value": "\"donation_refunds\".\"refund_amount_cents\" > 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.donation_transactions": {
+      "name": "donation_transactions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "challenge_id": {
+          "name": "challenge_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "external_transaction_id": {
+          "name": "external_transaction_id",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "givebutter_campaign_id": {
+          "name": "givebutter_campaign_id",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "givebutter_campaign_code": {
+          "name": "givebutter_campaign_code",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "donation_amount_cents": {
+          "name": "donation_amount_cents",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currency": {
+          "name": "currency",
+          "type": "varchar(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "transacted_at": {
+          "name": "transacted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "counts_toward_challenge": {
+          "name": "counts_toward_challenge",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "exclusion_reason": {
+          "name": "exclusion_reason",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "utm_source": {
+          "name": "utm_source",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "utm_campaign": {
+          "name": "utm_campaign",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "utm_medium": {
+          "name": "utm_medium",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "utm_content": {
+          "name": "utm_content",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "utm_shape": {
+          "name": "utm_shape",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "donation_transactions_external_id_unique": {
+          "name": "donation_transactions_external_id_unique",
+          "columns": [
+            {
+              "expression": "external_transaction_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "donation_transactions_challenge_counted_idx": {
+          "name": "donation_transactions_challenge_counted_idx",
+          "columns": [
+            {
+              "expression": "challenge_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "counts_toward_challenge",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "donation_transactions_challenge_id_community_challenges_id_fk": {
+          "name": "donation_transactions_challenge_id_community_challenges_id_fk",
+          "tableFrom": "donation_transactions",
+          "tableTo": "community_challenges",
+          "columnsFrom": [
+            "challenge_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "donation_transactions_amount_nonnegative": {
+          "name": "donation_transactions_amount_nonnegative",
+          "value": "\"donation_transactions\".\"donation_amount_cents\" >= 0"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.challenge_status": {
+      "name": "challenge_status",
+      "schema": "public",
+      "values": [
+        "draft",
+        "live",
+        "ended",
+        "archived"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
