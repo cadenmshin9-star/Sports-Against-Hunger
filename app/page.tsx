@@ -47,7 +47,7 @@ const impactStats = [
     label: "verified meals",
     note: "SCV Food Pantry-verified · 1 meal equivalent = $2.28",
   },
-  { value: "0", label: "games tracked", note: "Official results only" },
+  { value: "1", label: "games tracked", note: "Official results only" },
   { value: "1", label: "founding sponsor", note: "Copper Hill BBQ" },
 ];
 

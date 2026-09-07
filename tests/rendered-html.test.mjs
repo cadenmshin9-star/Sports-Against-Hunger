@@ -140,7 +140,7 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
 
   assert.match(page, /value: "20",\s*label: "verified meals"/);
   assert.match(page, /note: "SCV Food Pantry-verified · 1 meal equivalent = \$2\.28"/);
-  assert.match(page, /value: "0", label: "games tracked"/);
+  assert.match(page, /value: "1", label: "games tracked"/);
   assert.match(page, /value: "1", label: "founding sponsor"/);
   assert.match(page, /note: "Copper Hill BBQ"/);
   assert.match(page, /No prior results · Home opener September 10/);
