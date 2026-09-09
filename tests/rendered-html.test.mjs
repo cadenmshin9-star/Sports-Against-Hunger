@@ -56,6 +56,9 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
     html,
     /Valencia vs\. Paraclete[\s\S]*?Presented by[\s\S]*?Pizza Di Marco/i,
   );
+  assert.match(html, /SEP 10 · 7:00 PM/i);
+  assert.match(html, /dateTime="2026-09-10T19:00:00-07:00"[^>]*>7:00 PM<\/time>/i);
+  assert.doesNotMatch(html, /7:30 PM|T19:30:00-07:00/i);
   assert.match(
     html,
     /Businesses behind the impact[\s\S]*?Copper Hill BBQ[\s\S]*?Pizza Di Marco/i,

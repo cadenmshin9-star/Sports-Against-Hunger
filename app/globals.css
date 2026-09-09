@@ -10283,6 +10283,7 @@ main section[id] {
   }
 
   .hero-game-callout > em .pizza-di-marco-highlight {
+    font-size: 14px;
     white-space: nowrap;
   }
 

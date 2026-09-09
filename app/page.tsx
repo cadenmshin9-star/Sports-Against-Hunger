@@ -1799,7 +1799,7 @@ export default function Home() {
           >
             <span className="hero-game-callout__flash">NEXT HOME GAME</span>
             <span className="hero-game-callout__match">
-              <small>SEP 10 · 7:30 PM</small>
+              <small>SEP 10 · 7:00 PM</small>
               <strong>Valencia vs. Paraclete</strong>
             </span>
             <em>
@@ -2147,7 +2147,7 @@ export default function Home() {
           />
           <div className="section-index">04 / Games & achievements</div>
           <article
-            aria-label="Upcoming home football game: Valencia High School versus Paraclete High School, September 10 at 7:30 p.m., presented by Pizza Di Marco."
+            aria-label="Upcoming home football game: Valencia High School versus Paraclete High School, September 10 at 7:00 p.m., presented by Pizza Di Marco."
             className="matchup-card"
             data-reveal
             tabIndex={0}
@@ -2187,7 +2187,7 @@ export default function Home() {
             <div className="matchup-card__game">
               <span>Thursday / September 10</span>
               <strong>
-                <time dateTime="2026-09-10T19:30:00-07:00">7:30 PM</time>
+                <time dateTime="2026-09-10T19:00:00-07:00">7:00 PM</time>
               </strong>
               <span>Valencia High School / Home</span>
             </div>
