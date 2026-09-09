@@ -10145,3 +10145,164 @@ main section[id] {
     animation: none;
   }
 }
+
+/* Pizza Di Marco game-sponsor integration. */
+.hero-game-callout > em .pizza-di-marco-highlight {
+  color: #ff9a91;
+  font-style: normal;
+  font-weight: 950;
+  text-shadow: 0 0 14px rgba(237, 28, 36, 0.34);
+}
+
+.sponsor-banner {
+  grid-template-columns:
+    minmax(190px, 0.9fr)
+    minmax(190px, 1fr)
+    minmax(142px, 0.72fr)
+    minmax(185px, 0.72fr);
+}
+
+.sponsor-banner__brand {
+  min-height: 116px;
+  padding: 12px clamp(14px, 2vw, 28px);
+  border-right: 0;
+  border-left: 1px solid var(--ink);
+}
+
+.sponsor-banner__brand--pizza {
+  border-right: 1px solid var(--ink);
+}
+
+.sponsor-banner__brand--copper img {
+  width: min(100%, 230px);
+  height: 62px;
+}
+
+.sponsor-banner__brand--pizza img {
+  width: auto;
+  max-width: 100%;
+  height: 88px;
+}
+
+.partner-slots__sponsor--pizza {
+  background:
+    linear-gradient(122deg, transparent 0 44%, rgba(237, 28, 36, 0.12) 44.2% 45%, transparent 45.2%),
+    radial-gradient(circle at 82% 18%, rgba(237, 28, 36, 0.2), transparent 30%),
+    var(--ink);
+}
+
+.partner-slots__sponsor--pizza:hover {
+  background:
+    linear-gradient(122deg, transparent 0 44%, rgba(237, 28, 36, 0.16) 44.2% 45%, transparent 45.2%),
+    radial-gradient(circle at 82% 18%, rgba(237, 28, 36, 0.27), transparent 33%),
+    var(--ink-soft) !important;
+}
+
+.pizza-di-marco-logo-link {
+  display: flex;
+  width: min(100%, 190px);
+  min-height: 132px;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 14px;
+}
+
+.pizza-di-marco-logo-link:focus-visible {
+  outline: 3px solid var(--lime);
+  outline-offset: 5px;
+}
+
+.pizza-di-marco-logo {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: 126px;
+  object-fit: contain;
+  object-position: left center;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.28));
+}
+
+.partner-slots__sponsor--pizza > span {
+  color: #ff777c;
+}
+
+.partner-slots__sponsor--pizza .partner-links a {
+  border-color: rgba(255, 119, 124, 0.46);
+  color: white;
+}
+
+.partner-slots__sponsor--pizza .partner-links a:hover,
+.partner-slots__sponsor--pizza .partner-links a:focus-visible {
+  border-color: #ff777c;
+  background: rgba(237, 28, 36, 0.16);
+}
+
+@media (max-width: 820px) {
+  .sponsor-banner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sponsor-banner__brand {
+    min-height: 100px;
+    border-top: 1px solid var(--ink);
+  }
+
+  .sponsor-banner__brand--copper {
+    grid-column: 1;
+    grid-row: 2;
+    border-right: 0;
+    border-left: 0;
+  }
+
+  .sponsor-banner__brand--pizza {
+    grid-column: 2;
+    grid-row: 2;
+    border-right: 0;
+    border-left: 1px solid var(--ink);
+  }
+
+  .sponsor-banner__brand--copper img {
+    height: 54px;
+  }
+
+  .sponsor-banner__brand--pizza img {
+    height: 74px;
+  }
+}
+
+@media (max-width: 520px) {
+  .hero-game-callout > em {
+    display: flex;
+    min-width: 0;
+    max-width: 100%;
+    flex-wrap: wrap;
+    gap: 0 3px;
+    font-size: 7px;
+    line-height: 1.15;
+    white-space: normal;
+  }
+
+  .hero-game-callout > em .pizza-di-marco-highlight {
+    white-space: nowrap;
+  }
+
+  .sponsor-banner > span,
+  .sponsor-banner__cta {
+    padding-right: 14px;
+    padding-left: 14px;
+    font-size: 11px;
+  }
+
+  .sponsor-banner__brand {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .pizza-di-marco-logo-link {
+    min-height: 118px;
+  }
+
+  .pizza-di-marco-logo {
+    height: 112px;
+  }
+}

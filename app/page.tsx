@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import {
   useEffect,
   useRef,
@@ -12,6 +13,8 @@ import { createPortal } from "react-dom";
 const sportsAgainstHungerInstagram =
   "https://www.instagram.com/sportsagainsthunger.vhs?utm_source=ig_web_button_share_sheet&igsi=ZDNlZDc0MzIxNw==";
 const copperHillWebsite = "https://copperhillbbq.com/";
+const pizzaDiMarcoWebsite = "https://pizzadimarco.com/";
+const pizzaDiMarcoInstagram = "https://www.instagram.com/pizza.dimarco/";
 const scvFoodPantryWebsite = "https://www.scvfoodpantry.org/";
 
 const navItems = [
@@ -1266,11 +1269,12 @@ function HeroFieldCanvas() {
     document.addEventListener("visibilitychange", onVisibilityChange);
     applyResize();
     render();
+    const sportDisplayDuration = width <= 620 ? 9000 : 10000;
     const sportTimer = prefersReducedMotion
       ? 0
       : window.setInterval(() => {
           if (!pointer.down && !touchHolding) setSport(activeSport + 1);
-        }, 11200);
+        }, sportDisplayDuration);
 
     return () => {
       observer.disconnect();
@@ -1799,7 +1803,8 @@ export default function Home() {
               <strong>Valencia vs. Paraclete</strong>
             </span>
             <em>
-              Presented by <span className="presenting-sponsor-blank" aria-hidden="true" />
+              Presented by{" "}
+              <strong className="pizza-di-marco-highlight">Pizza Di Marco</strong>
             </em>
             <span className="hero-game-callout__arrow" aria-hidden="true">↓</span>
           </a>
@@ -1919,17 +1924,31 @@ export default function Home() {
         <section className="sponsor-banner" aria-label="Businesses behind the impact">
           <span>Businesses behind the impact</span>
           <a
-            className="sponsor-banner__brand"
+            className="sponsor-banner__brand sponsor-banner__brand--copper"
             href={copperHillWebsite}
             rel="noreferrer"
             target="_blank"
           >
-            <img
+            <Image
               alt="Copper Hill BBQ — founding sponsor"
-              decoding="async"
               height="429"
               src="/copper-hill-bbq-logo.webp"
+              unoptimized
               width="1600"
+            />
+          </a>
+          <a
+            className="sponsor-banner__brand sponsor-banner__brand--pizza"
+            href={pizzaDiMarcoWebsite}
+            rel="noreferrer"
+            target="_blank"
+          >
+            <Image
+              alt="Pizza Di Marco — Valencia vs. Paraclete game sponsor"
+              height="402"
+              src="/pizza-di-marco-logo.png"
+              unoptimized
+              width="512"
             />
           </a>
           <a
@@ -2128,7 +2147,7 @@ export default function Home() {
           />
           <div className="section-index">04 / Games & achievements</div>
           <article
-            aria-label="Upcoming home football game: Valencia High School versus Paraclete High School, September 10 at 7:30 p.m."
+            aria-label="Upcoming home football game: Valencia High School versus Paraclete High School, September 10 at 7:30 p.m., presented by Pizza Di Marco."
             className="matchup-card"
             data-reveal
             tabIndex={0}
@@ -2173,6 +2192,10 @@ export default function Home() {
               <span>Valencia High School / Home</span>
             </div>
 
+            <span className="matchup-card__presented">
+              Game sponsored by <strong>Pizza Di Marco</strong>
+            </span>
+
             <span className="matchup-card__prompt" aria-hidden="true">
               Hover or tap to charge the matchup
             </span>
@@ -2184,7 +2207,7 @@ export default function Home() {
               <strong>20 meals</strong>
             </p>
             <p>
-              Game sponsor <strong>Open</strong>
+              Game sponsor <strong>Pizza Di Marco</strong>
             </p>
           </div>
         </section>
@@ -2196,8 +2219,8 @@ export default function Home() {
             <div className="partners__copy" data-reveal>
               <h2>Local brands.<br />Lasting impact.</h2>
               <p>
-                Valencia athletics and the SCV Food Pantry connect school
-                spirit to clear, local action—with room for the next sponsor.
+                Valencia athletics, Pizza Di Marco, Copper Hill BBQ, and the
+                SCV Food Pantry connect school spirit to clear, local action.
               </p>
             </div>
             <div className="partner-slots" aria-label="Partner spaces" data-reveal>
@@ -2210,17 +2233,32 @@ export default function Home() {
                 <strong>Valencia High School</strong>
                 <small>Student and athletics partner</small>
               </div>
-              <div className="partner-slots__sponsor partner-slots__sponsor--open">
-                <div className="open-sponsor-mark" aria-hidden="true">YOUR LOGO</div>
-                <span>OPEN SPONSOR SPACE</span>
-                <strong>Your business here</strong>
-                <small>Current campaign sponsor</small>
-                <div className="partner-links">
-                  <a
-                    href="#contact"
-                    onClick={(event) => handleSectionLinkClick(event, "#contact")}
-                  >
-                    Sponsor a game <Arrow />
+              <div className="partner-slots__sponsor partner-slots__sponsor--pizza">
+                <a
+                  aria-label="Visit the Pizza Di Marco website"
+                  className="pizza-di-marco-logo-link"
+                  href={pizzaDiMarcoWebsite}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  <Image
+                    alt="Pizza Di Marco"
+                    className="pizza-di-marco-logo"
+                    height="402"
+                    src="/pizza-di-marco-logo.png"
+                    unoptimized
+                    width="512"
+                  />
+                </a>
+                <span>CURRENT GAME SPONSOR</span>
+                <strong>Pizza Di Marco</strong>
+                <small>Valencia restaurant and community partner</small>
+                <div className="partner-links" aria-label="Pizza Di Marco links">
+                  <a href={pizzaDiMarcoWebsite} rel="noreferrer" target="_blank">
+                    Website <Arrow />
+                  </a>
+                  <a href={pizzaDiMarcoInstagram} rel="noreferrer" target="_blank">
+                    Instagram <Arrow />
                   </a>
                 </div>
               </div>
