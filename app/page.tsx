@@ -14,7 +14,8 @@ const sportsAgainstHungerInstagram =
   "https://www.instagram.com/sportsagainsthunger.vhs?utm_source=ig_web_button_share_sheet&igsi=ZDNlZDc0MzIxNw==";
 const copperHillWebsite = "https://copperhillbbq.com/";
 const pizzaDiMarcoWebsite = "https://pizzadimarco.com/";
-const pizzaDiMarcoInstagram = "https://www.instagram.com/pizza.dimarco/";
+const stonefireGrillWebsite = "https://www.stonefiregrill.com/location/valencia/";
+const stonefireGrillInstagram = "https://www.instagram.com/stonefiregrill/";
 const scvFoodPantryWebsite = "https://www.scvfoodpantry.org/";
 
 const navItems = [
@@ -46,12 +47,16 @@ const systemFlow = [
 
 const impactStats = [
   {
-    value: "20",
+    value: "157",
     label: "verified meals",
     note: "SCV Food Pantry-verified · 1 meal equivalent = $2.28",
   },
-  { value: "1", label: "games tracked", note: "Official results only" },
-  { value: "1", label: "founding sponsor", note: "Copper Hill BBQ" },
+  { value: "2", label: "games tracked", note: "Official results only" },
+  {
+    value: "2",
+    label: "sponsors",
+    note: "Copper Hill BBQ + Pizza Di Marco",
+  },
 ];
 
 const pillars = [
@@ -1799,12 +1804,12 @@ export default function Home() {
           >
             <span className="hero-game-callout__flash">NEXT HOME GAME</span>
             <span className="hero-game-callout__match">
-              <small>SEP 10 · 7:00 PM</small>
-              <strong>Valencia vs. Paraclete</strong>
+              <small>SEP 18 · 7:00 PM</small>
+              <strong>Valencia vs. Castaic</strong>
             </span>
             <em>
               Presented by{" "}
-              <strong className="pizza-di-marco-highlight">Pizza Di Marco</strong>
+              <strong className="stonefire-grill-highlight">Stonefire Grill – Valencia</strong>
             </em>
             <span className="hero-game-callout__arrow" aria-hidden="true">↓</span>
           </a>
@@ -1944,11 +1949,25 @@ export default function Home() {
             target="_blank"
           >
             <Image
-              alt="Pizza Di Marco — Valencia vs. Paraclete game sponsor"
+              alt="Pizza Di Marco — impact sponsor"
               height="402"
               src="/pizza-di-marco-logo.png"
               unoptimized
               width="512"
+            />
+          </a>
+          <a
+            className="sponsor-banner__brand sponsor-banner__brand--stonefire"
+            href={stonefireGrillWebsite}
+            rel="noreferrer"
+            target="_blank"
+          >
+            <Image
+              alt="Stonefire Grill — Valencia vs. Castaic game sponsor"
+              height="572"
+              src="/stonefire-grill-logo.png"
+              unoptimized
+              width="1200"
             />
           </a>
           <a
@@ -2057,7 +2076,13 @@ export default function Home() {
                     label="Warm meal bowl sticker"
                   />
                 ) : null}
-                <span className="impact-grid__value">{stat.value}</span>
+                <span
+                  className={`impact-grid__value${
+                    stat.value.length > 2 ? " impact-grid__value--compact" : ""
+                  }`}
+                >
+                  {stat.value}
+                </span>
                 <div>
                   <strong>{stat.label}</strong>
                   <small>{stat.note}</small>
@@ -2072,12 +2097,12 @@ export default function Home() {
                 <span>SEASON 01 · EST. 2026</span>
                 <strong>Founding season</strong>
               </div>
-              <span className="season-card__status">NEW PROGRAM · STARTS SEP 10</span>
+              <span className="season-card__status">NEW PROGRAM · STARTED SEP 10</span>
             </div>
             <div className="season-card__bar"><span /></div>
             <div className="season-card__foot">
-              <span>20 verified meals</span>
-              <span>No prior results · Home opener September 10</span>
+              <span>157 verified meals</span>
+              <span>2 games tracked · Home opener September 10</span>
             </div>
           </div>
         </section>
@@ -2147,7 +2172,7 @@ export default function Home() {
           />
           <div className="section-index">04 / Games & achievements</div>
           <article
-            aria-label="Upcoming home football game: Valencia High School versus Paraclete High School, September 10 at 7:00 p.m., presented by Pizza Di Marco."
+            aria-label="Upcoming home football game: Valencia High School versus Castaic High School, September 18 at 7:00 p.m., presented by Stonefire Grill — Valencia."
             className="matchup-card"
             data-reveal
             tabIndex={0}
@@ -2172,28 +2197,28 @@ export default function Home() {
               <i />
             </div>
 
-            <div className="matchup-card__team matchup-card__team--paraclete">
+            <div className="matchup-card__team matchup-card__team--castaic">
               <span>Visitor</span>
               <div className="matchup-card__identity">
                 <h2>
-                  <small>Paraclete</small>
-                  <strong>Spirits</strong>
+                  <small>Castaic</small>
+                  <strong>Coyotes</strong>
                 </h2>
-                <i aria-hidden="true">P</i>
+                <i aria-hidden="true">C</i>
               </div>
-              <p>Scarlet / Gold</p>
+              <p>Orange / Charcoal</p>
             </div>
 
             <div className="matchup-card__game">
-              <span>Thursday / September 10</span>
+              <span>Friday / September 18</span>
               <strong>
-                <time dateTime="2026-09-10T19:00:00-07:00">7:00 PM</time>
+                <time dateTime="2026-09-18T19:00:00-07:00">7:00 PM</time>
               </strong>
               <span>Valencia High School / Home</span>
             </div>
 
             <span className="matchup-card__presented">
-              Game sponsored by <strong>Pizza Di Marco</strong>
+              Game sponsored by <strong>Stonefire Grill – Valencia</strong>
             </span>
 
             <span className="matchup-card__prompt" aria-hidden="true">
@@ -2207,7 +2232,7 @@ export default function Home() {
               <strong>20 meals</strong>
             </p>
             <p>
-              Game sponsor <strong>Pizza Di Marco</strong>
+              Game sponsor <strong>Stonefire Grill – Valencia</strong>
             </p>
           </div>
         </section>
@@ -2219,7 +2244,7 @@ export default function Home() {
             <div className="partners__copy" data-reveal>
               <h2>Local brands.<br />Lasting impact.</h2>
               <p>
-                Valencia athletics, Pizza Di Marco, Copper Hill BBQ, and the
+                Valencia athletics, Stonefire Grill – Valencia, Copper Hill BBQ, and the
                 SCV Food Pantry connect school spirit to clear, local action.
               </p>
             </div>
@@ -2233,31 +2258,31 @@ export default function Home() {
                 <strong>Valencia High School</strong>
                 <small>Student and athletics partner</small>
               </div>
-              <div className="partner-slots__sponsor partner-slots__sponsor--pizza">
+              <div className="partner-slots__sponsor partner-slots__sponsor--stonefire">
                 <a
-                  aria-label="Visit the Pizza Di Marco website"
-                  className="pizza-di-marco-logo-link"
-                  href={pizzaDiMarcoWebsite}
+                  aria-label="Visit the Stonefire Grill Valencia website"
+                  className="stonefire-grill-logo-link"
+                  href={stonefireGrillWebsite}
                   rel="noreferrer"
                   target="_blank"
                 >
                   <Image
-                    alt="Pizza Di Marco"
-                    className="pizza-di-marco-logo"
-                    height="402"
-                    src="/pizza-di-marco-logo.png"
+                    alt="Stonefire Grill"
+                    className="stonefire-grill-logo"
+                    height="572"
+                    src="/stonefire-grill-logo.png"
                     unoptimized
-                    width="512"
+                    width="1200"
                   />
                 </a>
                 <span>CURRENT GAME SPONSOR</span>
-                <strong>Pizza Di Marco</strong>
+                <strong>Stonefire Grill – Valencia</strong>
                 <small>Valencia restaurant and community partner</small>
-                <div className="partner-links" aria-label="Pizza Di Marco links">
-                  <a href={pizzaDiMarcoWebsite} rel="noreferrer" target="_blank">
+                <div className="partner-links" aria-label="Stonefire Grill links">
+                  <a href={stonefireGrillWebsite} rel="noreferrer" target="_blank">
                     Website <Arrow />
                   </a>
-                  <a href={pizzaDiMarcoInstagram} rel="noreferrer" target="_blank">
+                  <a href={stonefireGrillInstagram} rel="noreferrer" target="_blank">
                     Instagram <Arrow />
                   </a>
                 </div>
