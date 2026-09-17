@@ -75,8 +75,8 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   );
   assert.doesNotMatch(html, /Paraclete|2026-09-10/i);
   assert.doesNotMatch(html, /OPEN SPONSOR SPACE|Game sponsor <strong>Open/i);
-  assert.match(html, /1 Valencia touchdown/i);
-  assert.match(html, /20 meals/i);
+  assert.match(html, /Every touchdown = 25 meals/i);
+  assert.match(html, /Every field goal = 10 meals/i);
   assert.match(html, /157 verified meals/i);
   assert.match(html, /Sports Against Hunger on Instagram/);
   assert.match(html, /href="https:\/\/copperhillbbq\.com\/"/);
@@ -161,10 +161,10 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
 
   assert.match(page, /value: "157",\s*label: "verified meals"/);
   assert.match(page, /note: "SCV Food Pantry-verified · 1 meal equivalent = \$2\.28"/);
-  assert.match(page, /value: "2", label: "games tracked"/);
-  assert.match(page, /value: "2",\s*label: "sponsors"/);
-  assert.match(page, /note: "Copper Hill BBQ \+ Pizza Di Marco"/);
-  assert.match(page, /2 games tracked · Home opener September 10/);
+  assert.match(page, /value: "3", label: "games tracked"/);
+  assert.match(page, /value: "3",\s*label: "sponsors"/);
+  assert.match(page, /note: "Copper Hill BBQ \+ Pizza Di Marco \+ Stonefire Grill"/);
+  assert.match(page, /3 games tracked · Home opener September 10/);
   assert.match(page, /Pledge details appear only after they are confirmed\./);
   assert.match(page, /Official scorecards verify athletic results/);
   assert.match(page, /jbenham@hartdistrict\.org/);

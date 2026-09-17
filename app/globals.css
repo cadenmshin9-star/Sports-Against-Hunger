@@ -1369,6 +1369,7 @@ a {
   min-height: 76px;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
   gap: clamp(12px, 2vw, 28px);
   margin: 0;
   padding: 18px clamp(18px, 3vw, 42px);

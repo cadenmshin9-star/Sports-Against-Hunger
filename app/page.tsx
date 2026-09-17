@@ -51,11 +51,11 @@ const impactStats = [
     label: "verified meals",
     note: "SCV Food Pantry-verified · 1 meal equivalent = $2.28",
   },
-  { value: "2", label: "games tracked", note: "Official results only" },
+  { value: "3", label: "games tracked", note: "Official results only" },
   {
-    value: "2",
+    value: "3",
     label: "sponsors",
-    note: "Copper Hill BBQ + Pizza Di Marco",
+    note: "Copper Hill BBQ + Pizza Di Marco + Stonefire Grill",
   },
 ];
 
@@ -2102,7 +2102,7 @@ export default function Home() {
             <div className="season-card__bar"><span /></div>
             <div className="season-card__foot">
               <span>157 verified meals</span>
-              <span>2 games tracked · Home opener September 10</span>
+              <span>3 games tracked · Home opener September 10</span>
             </div>
           </div>
         </section>
@@ -2227,9 +2227,9 @@ export default function Home() {
           </article>
           <div className="matchup-impact-note" data-reveal>
             <p>
-              <strong>1 Valencia touchdown</strong>
-              <span aria-hidden="true">=</span>
-              <strong>20 meals</strong>
+              <strong>Every touchdown = 25 meals</strong>
+              <span aria-hidden="true">•</span>
+              <strong>Every field goal = 10 meals</strong>
             </p>
             <p>
               Game sponsor <strong>Stonefire Grill – Valencia</strong>
