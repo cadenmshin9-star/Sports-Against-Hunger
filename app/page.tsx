@@ -15,7 +15,7 @@ const sportsAgainstHungerInstagram =
 const copperHillWebsite = "https://copperhillbbq.com/";
 const pizzaDiMarcoWebsite = "https://pizzadimarco.com/";
 const stonefireGrillWebsite = "https://www.stonefiregrill.com/location/valencia/";
-const stonefireGrillInstagram = "https://www.instagram.com/stonefiregrill/";
+const ecOrganicJuicingInstagram = "https://www.instagram.com/ec_organic_juicing/";
 const scvFoodPantryWebsite = "https://www.scvfoodpantry.org/";
 
 const navItems = [
@@ -47,15 +47,15 @@ const systemFlow = [
 
 const impactStats = [
   {
-    value: "157",
+    value: "284",
     label: "verified meals",
     note: "SCV Food Pantry-verified · 1 meal equivalent = $2.28",
   },
   { value: "3", label: "games tracked", note: "Official results only" },
   {
-    value: "3",
+    value: "4",
     label: "sponsors",
-    note: "Copper Hill BBQ + Pizza Di Marco + Stonefire Grill",
+    note: "Copper Hill BBQ + Pizza Di Marco + Stonefire Grill + EC Organic Juicing",
   },
 ];
 
@@ -1802,14 +1802,14 @@ export default function Home() {
             href="#upcoming-game"
             onClick={(event) => handleSectionLinkClick(event, "#upcoming-game")}
           >
-            <span className="hero-game-callout__flash">NEXT HOME GAME</span>
+            <span className="hero-game-callout__flash">NEXT GAME</span>
             <span className="hero-game-callout__match">
-              <small>SEP 18 · 7:00 PM</small>
-              <strong>Valencia vs. Castaic</strong>
+              <small>SEP 24 · 5:00 PM · VOLLEYBALL</small>
+              <strong>Valencia vs. Hart</strong>
             </span>
             <em>
               Presented by{" "}
-              <strong className="stonefire-grill-highlight">Stonefire Grill – Valencia</strong>
+              <strong className="ec-organic-highlight">EC Organic Juicing</strong>
             </em>
             <span className="hero-game-callout__arrow" aria-hidden="true">↓</span>
           </a>
@@ -1963,11 +1963,25 @@ export default function Home() {
             target="_blank"
           >
             <Image
-              alt="Stonefire Grill — Valencia vs. Castaic game sponsor"
+              alt="Stonefire Grill — impact sponsor"
               height="572"
               src="/stonefire-grill-logo.png"
               unoptimized
               width="1200"
+            />
+          </a>
+          <a
+            className="sponsor-banner__brand sponsor-banner__brand--ec"
+            href={ecOrganicJuicingInstagram}
+            rel="noreferrer"
+            target="_blank"
+          >
+            <Image
+              alt="EC Organic Juicing — Valencia vs. Hart volleyball game sponsor"
+              height="276"
+              src="/ec-organic-juicing-logo.png"
+              unoptimized
+              width="287"
             />
           </a>
           <a
@@ -2101,7 +2115,7 @@ export default function Home() {
             </div>
             <div className="season-card__bar"><span /></div>
             <div className="season-card__foot">
-              <span>157 verified meals</span>
+              <span>284 verified meals</span>
               <span>3 games tracked · Home opener September 10</span>
             </div>
           </div>
@@ -2172,12 +2186,12 @@ export default function Home() {
           />
           <div className="section-index">04 / Games & achievements</div>
           <article
-            aria-label="Upcoming home football game: Valencia High School versus Castaic High School, September 18 at 7:00 p.m., presented by Stonefire Grill — Valencia."
-            className="matchup-card"
+            aria-label="Upcoming volleyball game: Valencia High School versus Hart High School, September 24 at 5:00 p.m., presented by EC Organic Juicing."
+            className="matchup-card matchup-card--volleyball"
             data-reveal
             tabIndex={0}
           >
-            <span className="matchup-card__flag">UPCOMING HOME GAME</span>
+            <span className="matchup-card__flag">UPCOMING VOLLEYBALL MATCH</span>
 
             <div className="matchup-card__team matchup-card__team--valencia">
               <span>Home / VHS</span>
@@ -2197,28 +2211,28 @@ export default function Home() {
               <i />
             </div>
 
-            <div className="matchup-card__team matchup-card__team--castaic">
-              <span>Visitor</span>
+            <div className="matchup-card__team matchup-card__team--hart">
+              <span>Opponent / HHS</span>
               <div className="matchup-card__identity">
                 <h2>
-                  <small>Castaic</small>
-                  <strong>Coyotes</strong>
+                  <small>Hart</small>
+                  <strong>High School</strong>
                 </h2>
-                <i aria-hidden="true">C</i>
+                <i aria-hidden="true">H</i>
               </div>
-              <p>Orange / Charcoal</p>
+              <p>September 24 matchup</p>
             </div>
 
             <div className="matchup-card__game">
-              <span>Friday / September 18</span>
+              <span>Thursday / September 24</span>
               <strong>
-                <time dateTime="2026-09-18T19:00:00-07:00">7:00 PM</time>
+                <time dateTime="2026-09-24T17:00:00-07:00">5:00 PM</time>
               </strong>
-              <span>Valencia High School / Home</span>
+              <span>Girls volleyball</span>
             </div>
 
             <span className="matchup-card__presented">
-              Game sponsored by <strong>Stonefire Grill – Valencia</strong>
+              Game sponsored by <strong>EC Organic Juicing</strong>
             </span>
 
             <span className="matchup-card__prompt" aria-hidden="true">
@@ -2227,12 +2241,12 @@ export default function Home() {
           </article>
           <div className="matchup-impact-note" data-reveal>
             <p>
-              <strong>Every touchdown = 25 meals</strong>
+              <strong>Girls volleyball</strong>
               <span aria-hidden="true">•</span>
-              <strong>Every field goal = 10 meals</strong>
+              <strong>Sponsorship details to be announced</strong>
             </p>
             <p>
-              Game sponsor <strong>Stonefire Grill – Valencia</strong>
+              Game sponsor <strong>EC Organic Juicing</strong>
             </p>
           </div>
         </section>
@@ -2244,8 +2258,9 @@ export default function Home() {
             <div className="partners__copy" data-reveal>
               <h2>Local brands.<br />Lasting impact.</h2>
               <p>
-                Valencia athletics, Stonefire Grill – Valencia, Copper Hill BBQ, and the
-                SCV Food Pantry connect school spirit to clear, local action.
+                Valencia athletics, EC Organic Juicing, Stonefire Grill – Valencia,
+                Copper Hill BBQ, Pizza Di Marco, and the SCV Food Pantry connect school
+                spirit to clear, local action.
               </p>
             </div>
             <div className="partner-slots" aria-label="Partner spaces" data-reveal>
@@ -2258,31 +2273,28 @@ export default function Home() {
                 <strong>Valencia High School</strong>
                 <small>Student and athletics partner</small>
               </div>
-              <div className="partner-slots__sponsor partner-slots__sponsor--stonefire">
+              <div className="partner-slots__sponsor partner-slots__sponsor--ec">
                 <a
-                  aria-label="Visit the Stonefire Grill Valencia website"
-                  className="stonefire-grill-logo-link"
-                  href={stonefireGrillWebsite}
+                  aria-label="Visit EC Organic Juicing on Instagram"
+                  className="ec-organic-logo-link"
+                  href={ecOrganicJuicingInstagram}
                   rel="noreferrer"
                   target="_blank"
                 >
                   <Image
-                    alt="Stonefire Grill"
-                    className="stonefire-grill-logo"
-                    height="572"
-                    src="/stonefire-grill-logo.png"
+                    alt="EC Organic Juicing"
+                    className="ec-organic-logo"
+                    height="276"
+                    src="/ec-organic-juicing-logo.png"
                     unoptimized
-                    width="1200"
+                    width="287"
                   />
                 </a>
                 <span>CURRENT GAME SPONSOR</span>
-                <strong>Stonefire Grill – Valencia</strong>
-                <small>Valencia restaurant and community partner</small>
-                <div className="partner-links" aria-label="Stonefire Grill links">
-                  <a href={stonefireGrillWebsite} rel="noreferrer" target="_blank">
-                    Website <Arrow />
-                  </a>
-                  <a href={stonefireGrillInstagram} rel="noreferrer" target="_blank">
+                <strong>EC Organic Juicing</strong>
+                <small>Organic juicing and community partner</small>
+                <div className="partner-links" aria-label="EC Organic Juicing links">
+                  <a href={ecOrganicJuicingInstagram} rel="noreferrer" target="_blank">
                     Instagram <Arrow />
                   </a>
                 </div>
