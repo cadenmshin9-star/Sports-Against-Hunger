@@ -64,8 +64,10 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.doesNotMatch(html, /SEP 18|September 18|T19:00:00-07:00/i);
   assert.match(
     html,
-    /Businesses behind the impact[\s\S]*?Copper Hill BBQ[\s\S]*?Pizza Di Marco[\s\S]*?Stonefire Grill[\s\S]*?EC Organic Juicing/i,
+    /Previous sponsors[\s\S]*?Copper Hill BBQ[\s\S]*?Pizza Di Marco[\s\S]*?Stonefire Grill[\s\S]*?EC Organic Juicing/i,
   );
+  assert.match(html, /aria-label="Previous sponsors"/i);
+  assert.match(html, /ec-organic-juicing-banner-logo\.svg/i);
   assert.match(
     html,
     /matchup-card__presented[\s\S]*?Game sponsored by[\s\S]*?EC Organic Juicing/i,
@@ -76,8 +78,8 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   );
   assert.doesNotMatch(html, /Paraclete|2026-09-10/i);
   assert.doesNotMatch(html, /OPEN SPONSOR SPACE|Game sponsor <strong>Open/i);
-  assert.match(html, /Sponsorship details to be announced/i);
-  assert.doesNotMatch(html, /Every touchdown = 25 meals|Every field goal = 10 meals/i);
+  assert.match(html, /1 Valencia set win[\s\S]*?20 meals/i);
+  assert.match(html, /Each Valencia ace[\s\S]*?3 meals/i);
   assert.match(html, /284 verified meals/i);
   assert.match(html, /Sports Against Hunger on Instagram/);
   assert.match(html, /href="https:\/\/copperhillbbq\.com\/"/);
@@ -251,6 +253,7 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /pizza-di-marco-logo\.png/);
   assert.match(page, /stonefire-grill-logo\.png/);
   assert.match(page, /ec-organic-juicing-logo\.png/);
+  assert.match(page, /ec-organic-juicing-banner-logo\.svg/);
   assert.match(page, /\/instagram\.svg/);
   assert.match(page, /sportsagainsthunger\.vhs/);
   assert.match(page, /copperhillbbq\.com/);
@@ -344,6 +347,7 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   await access(new URL("../public/pizza-di-marco-logo.png", import.meta.url));
   await access(new URL("../public/stonefire-grill-logo.png", import.meta.url));
   await access(new URL("../public/ec-organic-juicing-logo.png", import.meta.url));
+  await access(new URL("../public/ec-organic-juicing-banner-logo.svg", import.meta.url));
   await access(new URL("../public/instagram.svg", import.meta.url));
   await access(new URL("../public/sports-against-hunger-icon-48.png", import.meta.url));
   await access(new URL("../public/sports-against-hunger-icon-192.png", import.meta.url));
