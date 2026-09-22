@@ -18,6 +18,41 @@ const stonefireGrillWebsite = "https://www.stonefiregrill.com/location/valencia/
 const ecOrganicJuicingInstagram = "https://www.instagram.com/ec_organic_juicing/";
 const scvFoodPantryWebsite = "https://www.scvfoodpantry.org/";
 
+const previousSponsors = [
+  {
+    name: "Copper Hill BBQ",
+    href: copperHillWebsite,
+    image: "/copper-hill-bbq-logo.webp",
+    imageWidth: 1600,
+    imageHeight: 429,
+    className: "sponsor-banner__brand--copper",
+  },
+  {
+    name: "Pizza Di Marco",
+    href: pizzaDiMarcoWebsite,
+    image: "/pizza-di-marco-logo.png",
+    imageWidth: 512,
+    imageHeight: 402,
+    className: "sponsor-banner__brand--pizza",
+  },
+  {
+    name: "Stonefire Grill",
+    href: stonefireGrillWebsite,
+    image: "/stonefire-grill-logo.png",
+    imageWidth: 1200,
+    imageHeight: 572,
+    className: "sponsor-banner__brand--stonefire",
+  },
+  {
+    name: "EC Organic Juicing",
+    href: ecOrganicJuicingInstagram,
+    image: "/ec-organic-juicing-banner-logo.svg",
+    imageWidth: 801,
+    imageHeight: 341,
+    className: "sponsor-banner__brand--ec",
+  },
+] as const;
+
 const navItems = [
   ["About", "#about"],
   ["Impact", "#impact"],
@@ -1926,71 +1961,51 @@ export default function Home() {
           />
         </div>
 
-        <section className="sponsor-banner" aria-label="Businesses behind the impact">
-          <span>Businesses behind the impact</span>
-          <a
-            className="sponsor-banner__brand sponsor-banner__brand--copper"
-            href={copperHillWebsite}
-            rel="noreferrer"
-            target="_blank"
-          >
-            <Image
-              alt="Copper Hill BBQ — founding sponsor"
-              height="429"
-              src="/copper-hill-bbq-logo.webp"
-              unoptimized
-              width="1600"
-            />
-          </a>
-          <a
-            className="sponsor-banner__brand sponsor-banner__brand--pizza"
-            href={pizzaDiMarcoWebsite}
-            rel="noreferrer"
-            target="_blank"
-          >
-            <Image
-              alt="Pizza Di Marco — impact sponsor"
-              height="402"
-              src="/pizza-di-marco-logo.png"
-              unoptimized
-              width="512"
-            />
-          </a>
-          <a
-            className="sponsor-banner__brand sponsor-banner__brand--stonefire"
-            href={stonefireGrillWebsite}
-            rel="noreferrer"
-            target="_blank"
-          >
-            <Image
-              alt="Stonefire Grill — impact sponsor"
-              height="572"
-              src="/stonefire-grill-logo.png"
-              unoptimized
-              width="1200"
-            />
-          </a>
-          <a
-            className="sponsor-banner__brand sponsor-banner__brand--ec"
-            href={ecOrganicJuicingInstagram}
-            rel="noreferrer"
-            target="_blank"
-          >
-            <Image
-              alt="EC Organic Juicing — Valencia vs. Hart volleyball game sponsor"
-              height="276"
-              src="/ec-organic-juicing-logo.png"
-              unoptimized
-              width="287"
-            />
-          </a>
-          <a
-            className="sponsor-banner__cta"
-            href="#contact"
-            onClick={(event) => handleSectionLinkClick(event, "#contact")}
-          >
-            Sponsor a game <Arrow />
-          </a>
+        <section className="sponsor-banner" aria-label="Previous sponsors">
+          <div className="sponsor-banner__track">
+            {[0, 1].map((groupIndex) => (
+              <div
+                aria-hidden={groupIndex === 1 ? "true" : undefined}
+                className="sponsor-banner__group"
+                key={groupIndex}
+              >
+                <span className="sponsor-banner__label">Previous sponsors</span>
+                {previousSponsors.map((sponsor) =>
+                  groupIndex === 0 ? (
+                    <a
+                      aria-label={`Visit ${sponsor.name}`}
+                      className={`sponsor-banner__brand ${sponsor.className}`}
+                      href={sponsor.href}
+                      key={sponsor.name}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      <Image
+                        alt={sponsor.name}
+                        height={sponsor.imageHeight}
+                        src={sponsor.image}
+                        unoptimized
+                        width={sponsor.imageWidth}
+                      />
+                    </a>
+                  ) : (
+                    <span
+                      className={`sponsor-banner__brand ${sponsor.className}`}
+                      key={sponsor.name}
+                    >
+                      <Image
+                        alt=""
+                        height={sponsor.imageHeight}
+                        src={sponsor.image}
+                        unoptimized
+                        width={sponsor.imageWidth}
+                      />
+                    </span>
+                  ),
+                )}
+              </div>
+            ))}
+          </div>
         </section>
 
         <section className="mission section-shell" id="about">
@@ -2241,9 +2256,14 @@ export default function Home() {
           </article>
           <div className="matchup-impact-note" data-reveal>
             <p>
-              <strong>Girls volleyball</strong>
-              <span aria-hidden="true">•</span>
-              <strong>Sponsorship details to be announced</strong>
+              <strong>1 Valencia set win</strong>
+              <span aria-hidden="true">=</span>
+              <strong>20 meals</strong>
+            </p>
+            <p>
+              <strong>Each Valencia ace</strong>
+              <span aria-hidden="true">=</span>
+              <strong>3 meals</strong>
             </p>
             <p>
               Game sponsor <strong>EC Organic Juicing</strong>
