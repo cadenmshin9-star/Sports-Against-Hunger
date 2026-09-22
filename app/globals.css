@@ -486,89 +486,71 @@ a {
 }
 
 .sponsor-banner {
-  display: grid;
-  min-height: 116px;
-  grid-template-columns: minmax(220px, 1fr) minmax(240px, 1fr) minmax(200px, 0.7fr);
-  align-items: stretch;
+  overflow: hidden;
   border-top: 1px solid var(--ink);
   border-bottom: 1px solid var(--ink);
-  background: var(--lime);
+  background: #f3efe3;
   color: var(--ink);
 }
 
-.sponsor-banner > span,
-.sponsor-banner__brand,
-.sponsor-banner__cta {
+.sponsor-banner__track {
   display: flex;
-  min-width: 0;
+  width: max-content;
   align-items: center;
-  padding: 22px clamp(20px, 3vw, 44px);
+  animation: sponsorBandRight 24s linear infinite;
 }
 
-.sponsor-banner > span {
-  font-size: 14px;
+.sponsor-banner__group {
+  display: flex;
+  min-width: max(100vw, 1120px);
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: clamp(22px, 3vw, 54px);
+  padding: 14px clamp(22px, 4vw, 62px);
+}
+
+.sponsor-banner__label {
+  flex: 0 0 auto;
+  color: #4e5751;
+  font-size: 11px;
   font-weight: 950;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   line-height: 1.2;
   text-transform: uppercase;
 }
 
 .sponsor-banner__brand {
+  display: flex;
+  width: 210px;
+  min-width: 210px;
+  min-height: 78px;
+  align-items: center;
   justify-content: center;
-  border-right: 1px solid var(--ink);
-  border-left: 1px solid var(--ink);
-  background: #f3efe3;
+  padding: 8px 18px;
+  border: 1px solid rgba(16, 24, 20, 0.13);
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 7px 20px rgba(16, 24, 20, 0.08);
+  transition: box-shadow 180ms ease, transform 180ms ease;
 }
 
 .sponsor-banner__brand img {
   display: block;
-  width: min(100%, 250px);
-  height: 68px;
+  width: min(100%, 190px);
+  height: 62px;
   object-fit: contain;
 }
 
-.sponsor-banner__cta {
-  justify-content: space-between;
-  gap: 16px;
-  background: var(--ink);
-  color: white;
-  font-size: 14px;
-  font-weight: 950;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+a.sponsor-banner__brand:hover,
+a.sponsor-banner__brand:focus-visible {
+  box-shadow: 0 11px 28px rgba(16, 24, 20, 0.16);
+  transform: translateY(-2px);
 }
 
-.sponsor-banner__cta:hover,
-.sponsor-banner__cta:focus-visible {
-  background: var(--action);
-}
-
-@media (max-width: 700px) {
-  .sponsor-banner {
-    grid-template-columns: 1fr auto;
-  }
-
-  .sponsor-banner > span {
-    min-height: 74px;
-  }
-
-  .sponsor-banner__brand {
-    min-height: 92px;
-    grid-column: 1 / -1;
-    grid-row: 2;
-    border: 0;
-    border-top: 1px solid var(--ink);
-  }
-
-  .sponsor-banner__brand img {
-    height: 58px;
-  }
-
-  .sponsor-banner__cta {
-    min-height: 74px;
-    padding-right: 18px;
-    padding-left: 18px;
-  }
+.sponsor-banner:hover .sponsor-banner__track,
+.sponsor-banner:focus-within .sponsor-banner__track {
+  animation-play-state: paused;
 }
 
 .mission {
@@ -1355,7 +1337,7 @@ a {
 
 .matchup-impact-note {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.78fr);
   align-items: stretch;
   border: 1px solid rgba(13, 89, 98, 0.2);
   border-top: 0;
@@ -1387,16 +1369,16 @@ a {
   font-size: clamp(9px, 0.9vw, 12px);
 }
 
-.matchup-impact-note p:first-child strong:first-child {
+.matchup-impact-note p:nth-child(-n + 2) strong:first-child {
   color: var(--valencia-gold, #ffc72c);
 }
 
-.matchup-impact-note p:first-child span {
+.matchup-impact-note p:nth-child(-n + 2) span {
   color: rgba(255, 255, 255, 0.48);
   font-size: 1.35em;
 }
 
-.matchup-impact-note p:first-child strong:last-child {
+.matchup-impact-note p:nth-child(-n + 2) strong:last-child {
   color: var(--lime);
 }
 
@@ -2370,6 +2352,11 @@ footer > span {
 
 @keyframes marquee {
   to { transform: translateX(-50%); }
+}
+
+@keyframes sponsorBandRight {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
 }
 
 @keyframes floatBall {
@@ -10160,48 +10147,26 @@ main section[id] {
   text-shadow: 0 0 14px rgba(235, 159, 49, 0.42);
 }
 
-.sponsor-banner {
-  grid-template-columns:
-    minmax(170px, 0.85fr)
-    repeat(4, minmax(135px, 1fr))
-    minmax(155px, 0.72fr);
-}
-
-.sponsor-banner__brand {
-  min-height: 116px;
-  padding: 12px clamp(14px, 2vw, 28px);
-  border-right: 0;
-  border-left: 1px solid var(--ink);
-}
-
-.sponsor-banner__brand--stonefire {
-  border-right: 0;
-}
-
-.sponsor-banner__brand--ec {
-  border-right: 1px solid var(--ink);
-}
-
 .sponsor-banner__brand--copper img {
-  width: min(100%, 230px);
-  height: 62px;
+  width: min(100%, 188px);
+  height: 54px;
 }
 
 .sponsor-banner__brand--pizza img {
   width: auto;
   max-width: 100%;
-  height: 84px;
+  height: 64px;
 }
 
 .sponsor-banner__brand--stonefire img {
-  width: min(100%, 280px);
+  width: min(100%, 190px);
   height: auto;
-  max-height: 88px;
+  max-height: 60px;
 }
 
 .sponsor-banner__brand--ec img {
-  width: min(100%, 94px);
-  height: 88px;
+  width: min(100%, 190px);
+  height: 62px;
   object-fit: contain;
   object-position: center;
 }
@@ -10264,68 +10229,6 @@ main section[id] {
   background: rgba(145, 176, 97, 0.24);
 }
 
-@media (max-width: 820px) {
-  .sponsor-banner {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .sponsor-banner__brand {
-    min-height: 100px;
-    border-top: 1px solid var(--ink);
-  }
-
-  .sponsor-banner__brand--copper {
-    grid-column: 1;
-    grid-row: 2;
-    border-right: 0;
-    border-left: 0;
-  }
-
-  .sponsor-banner__brand--pizza {
-    grid-column: 2;
-    grid-row: 2;
-    border-right: 0;
-    border-left: 1px solid var(--ink);
-  }
-
-  .sponsor-banner__brand--stonefire {
-    grid-column: 1;
-    grid-row: 3;
-    border-right: 0;
-    border-left: 0;
-  }
-
-  .sponsor-banner__brand--ec {
-    grid-column: 2;
-    grid-row: 3;
-    border-right: 0;
-    border-left: 1px solid var(--ink);
-  }
-
-  .sponsor-banner__cta {
-    grid-column: 2;
-    grid-row: 1;
-  }
-
-  .sponsor-banner__brand--copper img {
-    height: 54px;
-  }
-
-  .sponsor-banner__brand--pizza img {
-    height: 70px;
-  }
-
-  .sponsor-banner__brand--stonefire img {
-    height: auto;
-    max-height: 74px;
-  }
-
-  .sponsor-banner__brand--ec img {
-    width: min(100%, 82px);
-    height: 76px;
-  }
-}
-
 @media (max-width: 520px) {
   .hero-game-callout > em {
     display: flex;
@@ -10341,18 +10244,6 @@ main section[id] {
   .hero-game-callout > em .ec-organic-highlight {
     font-size: 11px;
     white-space: normal;
-  }
-
-  .sponsor-banner > span,
-  .sponsor-banner__cta {
-    padding-right: 14px;
-    padding-left: 14px;
-    font-size: 11px;
-  }
-
-  .sponsor-banner__brand {
-    padding-right: 12px;
-    padding-left: 12px;
   }
 
   .ec-organic-logo-link {
