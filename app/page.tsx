@@ -16,6 +16,7 @@ const copperHillWebsite = "https://copperhillbbq.com/";
 const pizzaDiMarcoWebsite = "https://pizzadimarco.com/";
 const stonefireGrillWebsite = "https://www.stonefiregrill.com/location/valencia/";
 const ecOrganicJuicingInstagram = "https://www.instagram.com/ec_organic_juicing/";
+const farmersJaquezWebsite = "http://Jaquezgroup.com";
 const scvFoodPantryWebsite = "https://www.scvfoodpantry.org/";
 
 const previousSponsors = [
@@ -1839,12 +1840,14 @@ export default function Home() {
           >
             <span className="hero-game-callout__flash">NEXT GAME</span>
             <span className="hero-game-callout__match">
-              <small>SEP 24 · 5:00 PM · VOLLEYBALL</small>
-              <strong>Valencia vs. Hart</strong>
+              <small>SEP 25 · TIME TBA · FOOTBALL</small>
+              <strong>Valencia vs. West Ranch</strong>
             </span>
             <em>
               Presented by{" "}
-              <strong className="ec-organic-highlight">EC Organic Juicing</strong>
+              <strong className="farmers-jaquez-highlight">
+                Farmers Insurance – Jaquez Group
+              </strong>
             </em>
             <span className="hero-game-callout__arrow" aria-hidden="true">↓</span>
           </a>
@@ -2201,12 +2204,12 @@ export default function Home() {
           />
           <div className="section-index">04 / Games & achievements</div>
           <article
-            aria-label="Upcoming volleyball game: Valencia High School versus Hart High School, September 24 at 5:00 p.m., presented by EC Organic Juicing."
-            className="matchup-card matchup-card--volleyball"
+            aria-label="Upcoming football game: Valencia High School versus West Ranch High School, September 25, time to be announced, presented by Farmers Insurance – Jaquez Group."
+            className="matchup-card"
             data-reveal
             tabIndex={0}
           >
-            <span className="matchup-card__flag">UPCOMING VOLLEYBALL MATCH</span>
+            <span className="matchup-card__flag">UPCOMING FOOTBALL GAME</span>
 
             <div className="matchup-card__team matchup-card__team--valencia">
               <span>Home / VHS</span>
@@ -2226,28 +2229,26 @@ export default function Home() {
               <i />
             </div>
 
-            <div className="matchup-card__team matchup-card__team--hart">
-              <span>Opponent / HHS</span>
+            <div className="matchup-card__team matchup-card__team--west-ranch">
+              <span>Opponent / WRHS</span>
               <div className="matchup-card__identity">
                 <h2>
-                  <small>Hart</small>
+                  <small>West Ranch</small>
                   <strong>High School</strong>
                 </h2>
-                <i aria-hidden="true">H</i>
+                <i aria-hidden="true">WR</i>
               </div>
-              <p>September 24 matchup</p>
+              <p>September 25 matchup</p>
             </div>
 
             <div className="matchup-card__game">
-              <span>Thursday / September 24</span>
-              <strong>
-                <time dateTime="2026-09-24T17:00:00-07:00">5:00 PM</time>
-              </strong>
-              <span>Girls volleyball</span>
+              <span>Friday / September 25</span>
+              <strong>TIME TBA</strong>
+              <span>Football</span>
             </div>
 
             <span className="matchup-card__presented">
-              Game sponsored by <strong>EC Organic Juicing</strong>
+              Game sponsored by <strong>Farmers Insurance – Jaquez Group</strong>
             </span>
 
             <span className="matchup-card__prompt" aria-hidden="true">
@@ -2256,17 +2257,17 @@ export default function Home() {
           </article>
           <div className="matchup-impact-note" data-reveal>
             <p>
-              <strong>1 Valencia set win</strong>
+              <strong>Each Valencia touchdown</strong>
               <span aria-hidden="true">=</span>
-              <strong>20 meals</strong>
+              <strong>25 meals</strong>
             </p>
             <p>
-              <strong>Each Valencia ace</strong>
+              <strong>Each Valencia field goal</strong>
               <span aria-hidden="true">=</span>
-              <strong>3 meals</strong>
+              <strong>10 meals</strong>
             </p>
             <p>
-              Game sponsor <strong>EC Organic Juicing</strong>
+              Game sponsor <strong>Farmers Insurance – Jaquez Group</strong>
             </p>
           </div>
         </section>
@@ -2278,9 +2279,9 @@ export default function Home() {
             <div className="partners__copy" data-reveal>
               <h2>Local brands.<br />Lasting impact.</h2>
               <p>
-                Valencia athletics, EC Organic Juicing, Stonefire Grill – Valencia,
-                Copper Hill BBQ, Pizza Di Marco, and the SCV Food Pantry connect school
-                spirit to clear, local action.
+                Valencia athletics, Farmers Insurance – Jaquez Group, EC Organic
+                Juicing, Stonefire Grill – Valencia, Copper Hill BBQ, Pizza Di Marco,
+                and the SCV Food Pantry connect school spirit to clear, local action.
               </p>
             </div>
             <div className="partner-slots" aria-label="Partner spaces" data-reveal>
@@ -2293,29 +2294,29 @@ export default function Home() {
                 <strong>Valencia High School</strong>
                 <small>Student and athletics partner</small>
               </div>
-              <div className="partner-slots__sponsor partner-slots__sponsor--ec">
+              <div className="partner-slots__sponsor partner-slots__sponsor--farmers">
                 <a
-                  aria-label="Visit EC Organic Juicing on Instagram"
-                  className="ec-organic-logo-link"
-                  href={ecOrganicJuicingInstagram}
+                  aria-label="Visit Farmers Insurance – Jaquez Group"
+                  className="farmers-jaquez-logo-link"
+                  href={farmersJaquezWebsite}
                   rel="noreferrer"
                   target="_blank"
                 >
                   <Image
-                    alt="EC Organic Juicing"
-                    className="ec-organic-logo"
-                    height="276"
-                    src="/ec-organic-juicing-logo.png"
+                    alt="Farmers Insurance – Jaquez Group"
+                    className="farmers-jaquez-logo"
+                    height="1265"
+                    src="/farmers-jaquez-group-logo.svg"
                     unoptimized
-                    width="287"
+                    width="1192"
                   />
                 </a>
                 <span>CURRENT GAME SPONSOR</span>
-                <strong>EC Organic Juicing</strong>
-                <small>Organic juicing and community partner</small>
-                <div className="partner-links" aria-label="EC Organic Juicing links">
-                  <a href={ecOrganicJuicingInstagram} rel="noreferrer" target="_blank">
-                    Instagram <Arrow />
+                <strong>Farmers Insurance – Jaquez Group</strong>
+                <small>Insurance and community partner</small>
+                <div className="partner-links" aria-label="Farmers Insurance – Jaquez Group links">
+                  <a href={farmersJaquezWebsite} rel="noreferrer" target="_blank">
+                    Website <Arrow />
                   </a>
                 </div>
               </div>
