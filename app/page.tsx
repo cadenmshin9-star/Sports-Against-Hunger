@@ -52,6 +52,14 @@ const previousSponsors = [
     imageHeight: 341,
     className: "sponsor-banner__brand--ec",
   },
+  {
+    name: "Farmers Insurance – Jaquez Group",
+    href: farmersJaquezWebsite,
+    image: "/farmers-jaquez-group-logo.svg",
+    imageWidth: 848,
+    imageHeight: 900,
+    className: "sponsor-banner__brand--farmers",
+  },
 ] as const;
 
 const navItems = [
@@ -87,11 +95,11 @@ const impactStats = [
     label: "verified meals",
     note: "SCV Food Pantry-verified · 1 meal equivalent = $2.28",
   },
-  { value: "3", label: "games tracked", note: "Official results only" },
+  { value: "5", label: "games tracked", note: "Official results only" },
   {
-    value: "4",
+    value: "5",
     label: "previous sponsors",
-    note: "Copper Hill BBQ + Pizza Di Marco + Stonefire Grill + EC Organic Juicing",
+    note: "Copper Hill BBQ + Pizza Di Marco + Stonefire Grill + EC Organic Juicing + Farmers Insurance – Jaquez Group",
   },
 ];
 
@@ -1990,6 +1998,9 @@ export default function Home() {
                         unoptimized
                         width={sponsor.imageWidth}
                       />
+                      {sponsor.className === "sponsor-banner__brand--farmers" && (
+                        <span className="sponsor-banner__brand-name">Farmers Insurance – Jaquez Group</span>
+                      )}
                     </a>
                   ) : (
                     <span
@@ -2003,6 +2014,9 @@ export default function Home() {
                         unoptimized
                         width={sponsor.imageWidth}
                       />
+                      {sponsor.className === "sponsor-banner__brand--farmers" && (
+                        <span className="sponsor-banner__brand-name">Farmers Insurance – Jaquez Group</span>
+                      )}
                     </span>
                   ),
                 )}
@@ -2134,7 +2148,7 @@ export default function Home() {
             <div className="season-card__bar"><span /></div>
             <div className="season-card__foot">
               <span>367 verified meals</span>
-              <span>3 games tracked · Home opener September 10</span>
+              <span>5 games tracked · Home opener September 10</span>
             </div>
           </div>
         </section>

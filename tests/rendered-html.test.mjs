@@ -64,10 +64,11 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.doesNotMatch(html, /dateTime="2026-09-25/i);
   assert.match(
     html,
-    /Previous sponsors[\s\S]*?Copper Hill BBQ[\s\S]*?Pizza Di Marco[\s\S]*?Stonefire Grill[\s\S]*?EC Organic Juicing/i,
+    /Previous sponsors[\s\S]*?Copper Hill BBQ[\s\S]*?Pizza Di Marco[\s\S]*?Stonefire Grill[\s\S]*?EC Organic Juicing[\s\S]*?Farmers Insurance – Jaquez Group/i,
   );
   assert.match(html, /aria-label="Previous sponsors"/i);
   assert.match(html, /ec-organic-juicing-banner-logo\.svg/i);
+  assert.match(html, /sponsor-banner__brand--farmers[\s\S]*?farmers-jaquez-group-logo\.svg/i);
   assert.match(
     html,
     /matchup-card__presented[\s\S]*?Game sponsored by[\s\S]*?Farmers Insurance – Jaquez Group/i,
@@ -165,10 +166,10 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
 
   assert.match(page, /value: "367",\s*label: "verified meals"/);
   assert.match(page, /note: "SCV Food Pantry-verified · 1 meal equivalent = \$2\.28"/);
-  assert.match(page, /value: "3", label: "games tracked"/);
-  assert.match(page, /value: "4",\s*label: "previous sponsors"/);
-  assert.match(page, /note: "Copper Hill BBQ \+ Pizza Di Marco \+ Stonefire Grill \+ EC Organic Juicing"/);
-  assert.match(page, /3 games tracked · Home opener September 10/);
+  assert.match(page, /value: "5", label: "games tracked"/);
+  assert.match(page, /value: "5",\s*label: "previous sponsors"/);
+  assert.match(page, /note: "Copper Hill BBQ \+ Pizza Di Marco \+ Stonefire Grill \+ EC Organic Juicing \+ Farmers Insurance – Jaquez Group"/);
+  assert.match(page, /5 games tracked · Home opener September 10/);
   assert.match(page, /Pledge details appear only after they are confirmed\./);
   assert.match(page, /Official scorecards verify athletic results/);
   assert.match(page, /jbenham@hartdistrict\.org/);

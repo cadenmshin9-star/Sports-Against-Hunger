@@ -10171,6 +10171,27 @@ main section[id] {
   object-position: center;
 }
 
+.sponsor-banner__brand--farmers {
+  width: 250px;
+  min-width: 250px;
+  gap: 10px;
+  padding-inline: 12px;
+}
+
+.sponsor-banner__brand--farmers img {
+  width: 62px;
+  min-width: 62px;
+  height: 66px;
+  object-fit: contain;
+}
+
+.sponsor-banner__brand-name {
+  color: #153f76;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
 .partner-slots__sponsor--farmers {
   background:
     linear-gradient(122deg, transparent 0 44%, rgba(214, 39, 54, 0.18) 44.2% 45%, transparent 45.2%),
