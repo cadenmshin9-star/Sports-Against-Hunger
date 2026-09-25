@@ -83,14 +83,14 @@ const systemFlow = [
 
 const impactStats = [
   {
-    value: "284",
+    value: "367",
     label: "verified meals",
     note: "SCV Food Pantry-verified · 1 meal equivalent = $2.28",
   },
   { value: "3", label: "games tracked", note: "Official results only" },
   {
     value: "4",
-    label: "sponsors",
+    label: "previous sponsors",
     note: "Copper Hill BBQ + Pizza Di Marco + Stonefire Grill + EC Organic Juicing",
   },
 ];
@@ -2133,7 +2133,7 @@ export default function Home() {
             </div>
             <div className="season-card__bar"><span /></div>
             <div className="season-card__foot">
-              <span>284 verified meals</span>
+              <span>367 verified meals</span>
               <span>3 games tracked · Home opener September 10</span>
             </div>
           </div>
