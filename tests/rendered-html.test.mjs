@@ -80,7 +80,7 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.doesNotMatch(html, /OPEN SPONSOR SPACE|Game sponsor <strong>Open/i);
   assert.match(html, /Each Valencia touchdown[\s\S]*?25 meals/i);
   assert.match(html, /Each Valencia field goal[\s\S]*?10 meals/i);
-  assert.match(html, /284 verified meals/i);
+  assert.match(html, /367 verified meals/i);
   assert.match(html, /Sports Against Hunger on Instagram/);
   assert.match(html, /href="https:\/\/copperhillbbq\.com\/"/);
   assert.match(html, /href="https:\/\/pizzadimarco\.com\/"/);
@@ -163,10 +163,10 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
     readFile(new URL("../app/manifest.ts", import.meta.url), "utf8"),
   ]);
 
-  assert.match(page, /value: "284",\s*label: "verified meals"/);
+  assert.match(page, /value: "367",\s*label: "verified meals"/);
   assert.match(page, /note: "SCV Food Pantry-verified · 1 meal equivalent = \$2\.28"/);
   assert.match(page, /value: "3", label: "games tracked"/);
-  assert.match(page, /value: "4",\s*label: "sponsors"/);
+  assert.match(page, /value: "4",\s*label: "previous sponsors"/);
   assert.match(page, /note: "Copper Hill BBQ \+ Pizza Di Marco \+ Stonefire Grill \+ EC Organic Juicing"/);
   assert.match(page, /3 games tracked · Home opener September 10/);
   assert.match(page, /Pledge details appear only after they are confirmed\./);
