@@ -16,6 +16,7 @@ const copperHillWebsite = "https://copperhillbbq.com/";
 const pizzaDiMarcoWebsite = "https://pizzadimarco.com/";
 const stonefireGrillWebsite = "https://www.stonefiregrill.com/location/valencia/";
 const ecOrganicJuicingInstagram = "https://www.instagram.com/ec_organic_juicing/";
+const stormEliteBaseballInstagram = "https://www.instagram.com/storm_elite_baseball/";
 const scvFoodPantryWebsite = "https://www.scvfoodpantry.org/";
 
 const navItems = [
@@ -47,15 +48,15 @@ const systemFlow = [
 
 const impactStats = [
   {
-    value: "284",
+    value: "666",
     label: "verified meals",
     note: "SCV Food Pantry-verified · 1 meal equivalent = $2.28",
   },
-  { value: "3", label: "games tracked", note: "Official results only" },
+  { value: "6", label: "games tracked", note: "Official results only" },
   {
-    value: "4",
+    value: "5",
     label: "sponsors",
-    note: "Copper Hill BBQ + Pizza Di Marco + Stonefire Grill + EC Organic Juicing",
+    note: "Copper Hill BBQ + Pizza Di Marco + Stonefire Grill + EC Organic Juicing + Storm Elite Baseball",
   },
 ];
 
@@ -1804,12 +1805,12 @@ export default function Home() {
           >
             <span className="hero-game-callout__flash">NEXT GAME</span>
             <span className="hero-game-callout__match">
-              <small>SEP 24 · 5:00 PM · VOLLEYBALL</small>
-              <strong>Valencia vs. Hart</strong>
+              <small>OCT 23 · 7:00 PM · FOOTBALL</small>
+              <strong>Valencia vs. Golden Valley</strong>
             </span>
             <em>
               Presented by{" "}
-              <strong className="ec-organic-highlight">EC Organic Juicing</strong>
+              <strong className="storm-elite-highlight">Storm Elite Baseball</strong>
             </em>
             <span className="hero-game-callout__arrow" aria-hidden="true">↓</span>
           </a>
@@ -1977,11 +1978,25 @@ export default function Home() {
             target="_blank"
           >
             <Image
-              alt="EC Organic Juicing — Valencia vs. Hart volleyball game sponsor"
+              alt="EC Organic Juicing — impact sponsor"
               height="276"
               src="/ec-organic-juicing-logo.png"
               unoptimized
               width="287"
+            />
+          </a>
+          <a
+            className="sponsor-banner__brand sponsor-banner__brand--storm"
+            href={stormEliteBaseballInstagram}
+            rel="noreferrer"
+            target="_blank"
+          >
+            <Image
+              alt="Storm Elite Baseball — Valencia vs. Golden Valley football game sponsor"
+              height="240"
+              src="/storm-elite-baseball-logo.png"
+              unoptimized
+              width="274"
             />
           </a>
           <a
@@ -2115,8 +2130,8 @@ export default function Home() {
             </div>
             <div className="season-card__bar"><span /></div>
             <div className="season-card__foot">
-              <span>284 verified meals</span>
-              <span>3 games tracked · Home opener September 10</span>
+              <span>666 verified meals</span>
+              <span>6 games tracked · Home opener September 10</span>
             </div>
           </div>
         </section>
@@ -2186,12 +2201,12 @@ export default function Home() {
           />
           <div className="section-index">04 / Games & achievements</div>
           <article
-            aria-label="Upcoming volleyball game: Valencia High School versus Hart High School, September 24 at 5:00 p.m., presented by EC Organic Juicing."
-            className="matchup-card matchup-card--volleyball"
+            aria-label="Upcoming home varsity football game: Valencia High School versus Golden Valley High School, October 23 at 7:00 p.m., presented by Storm Elite Baseball."
+            className="matchup-card"
             data-reveal
             tabIndex={0}
           >
-            <span className="matchup-card__flag">UPCOMING VOLLEYBALL MATCH</span>
+            <span className="matchup-card__flag">UPCOMING HOME GAME · SENIOR NIGHT</span>
 
             <div className="matchup-card__team matchup-card__team--valencia">
               <span>Home / VHS</span>
@@ -2211,28 +2226,28 @@ export default function Home() {
               <i />
             </div>
 
-            <div className="matchup-card__team matchup-card__team--hart">
-              <span>Opponent / HHS</span>
+            <div className="matchup-card__team matchup-card__team--golden-valley">
+              <span>Visitor / GVHS</span>
               <div className="matchup-card__identity">
                 <h2>
-                  <small>Hart</small>
-                  <strong>High School</strong>
+                  <small>Golden Valley</small>
+                  <strong>Grizzlies</strong>
                 </h2>
-                <i aria-hidden="true">H</i>
+                <i aria-hidden="true">G</i>
               </div>
-              <p>September 24 matchup</p>
+              <p>Black / Gold</p>
             </div>
 
             <div className="matchup-card__game">
-              <span>Thursday / September 24</span>
+              <span>Friday / October 23</span>
               <strong>
-                <time dateTime="2026-09-24T17:00:00-07:00">5:00 PM</time>
+                <time dateTime="2026-10-23T19:00:00-07:00">7:00 PM</time>
               </strong>
-              <span>Girls volleyball</span>
+              <span>Varsity football · Senior Night</span>
             </div>
 
             <span className="matchup-card__presented">
-              Game sponsored by <strong>EC Organic Juicing</strong>
+              Game sponsored by <strong>Storm Elite Baseball</strong>
             </span>
 
             <span className="matchup-card__prompt" aria-hidden="true">
@@ -2241,12 +2256,12 @@ export default function Home() {
           </article>
           <div className="matchup-impact-note" data-reveal>
             <p>
-              <strong>Girls volleyball</strong>
+              <strong>Every touchdown = 25 meals</strong>
               <span aria-hidden="true">•</span>
-              <strong>Sponsorship details to be announced</strong>
+              <strong>Every field goal = 10 meals</strong>
             </p>
             <p>
-              Game sponsor <strong>EC Organic Juicing</strong>
+              Game sponsor <strong>Storm Elite Baseball</strong>
             </p>
           </div>
         </section>
@@ -2258,9 +2273,9 @@ export default function Home() {
             <div className="partners__copy" data-reveal>
               <h2>Local brands.<br />Lasting impact.</h2>
               <p>
-                Valencia athletics, EC Organic Juicing, Stonefire Grill – Valencia,
-                Copper Hill BBQ, Pizza Di Marco, and the SCV Food Pantry connect school
-                spirit to clear, local action.
+                Valencia athletics, Storm Elite Baseball, EC Organic Juicing, Stonefire
+                Grill – Valencia, Copper Hill BBQ, Pizza Di Marco, and the SCV Food Pantry
+                connect school spirit to clear, local action.
               </p>
             </div>
             <div className="partner-slots" aria-label="Partner spaces" data-reveal>
@@ -2273,28 +2288,28 @@ export default function Home() {
                 <strong>Valencia High School</strong>
                 <small>Student and athletics partner</small>
               </div>
-              <div className="partner-slots__sponsor partner-slots__sponsor--ec">
+              <div className="partner-slots__sponsor partner-slots__sponsor--storm">
                 <a
-                  aria-label="Visit EC Organic Juicing on Instagram"
-                  className="ec-organic-logo-link"
-                  href={ecOrganicJuicingInstagram}
+                  aria-label="Visit Storm Elite Baseball on Instagram"
+                  className="storm-elite-logo-link"
+                  href={stormEliteBaseballInstagram}
                   rel="noreferrer"
                   target="_blank"
                 >
                   <Image
-                    alt="EC Organic Juicing"
-                    className="ec-organic-logo"
-                    height="276"
-                    src="/ec-organic-juicing-logo.png"
+                    alt="Storm Elite Baseball"
+                    className="storm-elite-logo"
+                    height="240"
+                    src="/storm-elite-baseball-logo.png"
                     unoptimized
-                    width="287"
+                    width="274"
                   />
                 </a>
                 <span>CURRENT GAME SPONSOR</span>
-                <strong>EC Organic Juicing</strong>
-                <small>Organic juicing and community partner</small>
-                <div className="partner-links" aria-label="EC Organic Juicing links">
-                  <a href={ecOrganicJuicingInstagram} rel="noreferrer" target="_blank">
+                <strong>Storm Elite Baseball</strong>
+                <small>Santa Clarita travel baseball and community partner</small>
+                <div className="partner-links" aria-label="Storm Elite Baseball links">
+                  <a href={stormEliteBaseballInstagram} rel="noreferrer" target="_blank">
                     Instagram <Arrow />
                   </a>
                 </div>

@@ -54,36 +54,39 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /Pizza Di Marco/);
   assert.match(html, /Stonefire Grill/);
   assert.match(html, /EC Organic Juicing/);
+  assert.match(html, /Storm Elite Baseball/);
   assert.match(
     html,
-    /Valencia vs\. Hart[\s\S]*?Presented by[\s\S]*?EC Organic Juicing/i,
+    /Valencia vs\. Golden Valley[\s\S]*?Presented by[\s\S]*?Storm Elite Baseball/i,
   );
-  assert.match(html, /SEP 24 · 5:00 PM · VOLLEYBALL/i);
-  assert.match(html, /Thursday \/ September 24/i);
-  assert.match(html, /dateTime="2026-09-24T17:00:00-07:00"[^>]*>5:00 PM<\/time>/i);
-  assert.doesNotMatch(html, /SEP 18|September 18|T19:00:00-07:00/i);
+  assert.match(html, /OCT 23 · 7:00 PM · FOOTBALL/i);
+  assert.match(html, /Friday \/ October 23/i);
+  assert.match(html, /dateTime="2026-10-23T19:00:00-07:00"[^>]*>7:00 PM<\/time>/i);
+  assert.doesNotMatch(html, /SEP 24|September 24|T17:00:00-07:00/i);
   assert.match(
     html,
-    /Businesses behind the impact[\s\S]*?Copper Hill BBQ[\s\S]*?Pizza Di Marco[\s\S]*?Stonefire Grill[\s\S]*?EC Organic Juicing/i,
-  );
-  assert.match(
-    html,
-    /matchup-card__presented[\s\S]*?Game sponsored by[\s\S]*?EC Organic Juicing/i,
+    /Businesses behind the impact[\s\S]*?Copper Hill BBQ[\s\S]*?Pizza Di Marco[\s\S]*?Stonefire Grill[\s\S]*?EC Organic Juicing[\s\S]*?Storm Elite Baseball/i,
   );
   assert.match(
     html,
-    /partner-slots__sponsor--ec[\s\S]*?ec-organic-juicing-logo\.png/i,
+    /matchup-card__presented[\s\S]*?Game sponsored by[\s\S]*?Storm Elite Baseball/i,
+  );
+  assert.match(
+    html,
+    /partner-slots__sponsor--storm[\s\S]*?storm-elite-baseball-logo\.png/i,
   );
   assert.doesNotMatch(html, /Paraclete|2026-09-10/i);
   assert.doesNotMatch(html, /OPEN SPONSOR SPACE|Game sponsor <strong>Open/i);
-  assert.match(html, /Sponsorship details to be announced/i);
-  assert.doesNotMatch(html, /Every touchdown = 25 meals|Every field goal = 10 meals/i);
-  assert.match(html, /284 verified meals/i);
+  assert.match(html, /Every touchdown = 25 meals/i);
+  assert.match(html, /Every field goal = 10 meals/i);
+  assert.doesNotMatch(html, /Sponsorship details to be announced/i);
+  assert.match(html, /666 verified meals/i);
   assert.match(html, /Sports Against Hunger on Instagram/);
   assert.match(html, /href="https:\/\/copperhillbbq\.com\/"/);
   assert.match(html, /href="https:\/\/pizzadimarco\.com\/"/);
   assert.match(html, /href="https:\/\/www\.stonefiregrill\.com\/location\/valencia\/"/);
   assert.match(html, /href="https:\/\/www\.instagram\.com\/ec_organic_juicing\/"/);
+  assert.match(html, /href="https:\/\/www\.instagram\.com\/storm_elite_baseball\/"/);
   assert.match(html, /href="https:\/\/www\.instagram\.com\/sportsagainsthunger\.vhs\?/);
   assert.match(html, /href="https:\/\/www\.scvfoodpantry\.org\/"/);
   assert.match(html, /aria-label="Santa Clarita Valley Food Pantry"/);
@@ -103,13 +106,13 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, />Compete</);
   assert.match(html, />Unite</);
   assert.match(html, />Give Back</);
-  assert.match(html, /UPCOMING VOLLEYBALL MATCH/);
+  assert.match(html, /UPCOMING HOME GAME · SENIOR NIGHT/);
   assert.doesNotMatch(html, /impact__brand/i);
   assert.match(html, /Founding season tracker · Est\. 2026/i);
   assert.match(html, /This scoreboard includes only official/i);
-  assert.match(html, /Valencia High School versus Hart High School/);
+  assert.match(html, /Valencia High School versus Golden Valley High School/);
   assert.match(html, /matchup-card__team--valencia/);
-  assert.match(html, /matchup-card__team--hart/);
+  assert.match(html, /matchup-card__team--golden-valley/);
   assert.match(html, /SCV Food Pantry-verified · 1 meal equivalent = \$2\.28/);
   assert.match(html, /Preemptive Q&amp;A/);
   assert.match(html, /Does Sports Against Hunger handle money\?/);
@@ -152,7 +155,7 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.doesNotMatch(html, /West Hills|Home team \/ Santa Clarita/i);
 });
 
-test("keeps unconfirmed impact data explicit and accessible", async () => {
+test("keeps impact data explicit and accessible", async () => {
   const [page, css, layout, manifest] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
@@ -160,12 +163,12 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
     readFile(new URL("../app/manifest.ts", import.meta.url), "utf8"),
   ]);
 
-  assert.match(page, /value: "284",\s*label: "verified meals"/);
+  assert.match(page, /value: "666",\s*label: "verified meals"/);
   assert.match(page, /note: "SCV Food Pantry-verified · 1 meal equivalent = \$2\.28"/);
-  assert.match(page, /value: "3", label: "games tracked"/);
-  assert.match(page, /value: "4",\s*label: "sponsors"/);
-  assert.match(page, /note: "Copper Hill BBQ \+ Pizza Di Marco \+ Stonefire Grill \+ EC Organic Juicing"/);
-  assert.match(page, /3 games tracked · Home opener September 10/);
+  assert.match(page, /value: "6", label: "games tracked"/);
+  assert.match(page, /value: "5",\s*label: "sponsors"/);
+  assert.match(page, /note: "Copper Hill BBQ \+ Pizza Di Marco \+ Stonefire Grill \+ EC Organic Juicing \+ Storm Elite Baseball"/);
+  assert.match(page, /6 games tracked · Home opener September 10/);
   assert.match(page, /Pledge details appear only after they are confirmed\./);
   assert.match(page, /Official scorecards verify athletic results/);
   assert.match(page, /jbenham@hartdistrict\.org/);
@@ -242,8 +245,8 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   );
   assert.match(css, /--valencia-purple:\s*#552583/);
   assert.match(css, /--valencia-gold:\s*#ffc72c/);
-  assert.match(css, /--hart-black:\s*#171717/);
-  assert.match(css, /--hart-red:\s*#c32032/);
+  assert.match(css, /--golden-valley-black:\s*#171717/);
+  assert.match(css, /--golden-valley-gold:\s*#f2c230/);
   assert.doesNotMatch(page, /orientation\.lock/);
   assert.doesNotMatch(page, /\bpilot\b/i);
   assert.match(page, /sports-against-hunger-emblem\.webp/);
@@ -251,12 +254,14 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /pizza-di-marco-logo\.png/);
   assert.match(page, /stonefire-grill-logo\.png/);
   assert.match(page, /ec-organic-juicing-logo\.png/);
+  assert.match(page, /storm-elite-baseball-logo\.png/);
   assert.match(page, /\/instagram\.svg/);
   assert.match(page, /sportsagainsthunger\.vhs/);
   assert.match(page, /copperhillbbq\.com/);
   assert.match(page, /pizzadimarco\.com/);
   assert.match(page, /stonefiregrill\.com\/location\/valencia/);
   assert.match(page, /instagram\.com\/ec_organic_juicing/);
+  assert.match(page, /instagram\.com\/storm_elite_baseball/);
   assert.doesNotMatch(page, /Paraclete/i);
   assert.doesNotMatch(css, /\.playbook-list article:hover\s*\{[^}]*padding-/);
   assert.doesNotMatch(page, /sports-sprite\.png/);
@@ -344,6 +349,7 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   await access(new URL("../public/pizza-di-marco-logo.png", import.meta.url));
   await access(new URL("../public/stonefire-grill-logo.png", import.meta.url));
   await access(new URL("../public/ec-organic-juicing-logo.png", import.meta.url));
+  await access(new URL("../public/storm-elite-baseball-logo.png", import.meta.url));
   await access(new URL("../public/instagram.svg", import.meta.url));
   await access(new URL("../public/sports-against-hunger-icon-48.png", import.meta.url));
   await access(new URL("../public/sports-against-hunger-icon-192.png", import.meta.url));
