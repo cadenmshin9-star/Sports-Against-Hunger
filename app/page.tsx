@@ -17,6 +17,7 @@ const pizzaDiMarcoWebsite = "https://pizzadimarco.com/";
 const stonefireGrillWebsite = "https://www.stonefiregrill.com/location/valencia/";
 const ecOrganicJuicingInstagram = "https://www.instagram.com/ec_organic_juicing/";
 const farmersJaquezWebsite = "http://Jaquezgroup.com";
+const stormEliteBaseballInstagram = "https://www.instagram.com/storm_elite_baseball/";
 const scvFoodPantryWebsite = "https://www.scvfoodpantry.org/";
 
 const previousSponsors = [
@@ -60,6 +61,14 @@ const previousSponsors = [
     imageHeight: 900,
     className: "sponsor-banner__brand--farmers",
   },
+  {
+    name: "Storm Elite Baseball",
+    href: stormEliteBaseballInstagram,
+    image: "/storm-elite-baseball-logo.png",
+    imageWidth: 274,
+    imageHeight: 240,
+    className: "sponsor-banner__brand--storm",
+  },
 ] as const;
 
 const navItems = [
@@ -91,15 +100,15 @@ const systemFlow = [
 
 const impactStats = [
   {
-    value: "367",
+    value: "666",
     label: "verified meals",
     note: "SCV Food Pantry-verified · 1 meal equivalent = $2.28",
   },
-  { value: "5", label: "games tracked", note: "Official results only" },
+  { value: "6", label: "games tracked", note: "Official results only" },
   {
-    value: "5",
-    label: "previous sponsors",
-    note: "Copper Hill BBQ + Pizza Di Marco + Stonefire Grill + EC Organic Juicing + Farmers Insurance – Jaquez Group",
+    value: "6",
+    label: "sponsors",
+    note: "Copper Hill BBQ + Pizza Di Marco + Stonefire Grill + EC Organic Juicing + Farmers Insurance – Jaquez Group + Storm Elite Baseball",
   },
 ];
 
@@ -1848,13 +1857,13 @@ export default function Home() {
           >
             <span className="hero-game-callout__flash">NEXT GAME</span>
             <span className="hero-game-callout__match">
-              <small>SEP 25 · TIME TBA · FOOTBALL</small>
-              <strong>Valencia vs. West Ranch</strong>
+              <small>OCT 23 · 7:00 PM · FOOTBALL</small>
+              <strong>Valencia vs. Golden Valley</strong>
             </span>
             <em>
               Presented by{" "}
-              <strong className="farmers-jaquez-highlight">
-                Farmers Insurance – Jaquez Group
+              <strong className="storm-elite-highlight">
+                Storm Elite Baseball
               </strong>
             </em>
             <span className="hero-game-callout__arrow" aria-hidden="true">↓</span>
@@ -1972,7 +1981,7 @@ export default function Home() {
           />
         </div>
 
-        <section className="sponsor-banner" aria-label="Previous sponsors">
+        <section className="sponsor-banner" aria-label="Sponsors">
           <div className="sponsor-banner__track">
             {[0, 1].map((groupIndex) => (
               <div
@@ -1980,7 +1989,7 @@ export default function Home() {
                 className="sponsor-banner__group"
                 key={groupIndex}
               >
-                <span className="sponsor-banner__label">Previous sponsors</span>
+                <span className="sponsor-banner__label">Sponsors</span>
                 {previousSponsors.map((sponsor) =>
                   groupIndex === 0 ? (
                     <a
@@ -2147,8 +2156,8 @@ export default function Home() {
             </div>
             <div className="season-card__bar"><span /></div>
             <div className="season-card__foot">
-              <span>367 verified meals</span>
-              <span>5 games tracked · Home opener September 10</span>
+              <span>666 verified meals</span>
+              <span>6 games tracked · Home opener September 10</span>
             </div>
           </div>
         </section>
@@ -2218,12 +2227,12 @@ export default function Home() {
           />
           <div className="section-index">04 / Games & achievements</div>
           <article
-            aria-label="Upcoming football game: Valencia High School versus West Ranch High School, September 25, time to be announced, presented by Farmers Insurance – Jaquez Group."
+            aria-label="Upcoming football game: Valencia High School versus Golden Valley High School, October 23 at 7:00 PM, presented by Storm Elite Baseball."
             className="matchup-card"
             data-reveal
             tabIndex={0}
           >
-            <span className="matchup-card__flag">UPCOMING FOOTBALL GAME</span>
+            <span className="matchup-card__flag">UPCOMING HOME GAME · SENIOR NIGHT</span>
 
             <div className="matchup-card__team matchup-card__team--valencia">
               <span>Home / VHS</span>
@@ -2243,26 +2252,26 @@ export default function Home() {
               <i />
             </div>
 
-            <div className="matchup-card__team matchup-card__team--west-ranch">
-              <span>Opponent / WRHS</span>
+            <div className="matchup-card__team matchup-card__team--golden-valley">
+              <span>Opponent / GVHS</span>
               <div className="matchup-card__identity">
                 <h2>
-                  <small>West Ranch</small>
+                  <small>Golden Valley</small>
                   <strong>High School</strong>
                 </h2>
-                <i aria-hidden="true">WR</i>
+                <i aria-hidden="true">GV</i>
               </div>
-              <p>September 25 matchup</p>
+              <p>Black / Gold</p>
             </div>
 
             <div className="matchup-card__game">
-              <span>Friday / September 25</span>
-              <strong>TIME TBA</strong>
-              <span>Football</span>
+              <span>Friday / October 23</span>
+              <strong><time dateTime="2026-10-23T19:00:00-07:00">7:00 PM</time></strong>
+              <span>Football · Senior Night</span>
             </div>
 
             <span className="matchup-card__presented">
-              Game sponsored by <strong>Farmers Insurance – Jaquez Group</strong>
+              Game sponsored by <strong>Storm Elite Baseball</strong>
             </span>
 
             <span className="matchup-card__prompt" aria-hidden="true">
@@ -2281,7 +2290,7 @@ export default function Home() {
               <strong>10 meals</strong>
             </p>
             <p>
-              Game sponsor <strong>Farmers Insurance – Jaquez Group</strong>
+              Game sponsor <strong>Storm Elite Baseball</strong>
             </p>
           </div>
         </section>
@@ -2293,9 +2302,10 @@ export default function Home() {
             <div className="partners__copy" data-reveal>
               <h2>Local brands.<br />Lasting impact.</h2>
               <p>
-                Valencia athletics, Farmers Insurance – Jaquez Group, EC Organic
-                Juicing, Stonefire Grill – Valencia, Copper Hill BBQ, Pizza Di Marco,
-                and the SCV Food Pantry connect school spirit to clear, local action.
+                Valencia athletics, Storm Elite Baseball, Farmers Insurance – Jaquez
+                Group, EC Organic Juicing, Stonefire Grill – Valencia, Copper Hill BBQ,
+                Pizza Di Marco, and the SCV Food Pantry connect school spirit to clear,
+                local action.
               </p>
             </div>
             <div className="partner-slots" aria-label="Partner spaces" data-reveal>
@@ -2308,29 +2318,29 @@ export default function Home() {
                 <strong>Valencia High School</strong>
                 <small>Student and athletics partner</small>
               </div>
-              <div className="partner-slots__sponsor partner-slots__sponsor--farmers">
+              <div className="partner-slots__sponsor partner-slots__sponsor--storm">
                 <a
-                  aria-label="Visit Farmers Insurance – Jaquez Group"
-                  className="farmers-jaquez-logo-link"
-                  href={farmersJaquezWebsite}
+                  aria-label="Visit Storm Elite Baseball on Instagram"
+                  className="storm-elite-logo-link"
+                  href={stormEliteBaseballInstagram}
                   rel="noreferrer"
                   target="_blank"
                 >
                   <Image
-                    alt="Farmers Insurance – Jaquez Group"
-                    className="farmers-jaquez-logo"
-                    height="1265"
-                    src="/farmers-jaquez-group-logo.svg"
+                    alt="Storm Elite Baseball"
+                    className="storm-elite-logo"
+                    height="240"
+                    src="/storm-elite-baseball-logo.png"
                     unoptimized
-                    width="1192"
+                    width="274"
                   />
                 </a>
                 <span>CURRENT GAME SPONSOR</span>
-                <strong>Farmers Insurance – Jaquez Group</strong>
-                <small>Insurance and community partner</small>
-                <div className="partner-links" aria-label="Farmers Insurance – Jaquez Group links">
-                  <a href={farmersJaquezWebsite} rel="noreferrer" target="_blank">
-                    Website <Arrow />
+                <strong>Storm Elite Baseball</strong>
+                <small>Baseball and community partner</small>
+                <div className="partner-links" aria-label="Storm Elite Baseball links">
+                  <a href={stormEliteBaseballInstagram} rel="noreferrer" target="_blank">
+                    Instagram <Arrow />
                   </a>
                 </div>
               </div>

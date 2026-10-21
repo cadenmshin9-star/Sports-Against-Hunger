@@ -54,40 +54,43 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, /Pizza Di Marco/);
   assert.match(html, /Stonefire Grill/);
   assert.match(html, /EC Organic Juicing/);
+  assert.match(html, /Storm Elite Baseball/);
   assert.match(
     html,
-    /Valencia vs\. West Ranch[\s\S]*?Presented by[\s\S]*?Farmers Insurance – Jaquez Group/i,
+    /Valencia vs\. Golden Valley[\s\S]*?Presented by[\s\S]*?Storm Elite Baseball/i,
   );
-  assert.match(html, /SEP 25 · TIME TBA · FOOTBALL/i);
-  assert.match(html, /Friday \/ September 25/i);
-  assert.match(html, /TIME TBA/i);
-  assert.doesNotMatch(html, /dateTime="2026-09-25/i);
+  assert.match(html, /OCT 23 · 7:00 PM · FOOTBALL/i);
+  assert.match(html, /Friday \/ October 23/i);
+  assert.match(html, /dateTime="2026-10-23T19:00:00-07:00"[^>]*>7:00 PM/i);
+  assert.doesNotMatch(html, /TIME TBA/i);
   assert.match(
     html,
-    /Previous sponsors[\s\S]*?Copper Hill BBQ[\s\S]*?Pizza Di Marco[\s\S]*?Stonefire Grill[\s\S]*?EC Organic Juicing[\s\S]*?Farmers Insurance – Jaquez Group/i,
+    /Sponsors[\s\S]*?Copper Hill BBQ[\s\S]*?Pizza Di Marco[\s\S]*?Stonefire Grill[\s\S]*?EC Organic Juicing[\s\S]*?Farmers Insurance – Jaquez Group[\s\S]*?Storm Elite Baseball/i,
   );
-  assert.match(html, /aria-label="Previous sponsors"/i);
+  assert.match(html, /aria-label="Sponsors"/i);
   assert.match(html, /ec-organic-juicing-banner-logo\.svg/i);
   assert.match(html, /sponsor-banner__brand--farmers[\s\S]*?farmers-jaquez-group-logo\.svg/i);
+  assert.match(html, /sponsor-banner__brand--storm[\s\S]*?storm-elite-baseball-logo\.png/i);
   assert.match(
     html,
-    /matchup-card__presented[\s\S]*?Game sponsored by[\s\S]*?Farmers Insurance – Jaquez Group/i,
+    /matchup-card__presented[\s\S]*?Game sponsored by[\s\S]*?Storm Elite Baseball/i,
   );
   assert.match(
     html,
-    /partner-slots__sponsor--farmers[\s\S]*?farmers-jaquez-group-logo\.svg/i,
+    /partner-slots__sponsor--storm[\s\S]*?storm-elite-baseball-logo\.png/i,
   );
   assert.doesNotMatch(html, /Paraclete|2026-09-10/i);
   assert.doesNotMatch(html, /OPEN SPONSOR SPACE|Game sponsor <strong>Open/i);
   assert.match(html, /Each Valencia touchdown[\s\S]*?25 meals/i);
   assert.match(html, /Each Valencia field goal[\s\S]*?10 meals/i);
-  assert.match(html, /367 verified meals/i);
+  assert.match(html, /666 verified meals/i);
   assert.match(html, /Sports Against Hunger on Instagram/);
   assert.match(html, /href="https:\/\/copperhillbbq\.com\/"/);
   assert.match(html, /href="https:\/\/pizzadimarco\.com\/"/);
   assert.match(html, /href="https:\/\/www\.stonefiregrill\.com\/location\/valencia\/"/);
   assert.match(html, /href="https:\/\/www\.instagram\.com\/ec_organic_juicing\/"/);
   assert.match(html, /href="http:\/\/Jaquezgroup\.com"/);
+  assert.match(html, /href="https:\/\/www\.instagram\.com\/storm_elite_baseball\/"/);
   assert.match(html, /href="https:\/\/www\.instagram\.com\/sportsagainsthunger\.vhs\?/);
   assert.match(html, /href="https:\/\/www\.scvfoodpantry\.org\/"/);
   assert.match(html, /aria-label="Santa Clarita Valley Food Pantry"/);
@@ -107,13 +110,13 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.match(html, />Compete</);
   assert.match(html, />Unite</);
   assert.match(html, />Give Back</);
-  assert.match(html, /UPCOMING FOOTBALL GAME/);
+  assert.match(html, /UPCOMING HOME GAME · SENIOR NIGHT/);
   assert.doesNotMatch(html, /impact__brand/i);
   assert.match(html, /Founding season tracker · Est\. 2026/i);
   assert.match(html, /This scoreboard includes only official/i);
-  assert.match(html, /Valencia High School versus West Ranch High School/);
+  assert.match(html, /Valencia High School versus Golden Valley High School/);
   assert.match(html, /matchup-card__team--valencia/);
-  assert.match(html, /matchup-card__team--west-ranch/);
+  assert.match(html, /matchup-card__team--golden-valley/);
   assert.match(html, /SCV Food Pantry-verified · 1 meal equivalent = \$2\.28/);
   assert.match(html, /Preemptive Q&amp;A/);
   assert.match(html, /Does Sports Against Hunger handle money\?/);
@@ -156,7 +159,7 @@ test("server-renders the Sports Against Hunger sponsorship experience", async ()
   assert.doesNotMatch(html, /West Hills|Home team \/ Santa Clarita/i);
 });
 
-test("keeps unconfirmed impact data explicit and accessible", async () => {
+test("keeps impact data explicit and accessible", async () => {
   const [page, css, layout, manifest] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
@@ -164,12 +167,12 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
     readFile(new URL("../app/manifest.ts", import.meta.url), "utf8"),
   ]);
 
-  assert.match(page, /value: "367",\s*label: "verified meals"/);
+  assert.match(page, /value: "666",\s*label: "verified meals"/);
   assert.match(page, /note: "SCV Food Pantry-verified · 1 meal equivalent = \$2\.28"/);
-  assert.match(page, /value: "5", label: "games tracked"/);
-  assert.match(page, /value: "5",\s*label: "previous sponsors"/);
-  assert.match(page, /note: "Copper Hill BBQ \+ Pizza Di Marco \+ Stonefire Grill \+ EC Organic Juicing \+ Farmers Insurance – Jaquez Group"/);
-  assert.match(page, /5 games tracked · Home opener September 10/);
+  assert.match(page, /value: "6", label: "games tracked"/);
+  assert.match(page, /value: "6",\s*label: "sponsors"/);
+  assert.match(page, /note: "Copper Hill BBQ \+ Pizza Di Marco \+ Stonefire Grill \+ EC Organic Juicing \+ Farmers Insurance – Jaquez Group \+ Storm Elite Baseball"/);
+  assert.match(page, /6 games tracked · Home opener September 10/);
   assert.match(page, /Pledge details appear only after they are confirmed\./);
   assert.match(page, /Official scorecards verify athletic results/);
   assert.match(page, /jbenham@hartdistrict\.org/);
@@ -246,8 +249,8 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   );
   assert.match(css, /--valencia-purple:\s*#552583/);
   assert.match(css, /--valencia-gold:\s*#ffc72c/);
-  assert.match(css, /--west-ranch-blue:\s*#0b2d5c/);
-  assert.match(css, /--west-ranch-silver:\s*#d8dde5/);
+  assert.match(css, /--golden-valley-black:\s*#171717/);
+  assert.match(css, /--golden-valley-gold:\s*#f2c230/);
   assert.doesNotMatch(page, /orientation\.lock/);
   assert.doesNotMatch(page, /\bpilot\b/i);
   assert.match(page, /sports-against-hunger-emblem\.webp/);
@@ -256,6 +259,7 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /stonefire-grill-logo\.png/);
   assert.match(page, /ec-organic-juicing-banner-logo\.svg/);
   assert.match(page, /farmers-jaquez-group-logo\.svg/);
+  assert.match(page, /storm-elite-baseball-logo\.png/);
   assert.match(page, /\/instagram\.svg/);
   assert.match(page, /sportsagainsthunger\.vhs/);
   assert.match(page, /copperhillbbq\.com/);
@@ -263,6 +267,7 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   assert.match(page, /stonefiregrill\.com\/location\/valencia/);
   assert.match(page, /instagram\.com\/ec_organic_juicing/);
   assert.match(page, /Jaquezgroup\.com/);
+  assert.match(page, /instagram\.com\/storm_elite_baseball/);
   assert.doesNotMatch(page, /Paraclete/i);
   assert.doesNotMatch(css, /\.playbook-list article:hover\s*\{[^}]*padding-/);
   assert.doesNotMatch(page, /sports-sprite\.png/);
@@ -352,6 +357,7 @@ test("keeps unconfirmed impact data explicit and accessible", async () => {
   await access(new URL("../public/ec-organic-juicing-logo.png", import.meta.url));
   await access(new URL("../public/ec-organic-juicing-banner-logo.svg", import.meta.url));
   await access(new URL("../public/farmers-jaquez-group-logo.svg", import.meta.url));
+  await access(new URL("../public/storm-elite-baseball-logo.png", import.meta.url));
   await access(new URL("../public/instagram.svg", import.meta.url));
   await access(new URL("../public/sports-against-hunger-icon-48.png", import.meta.url));
   await access(new URL("../public/sports-against-hunger-icon-192.png", import.meta.url));

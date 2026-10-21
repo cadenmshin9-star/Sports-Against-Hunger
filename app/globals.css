@@ -1036,8 +1036,8 @@ a.sponsor-banner__brand:focus-visible {
 }
 
 .matchup-card {
-  --west-ranch-blue: #0b2d5c;
-  --west-ranch-silver: #d8dde5;
+  --golden-valley-black: #171717;
+  --golden-valley-gold: #f2c230;
   --valencia-gold: #ffc72c;
   --valencia-purple: #552583;
   position: relative;
@@ -1054,8 +1054,8 @@ a.sponsor-banner__brand:focus-visible {
       #fff7d2 49.4%,
       #ffffff 50%,
       #fff0c2 50.6%,
-      var(--west-ranch-silver) 53%,
-      var(--west-ranch-blue) 57%,
+      var(--golden-valley-gold) 53%,
+      var(--golden-valley-black) 57%,
       #151719 100%
     );
   box-shadow: 0 30px 80px rgba(16, 24, 20, 0.2);
@@ -1181,14 +1181,14 @@ a.sponsor-banner__brand:focus-visible {
   color: var(--valencia-gold);
 }
 
-.matchup-card__team--west-ranch {
+.matchup-card__team--golden-valley {
   right: 6%;
   bottom: 9%;
   text-align: right;
 }
 
-.matchup-card__team--west-ranch > p {
-  color: #d8dde5;
+.matchup-card__team--golden-valley > p {
+  color: var(--golden-valley-gold);
 }
 
 .matchup-card__identity {
@@ -1197,7 +1197,7 @@ a.sponsor-banner__brand:focus-visible {
   gap: clamp(16px, 2vw, 30px);
 }
 
-.matchup-card__team--west-ranch .matchup-card__identity {
+.matchup-card__team--golden-valley .matchup-card__identity {
   justify-content: flex-end;
 }
 
@@ -1226,8 +1226,8 @@ a.sponsor-banner__brand:focus-visible {
   color: var(--valencia-gold);
 }
 
-.matchup-card__team--west-ranch .matchup-card__identity > i {
-  border-color: var(--west-ranch-silver);
+.matchup-card__team--golden-valley .matchup-card__identity > i {
+  border-color: var(--golden-valley-gold);
   color: white;
 }
 
@@ -1391,8 +1391,8 @@ a.sponsor-banner__brand:focus-visible {
   transform: translate(-8px, -6px);
 }
 
-.matchup-card:hover .matchup-card__team--west-ranch,
-.matchup-card:focus-visible .matchup-card__team--west-ranch {
+.matchup-card:hover .matchup-card__team--golden-valley,
+.matchup-card:focus-visible .matchup-card__team--golden-valley {
   transform: translate(8px, 6px);
 }
 
@@ -1409,11 +1409,11 @@ a.sponsor-banner__brand:focus-visible {
   color: var(--valencia-purple);
 }
 
-.matchup-card:hover .matchup-card__team--west-ranch .matchup-card__identity > i,
-.matchup-card:focus-visible .matchup-card__team--west-ranch .matchup-card__identity > i,
-.matchup-card:active .matchup-card__team--west-ranch .matchup-card__identity > i {
-  background: var(--west-ranch-silver);
-  color: var(--west-ranch-blue);
+.matchup-card:hover .matchup-card__team--golden-valley .matchup-card__identity > i,
+.matchup-card:focus-visible .matchup-card__team--golden-valley .matchup-card__identity > i,
+.matchup-card:active .matchup-card__team--golden-valley .matchup-card__identity > i {
+  background: var(--golden-valley-gold);
+  color: var(--golden-valley-black);
 }
 
 .matchup-card:hover .matchup-card__clash span,
@@ -8162,7 +8162,7 @@ body {
     left: 7%;
   }
 
-  .matchup-card__team--west-ranch {
+  .matchup-card__team--golden-valley {
     right: 7%;
     bottom: 8%;
   }
@@ -8352,7 +8352,7 @@ body {
     left: 19px;
   }
 
-  .matchup-card__team--west-ranch {
+  .matchup-card__team--golden-valley {
     right: 19px;
     bottom: 42px;
   }
@@ -8381,7 +8381,7 @@ body {
     font-size: clamp(30px, 10.5vw, 45px);
   }
 
-  .matchup-card__team--west-ranch .matchup-card__identity h2 small {
+  .matchup-card__team--golden-valley .matchup-card__identity h2 small {
     font-size: clamp(26px, 7.8vw, 32px);
   }
 
@@ -10140,11 +10140,11 @@ main section[id] {
 }
 
 /* Current game sponsor and permanent sponsor-strip integration. */
-.hero-game-callout > em .farmers-jaquez-highlight {
-  color: #ff8a94;
+.hero-game-callout > em .storm-elite-highlight {
+  color: #ffc72c;
   font-style: normal;
   font-weight: 950;
-  text-shadow: 0 0 14px rgba(214, 39, 54, 0.48);
+  text-shadow: 0 0 14px rgba(255, 199, 44, 0.48);
 }
 
 .sponsor-banner__brand--copper img {
@@ -10185,6 +10185,18 @@ main section[id] {
   object-fit: contain;
 }
 
+.sponsor-banner__brand--storm {
+  width: 150px;
+  min-width: 150px;
+  background: #050505;
+}
+
+.sponsor-banner__brand--storm img {
+  width: auto;
+  height: 72px;
+  object-fit: contain;
+}
+
 .sponsor-banner__brand-name {
   color: #153f76;
   font-size: 13px;
@@ -10192,21 +10204,21 @@ main section[id] {
   line-height: 1.2;
 }
 
-.partner-slots__sponsor--farmers {
+.partner-slots__sponsor--storm {
   background:
-    linear-gradient(122deg, transparent 0 44%, rgba(214, 39, 54, 0.18) 44.2% 45%, transparent 45.2%),
-    radial-gradient(circle at 82% 18%, rgba(26, 85, 151, 0.42), transparent 30%),
+    linear-gradient(122deg, transparent 0 44%, rgba(255, 199, 44, 0.2) 44.2% 45%, transparent 45.2%),
+    radial-gradient(circle at 82% 18%, rgba(85, 37, 131, 0.5), transparent 30%),
     var(--ink);
 }
 
-.partner-slots__sponsor--farmers:hover {
+.partner-slots__sponsor--storm:hover {
   background:
-    linear-gradient(122deg, transparent 0 44%, rgba(214, 39, 54, 0.26) 44.2% 45%, transparent 45.2%),
-    radial-gradient(circle at 82% 18%, rgba(26, 85, 151, 0.52), transparent 33%),
+    linear-gradient(122deg, transparent 0 44%, rgba(255, 199, 44, 0.3) 44.2% 45%, transparent 45.2%),
+    radial-gradient(circle at 82% 18%, rgba(85, 37, 131, 0.62), transparent 33%),
     var(--ink-soft) !important;
 }
 
-.farmers-jaquez-logo-link {
+.storm-elite-logo-link {
   display: flex;
   width: min(100%, 220px);
   min-height: 176px;
@@ -10216,17 +10228,17 @@ main section[id] {
   padding: 14px;
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 4px;
-  background: white;
+  background: #050505;
 }
 
-.farmers-jaquez-logo-link:focus-visible {
+.storm-elite-logo-link:focus-visible {
   outline: 3px solid var(--lime);
   outline-offset: 5px;
 }
 
-.farmers-jaquez-logo {
+.storm-elite-logo {
   display: block;
-  width: min(100%, 184px);
+  width: min(100%, 176px);
   height: auto;
   max-height: 154px;
   margin: auto;
@@ -10235,19 +10247,19 @@ main section[id] {
   filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.28));
 }
 
-.partner-slots__sponsor--farmers > span {
-  color: #ff8a94;
+.partner-slots__sponsor--storm > span {
+  color: #ffc72c;
 }
 
-.partner-slots__sponsor--farmers .partner-links a {
-  border-color: rgba(255, 138, 148, 0.48);
+.partner-slots__sponsor--storm .partner-links a {
+  border-color: rgba(255, 199, 44, 0.5);
   color: white;
 }
 
-.partner-slots__sponsor--farmers .partner-links a:hover,
-.partner-slots__sponsor--farmers .partner-links a:focus-visible {
-  border-color: #ff8a94;
-  background: rgba(26, 85, 151, 0.3);
+.partner-slots__sponsor--storm .partner-links a:hover,
+.partner-slots__sponsor--storm .partner-links a:focus-visible {
+  border-color: #ffc72c;
+  background: rgba(85, 37, 131, 0.38);
 }
 
 @media (max-width: 520px) {
@@ -10262,16 +10274,16 @@ main section[id] {
     white-space: normal;
   }
 
-  .hero-game-callout > em .farmers-jaquez-highlight {
+  .hero-game-callout > em .storm-elite-highlight {
     font-size: 11px;
     white-space: normal;
   }
 
-  .farmers-jaquez-logo-link {
+  .storm-elite-logo-link {
     min-height: 156px;
   }
 
-  .farmers-jaquez-logo {
+  .storm-elite-logo {
     max-height: 134px;
   }
 }
